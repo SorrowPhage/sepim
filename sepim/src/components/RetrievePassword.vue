@@ -85,11 +85,11 @@
             verify_status() {
                 axios.post('http://localhost:8080/api/retrieve',this.user).then(
                     response=>{
-                        if (response.data.flag == "ver_defeat") {
+                        if (response.data.flag === "ver_defeat") {
                         //    验证码错误
                             console.log("验证码错误");
                             return;
-                        }else if (response.data.flag == "ver_status_defeat") {
+                        }else if (response.data.flag === "ver_status_defeat") {
                             //    身份验证失败
                             console.log("身份验证失败");
                         } else {
@@ -109,10 +109,10 @@
                 this.active = this.active + 1;
             },
             sendVerCode() {
-                if (this.user.email == '') {
+                if (this.user.email === '') {
                     this.message.email = '邮箱不能为空';
                     return;
-                } else if (this.message.email == '') {
+                } else if (this.message.email === '') {
                     axios.post('http://localhost:8080/api/sendcode', {tos: this.user.email, subject: '找回密码'});
                     this.display_button = false;
                     this.timer = 60;

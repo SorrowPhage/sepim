@@ -46,11 +46,11 @@
             login() {
                 axios.post('http://localhost:8080/api/login',this.user).then(
                     response=>{
-                        if (response.data.flag == "login_defeat") {
+                        if (response.data.flag === "login_defeat") {
                             this.message = "账号或密码错误";
                             console.log(this.message);
                         }
-                        if (response.data.flag == "login_succeed") {
+                        if (response.data.flag === "login_succeed") {
                             // this.sessionStorage.setItem("token",response.data.token);
                             this.$store.commit("User/getUserInfo", response.data.data);
                             this.$router.push({

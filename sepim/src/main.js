@@ -6,7 +6,7 @@ import store from './store'
 import VueRouter from 'vue-router'
 import router from './router/index'
 import VueCropper from "vue-cropper";
-import {MessageBox,Message} from "element-ui";
+import {MessageBox,Message,Pagination} from "element-ui";
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message=Message
 
@@ -17,7 +17,7 @@ import { RadioGroup, RadioButton, Menu,
   PageHeader, Descriptions, DescriptionsItem, 
   Breadcrumb,BreadcrumbItem,DatePicker,Steps
   ,Step,Form,FormItem,Input,Dialog,Button,Carousel,CarouselItem,
-  Calendar} from 'element-ui'
+  Calendar,Table,TableColumn,Radio} from 'element-ui'
 
 Vue.config.productionTip = false
 // 使用插件
@@ -47,6 +47,10 @@ Vue.component(Button.name, Button)
 Vue.component(Carousel.name, Carousel)
 Vue.component(CarouselItem.name, CarouselItem)
 Vue.component(Calendar.name, Calendar)
+Vue.component(Table.name, Table)
+Vue.component(TableColumn.name, TableColumn)
+Vue.component(Radio.name, Radio)
+Vue.component(Pagination.name, Pagination)
 
 
 

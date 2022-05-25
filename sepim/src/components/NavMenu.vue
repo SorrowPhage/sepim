@@ -1,12 +1,12 @@
 <template>
     <div class="left-menu left-side">
         <div class="logo">
-            <img src="../assets/img/main/menu/logo.png"/>
+            <img src="../assets/img/main/menu/logo.png" alt="加载失败"/>
         </div>
-        <el-menu default-active="1-4-1" class="el-menu-vertical-demo">
+        <el-menu class="el-menu-vertical-demo" default-active="1-4-1">
             <el-menu-item index="0" @click="goIndex">
                 <i class="el-icon-menu"></i>
-                <span slot="title" >首页</span>
+                <span slot="title">首页</span>
             </el-menu-item>
             <el-submenu index="1">
                 <template slot="title">
@@ -18,19 +18,18 @@
                     >个人信息
                     </el-menu-item
                     >
-                    <!--          <el-menu-item index="1-2" @click="setUserInfo">修改信息</el-menu-item>-->
                     <el-menu-item index="1-3" @click="setPassword">修改密码</el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="2">
+            <el-menu-item v-if="type==='admin' " index="2" @click="audit">
                 <i class="el-icon-menu"></i>
-                <span slot="title">导航二</span>
+                <span slot="title">审核</span>
             </el-menu-item>
-            <el-menu-item index="4">
-                <i class="el-icon-setting"></i>
-                <span slot="title">导航四</span>
+            <el-menu-item v-if="type==='user' " index="3" @click="leave">
+                <i class="el-icon-menu"></i>
+                <span slot="title">请假</span>
             </el-menu-item>
-            <el-menu-item index="5" @click="logOut">
+            <el-menu-item index="4" @click="logOut">
                 <i class="el-icon-right"></i>
                 <span slot="title">退出</span>
             </el-menu-item>
@@ -39,80 +38,95 @@
 </template>
 
 <script>
-    import {mapState} from "vuex";
-
-    export default {
-        name: "NavMenu",
-        methods: {
-            goIndex() {
-                this.isTrue = false;
-                this.$router.push({
-                    name:'main'
-                })
-            },
-            checkUserInfo() {
-                this.$router.push({
-                    name: "userinfo",
-                });
-            },
-            setUserInfo() {
-                this.$router.push({
-                    name: "setting",
-                });
-            },
-            setPassword() {
-                this.$router.push({
-                    name: "setpassword",
-                });
-            },
-            logOut(){
-                this.$router.push({
-                    name: "login"
-                });
-            }
+import {mapState} from "vuex";
+import {sessionReplaceStore} from "@/utils/session_util"
+export default {
+    name: "NavMenu",
+    computed: {
+        ...mapState("Menu", ["isCollapse"]),
+        ...mapState("User", ["type"]),
+    },
+    methods: {
+        goIndex() {
+            this.isTrue = false;
+            this.$router.push({
+                name: 'main'
+            })
         },
-        computed: {
-            ...mapState("Menu", ["isCollapse"]),
+        checkUserInfo() {
+            this.$router.push({
+                name: "userinfo",
+            });
         },
-    };
+        setPassword() {
+            this.$router.push({
+                name: "setpassword",
+            });
+        },
+        audit() {
+            this.$store.dispatch("Holiday/getAuditList");
+            this.$router.push({
+                name: 'auditlist',
+            })
+        },
+        leave() {
+            this.$store.dispatch("Holiday/getLeaveList", this.$store.state.User.account);
+            this.$router.push({
+                name: 'leave',
+            })
+        },
+        logOut() {
+            this.$router.push({
+                name: "login"
+            });
+        }
+    },
+    created() {
+        sessionReplaceStore('store');
+        // 发生页面销毁事件前将store数据存储至sessionStoreage中
+        window.addEventListener('beforeunload', () => {
+            sessionStorage.setItem('store', JSON.stringify(this.$store.state))
+        });
+    },
+};
 </script>
 
 <style scoped>
-    .left-menu {
-        position: fixed;
-        height: 100%;
-        z-index: 100;
-        overflow: hidden;
-        outline: none;
-        background-color: rgb(66, 79, 99);
-    }
+.left-menu {
+    position: fixed;
+    height: 100%;
+    z-index: 100;
+    overflow: hidden;
+    outline: none;
+    background-color: rgb(66, 79, 99);
+}
 
-    .left-side {
-        width: 240px;
-        top: 0;
-        left: 0;
-    }
+.left-side {
+    width: 240px;
+    top: 0;
+    left: 0;
+}
 
-    .el-menu-vertical-demo:not(.el-menu--collapse) {
-        width: 241px;
-        height: 100%;
-        background-color: rgb(66, 79, 99);
-    }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 241px;
+    height: 100%;
+    background-color: rgb(66, 79, 99);
+}
 
-    span {
-        color: white;
-    }
+span {
+    color: white;
+}
 
-    .logo {
-        padding-top: 5px;
-        padding-left: 20px;
-        height: 50px;
-        background-color: rgb(66, 79, 99);
-    }
+.logo {
+    padding-top: 5px;
+    padding-left: 20px;
+    height: 50px;
+    background-color: rgb(66, 79, 99);
+}
 
-    .group {
-        background-color: white;
-    }
+.group {
+    background-color: white;
+}
 
 </style>
 

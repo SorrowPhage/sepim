@@ -10,6 +10,7 @@ export default {
             state.avatarUrl = user.avatarUrl;
             state.userName = user.username;
             state.email = user.email;
+            state.type = user.type;
         },
         changeAvatar(state,url){
             state.avatarUrl = url;
@@ -21,6 +22,7 @@ export default {
         'userName': 'Admin',
         email: '1@qq.com',
         isCollapse: true,
+        type: '',
     },
     getters: {
         avatar_url(state) {

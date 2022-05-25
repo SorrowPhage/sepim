@@ -57,6 +57,18 @@ const router = new VueRouter({
                     component:()=>import('@/components/userinfo/SetPassword'),
                     meta:{title:'修改密码'},
                 },
+                {
+                    name:'auditlist',
+                    path:'auditlist',
+                    component:()=>import('@/components/operation/examination/AuditList'),
+                    meta:{title:'审核'},
+                },
+                {
+                    name:'leave',
+                    path:'leave',
+                    component:()=>import('@/components/operation/leave/AskOfLeaveList'),
+                    meta:{title:'请假'},
+                },
             ]
         },
         
