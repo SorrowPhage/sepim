@@ -8,6 +8,7 @@ import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.UserMapper;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.AccountGenerateUtil;
+import com.sepim.springboot.utils.MySessionUtil;
 import com.sepim.springboot.utils.SettingAvatarUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private ResultData resultData;
 
-    @Autowired
-    private MySessionService mySessionService;
 
 
     /**
@@ -29,12 +28,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 注册结果
      */
     public ResultData register(User user) {
-        String verCode = (String) mySessionService.getSession("ver_code");
+        String verCode = (String) MySessionUtil.getSession("ver_code");
         if (!verCode.equals(user.getVerCode())) {
             resultData.setFlag("ver_defeat");
         } else {
+            String account = AccountGenerateUtil.generateAccount();
+            //保证账号的唯一性
+            while (this.getById(account) != null) {
+                account = AccountGenerateUtil.generateAccount();
+            }
             user.setId(AccountGenerateUtil.generateAccount());
-            mySessionService.removeSession("ver_code");
+            MySessionUtil.removeSession("ver_code");
             user.setType("user");
             this.save(user);
             resultData.setData(user);
@@ -67,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 验证结果
      */
     public ResultData retrieve(User user) {
-        String verCode = (String) mySessionService.getSession("ver_code");
+        String verCode = (String) MySessionUtil.getSession("ver_code");
         if (!verCode.equals(user.getVerCode())) {
             resultData.setFlag("ver_defeat");
         } else {
@@ -77,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (admin != null) {
                 resultData.setFlag("succeed");
                 resultData.setData(admin);
-                mySessionService.removeSession("ver_code");
+                MySessionUtil.removeSession("ver_code");
             } else {
                 resultData.setFlag("ver_status_defeat");
             }

@@ -4,6 +4,7 @@ package com.sepim.springboot.serviceimpl;
 import com.sepim.springboot.entity.Email;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.EmailService;
+import com.sepim.springboot.utils.MySessionUtil;
 import com.sepim.springboot.utils.VerCodeGenerateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +24,6 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private ResultData resultData;
 
-    @Autowired
-    private MySessionService mySessionService;
 
     @Value("${spring.mail.username}")
     private String username;
@@ -43,7 +42,7 @@ public class EmailServiceImpl implements EmailService {
         message.setText(email.getContent());
         javaMailSender.send(message);
 
-        mySessionService.setSession("ver_code", verCode);
+        MySessionUtil.setSession("ver_code", verCode);
         resultData.setFlag("send_succeed");
         return resultData;
     }

@@ -40,7 +40,9 @@ public class HolidayServiceImpl extends ServiceImpl<HolidayMapper, Holiday> impl
 
     @Override
     public ResultData auditList() {
-        List<Holiday> list = this.list();
+        QueryWrapper<Holiday> wrapper = new QueryWrapper<>();
+        wrapper.eq("state", "待审核");
+        List<Holiday> list = this.list(wrapper);
         resultData.setData(list);
         resultData.setFlag("audit_succeed");
         return resultData;

@@ -1,10 +1,8 @@
 package com.sepim.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.sepim.springboot.entity.Email;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService extends IService<User> {
