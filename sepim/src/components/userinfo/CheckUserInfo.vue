@@ -68,7 +68,12 @@ export default {
             axios.post("http://localhost:8080/api/update", this.userInfo).then(res => {
                 if (res.data.flag === "user_info_update_succeed") {
                     this.$store.commit("User/getUserInfo", res.data.data);
-                    console.log(res.data.data)
+                    this.$message({
+                        message: '修改成功',
+                        showClose: true,
+                        type: 'success',
+                        center: true,
+                    });
                 }
             })
         }

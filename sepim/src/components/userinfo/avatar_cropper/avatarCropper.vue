@@ -134,6 +134,12 @@ export default {
                         {headers: {'Content-Type': 'multipart/form-data'}}).then(response => {
                             if (response.data.flag === "avatar_set_succeed") {
                                 this.$store.commit("User/changeAvatar", response.data.data);
+                                this.$message({
+                                    message: '修改成功',
+                                    showClose: true,
+                                    type: 'success',
+                                    center: true,
+                                });
                             }
                         },
                         error => {

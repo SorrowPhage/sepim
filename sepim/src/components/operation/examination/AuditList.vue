@@ -1,10 +1,10 @@
 <template>
     <div class="main">
     <div class="page-heading">
-        <h3>个人信息</h3>
+        <h3>审核</h3>
         <el-breadcrumb separator="/">
-            <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-            <el-breadcrumb-item>个人信息</el-breadcrumb-item>
+            <el-breadcrumb-item>审核</el-breadcrumb-item>
+<!--            <el-breadcrumb-item>个人信息</el-breadcrumb-item>-->
         </el-breadcrumb>
     </div>
     <div class="wrapper">
@@ -113,7 +113,7 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 * {
     box-sizing: border-box;
 }
