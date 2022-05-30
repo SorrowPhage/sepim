@@ -13,7 +13,7 @@
                 </div>
                 <div class="about-password">
                     <!--没用-->
-                    <input type="checkbox">记住密码
+                    <input type="checkbox" >记住密码
                     <router-link to="/retrieve">找回密码</router-link>
                     <br/>
                 </div>
@@ -48,13 +48,16 @@
                     response=>{
                         if (response.data.flag === "login_defeat") {
                             this.message = "账号或密码错误";
-                            console.log(this.message);
+                            this.$message({
+                                showClose: true,
+                                message: '账号或密码错误',
+                                type: 'error',
+                                center: true,
+                            });
                         }
                         if (response.data.flag === "login_succeed") {
-                            // this.sessionStorage.setItem("token",response.data.token);
                             this.$store.commit("User/getUserInfo", response.data.data);
                             this.$router.push({
-                                // path: '/index.html',
                                 name: 'main',
                             });
                         }
@@ -62,7 +65,6 @@
                 error=>{
                         console.log(error.message)
                 })
-
             },
         },
     };

@@ -1,11 +1,13 @@
 export default {
     namespaced: true,
-    actions: {},
+    actions: {
+    },
     mutations: {
         changeCollapse(state) {
             state.isCollapse = !state.isCollapse
         },
         getUserInfo(state,user){
+            localStorage.setItem("token", user.token);
             state.account = user.id;
             state.avatarUrl = user.avatarUrl;
             state.userName = user.username;
@@ -14,13 +16,13 @@ export default {
         },
         changeAvatar(state,url){
             state.avatarUrl = url;
-        }
+        },
     },
     state: {
-        account: 'Admin',
+        account: '',
         'avatarUrl': '',
-        'userName': 'Admin',
-        email: '1@qq.com',
+        'userName': '',
+        email: '',
         isCollapse: true,
         type: '',
     },

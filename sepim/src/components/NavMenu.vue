@@ -3,7 +3,7 @@
         <div class="logo">
             <img src="../assets/img/main/menu/logo.png" alt="加载失败"/>
         </div>
-        <el-menu class="el-menu-vertical-demo" default-active="1-4-1">
+        <el-menu class="el-menu-vertical-demo" default-active="1-4-1" >
             <el-menu-item index="0" @click="goIndex">
                 <i class="el-icon-menu"></i>
                 <span slot="title">首页</span>

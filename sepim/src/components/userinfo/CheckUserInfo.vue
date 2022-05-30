@@ -159,7 +159,6 @@ export default {
     justify-content: center;
 }
 
-
 table {
     border-collapse: collapse;
     border-spacing: 0;
