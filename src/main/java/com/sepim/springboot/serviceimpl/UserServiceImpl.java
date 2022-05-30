@@ -9,6 +9,7 @@ import com.sepim.springboot.mapper.UserMapper;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.AccountGenerateUtil;
 import com.sepim.springboot.utils.MySessionUtil;
+import com.sepim.springboot.utils.MyTokenUtil;
 import com.sepim.springboot.utils.SettingAvatarUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         wrapper.eq("id", user.getId()).eq("password", user.getPassword());
         User admin = this.getOne(wrapper);
         if (admin != null) {
+            //生成token
+            admin.setToken(MyTokenUtil.getToken(admin));
             resultData.setFlag("login_succeed");
+            admin.setPassword(null);
             resultData.setData(admin);
         } else {
             resultData.setFlag("login_defeat");
