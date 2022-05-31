@@ -36,6 +36,7 @@ public class InterceptServiceImpl implements InterceptService {
             jwtVerifier.verify(token);
         } catch (JWTVerificationException j) {
             resultData.setFlag("user_ver_defeat");;
+            return resultData;
         };
         resultData.setFlag("user_ver_succeed");
         user.setPassword(null);
