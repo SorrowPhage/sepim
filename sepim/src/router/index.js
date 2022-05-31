@@ -81,23 +81,14 @@ const router = new VueRouter({
 router.beforeEach((to,from,next)=>{
     if (to.meta.ver) {
         let token = localStorage.getItem("token");
+        if (token === null) {
+            next("/");
+        }
         axios.post("http://localhost:8080/api/ver/token", {token: token}).then(res => {
             if (res.data.flag === "user_ver_succeed") {
                 store.commit("User/getUserInfo", res.data.data);
                 next();
             } else {
-                // let message = '';
-                // if (res.data.flag === "token_null") {
-                //     message = "请先登录";
-                // }else if (res.data.flag === "user_ver_defeat") {
-                //     message="登录过期，请重新登录"
-                // }
-                // this.$message({
-                //     showClose: true,
-                //     message: message,
-                //     type: 'error',
-                //     center: true,
-                // });
                 console.log("未登录");
                 next("/");
             }

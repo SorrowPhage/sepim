@@ -67,6 +67,7 @@ export default {
         },
         logOut() {
             this.isTrue = false;
+            localStorage.removeItem("token");
             this.$router.push({
                 name: "login"
             });

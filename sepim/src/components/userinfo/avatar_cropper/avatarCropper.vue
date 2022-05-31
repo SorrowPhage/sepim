@@ -262,14 +262,17 @@ export default {
 .el-dialog__header {
     background: #f6f8fa;
     border-bottom: solid darkgray 1px;
-    border-radius: 5px;
+    border-radius: 5px 5px 0 0 ;
 }
 .el-dialog {
     border-radius: 5px;
 }
+.el-dialog__body{
+    overflow: auto;
+}
 .el-dialog__footer{
     background: #f6f8fa;
     border-top: solid darkgray 1px;
-    border-radius: 5px;
+    border-radius: 0 0 5px 5px;
 }
 </style>

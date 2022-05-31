@@ -7,7 +7,10 @@ export default {
             state.isCollapse = !state.isCollapse
         },
         getUserInfo(state,user){
-            localStorage.setItem("token", user.token);
+            if (user.token !== null) {
+                //防止不是路由跳转的请求返回更新用户信息时将token设为null
+                localStorage.setItem("token", user.token);
+            }
             state.account = user.id;
             state.avatarUrl = user.avatarUrl;
             state.userName = user.username;
@@ -28,7 +31,7 @@ export default {
     },
     getters: {
         avatar_url(state) {
-            if (state.avatarUrl === ''||state.avatarUrl === null) return "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            if (state.avatarUrl === ''||state.avatarUrl === null) return "http://localhost:8088/upload/sepim/avatar/default.png"
             else return state.avatarUrl
         }
     }

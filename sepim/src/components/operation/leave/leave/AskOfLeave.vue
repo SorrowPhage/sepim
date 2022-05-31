@@ -5,7 +5,6 @@
         </div>
         <div>
             <el-dialog
-                :before-close="handleClose"
                 :visible.sync="dialogVisible"
                 title="请假"
                 width="60%"
@@ -120,14 +119,6 @@ export default {
             ss = ss < 10 ? ('0' + ss) : ss;
             return y + '-' + m + '-' + d + ' ' + hh + ":" + mm + ":" + ss;
         },
-        handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {
-                });
-        }
     }
 }
 </script>
@@ -136,5 +127,21 @@ export default {
 .operation-box {
     padding: 15PX;
     text-align: right;
+}
+.el-dialog__header {
+    background: #f6f8fa;
+    border-bottom: solid darkgray 1px;
+    border-radius: 5px 5px 0 0 ;
+}
+.el-dialog {
+    border-radius: 5px;
+}
+.el-dialog__body{
+    overflow: auto;
+}
+.el-dialog__footer{
+    background: #f6f8fa;
+    border-top: solid darkgray 1px;
+    border-radius: 0 0 5px 5px;
 }
 </style>
