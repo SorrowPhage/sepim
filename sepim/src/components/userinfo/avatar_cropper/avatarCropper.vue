@@ -3,9 +3,7 @@
         <el-avatar :size="100" :src="avatar_url" class="avatar"></el-avatar>
         <el-button class="replace" type="primary" @click="dialogVisible = true">修改头像</el-button>
         <el-dialog
-            :before-close="handleClose"
             :visible.sync="dialogVisible"
-            center
             title="图片剪切"
             width="70%"
         >
@@ -164,14 +162,6 @@ export default {
                 type: mime
             })
         },
-        handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {
-                });
-        },
         //预览
         realTime(data) {
             // console.log("realTime");
@@ -205,7 +195,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .avatar_box {
     width: 300px;
     /*border-right: 1px solid #3083ff;*/
@@ -268,5 +258,18 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.el-dialog__header {
+    background: #f6f8fa;
+    border-bottom: solid darkgray 1px;
+    border-radius: 5px;
+}
+.el-dialog {
+    border-radius: 5px;
+}
+.el-dialog__footer{
+    background: #f6f8fa;
+    border-top: solid darkgray 1px;
+    border-radius: 5px;
 }
 </style>
