@@ -103,7 +103,6 @@ export default {
             });
         },
         commonDate(standardDate) {
-            //this.dateTime  是需要转换的值
             let date = new Date(standardDate)
             let y = date.getFullYear()
             let m = date.getMonth() + 1

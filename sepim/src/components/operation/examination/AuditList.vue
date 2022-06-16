@@ -22,6 +22,7 @@
                             <el-table-column
                                 type="index"
                                 label="#"
+                                width="50"
                             >
                             </el-table-column>
                             <el-table-column

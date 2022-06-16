@@ -4,7 +4,6 @@
             <h3>请假</h3>
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>请假</el-breadcrumb-item>
-<!--                <el-breadcrumb-item>个人信息</el-breadcrumb-item>-->
             </el-breadcrumb>
         </div>
         <div class="wrapper">
@@ -22,7 +21,7 @@
                                 <el-table-column
                                     label="#"
                                     type="index"
-                                    width="180">
+                                    width="50">
                                 </el-table-column>
                                 <el-table-column
                                     prop="id"

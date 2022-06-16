@@ -20,4 +20,6 @@ public interface UserService extends IService<User> {
     public ResultData userInfoUpdate(User user);
 
     public ResultData userUpdatePassword(User user);
+
+    public ResultData getUser(String id);
 }

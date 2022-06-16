@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <nav-menu></nav-menu>
+<!--        <nav-menu></nav-menu>-->
         <div class="main-content">
             <admin-header></admin-header>
             <router-view></router-view>
@@ -9,18 +9,22 @@
 </template>
 
 <script>
-    import NavMenu from "../components/NavMenu.vue";
+    /*import NavMenu from "../components/NavMenu.vue";
     import AdminHeader from "../components/AdminHeader.vue";
-
     export default {
         name: "HomePage",
         components: {NavMenu, AdminHeader},
+    };*/
+    import AdminHeader from "../components/AdminHeader.vue";
+    export default {
+        name: "HomePage",
+        components: {AdminHeader},
     };
 </script>
 
 <style>
     .main-content {
-        margin-left: 240px;
+        /*margin-left: 240px;*/
         background: white;
     }
 

@@ -6,6 +6,8 @@ import Vuex from 'vuex'
 import Menu from './left-menu'
 import User from './user'
 import Holiday from "@/store/holiday";
+import Folder from "@/store/folder";
+import Comment from "@/store/comment";
 //应用Vuex插件
 Vue.use(Vuex)
 
@@ -14,5 +16,7 @@ export default new Vuex.Store({
         Menu,
         User,
         Holiday,
+        Folder,
+        Comment,
     }
 })
