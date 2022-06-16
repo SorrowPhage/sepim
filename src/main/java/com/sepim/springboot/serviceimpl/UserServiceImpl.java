@@ -10,7 +10,7 @@ import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.AccountGenerateUtil;
 import com.sepim.springboot.utils.MySessionUtil;
 import com.sepim.springboot.utils.MyTokenUtil;
-import com.sepim.springboot.utils.SettingAvatarUtil;
+import com.sepim.springboot.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -120,10 +120,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (file != null) {
             //删除原来的图像
             String old_avatar = this.getById(id).getAvatarUrl();
-            SettingAvatarUtil.delete(old_avatar);
+            FileUploadUtil.delete(old_avatar);
 
             //上传图像文件到服务器
-            String avatarUrl = SettingAvatarUtil.upload(file);
+            String avatarUrl = FileUploadUtil.upload(file);
 
             //修改用户新的图像访问路径
             UpdateWrapper<User> wrapper = new UpdateWrapper<>();
@@ -156,6 +156,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             resultData.setFlag("user_info_update_password_succeed");
         } else {
             resultData.setFlag("user_info_update_password_defeat");
+        }
+        return resultData;
+    }
+
+    @Override
+    public ResultData getUser(String id) {
+        User user = this.getById(id);
+        if (user == null) {
+            resultData.setFlag("user_center_get_defeat");
+            resultData.setData(null);
+        } else {
+            resultData.setFlag("user_center_get_succeed");
+            resultData.setData(user);
         }
         return resultData;
     }
