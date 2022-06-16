@@ -11,13 +11,22 @@ Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message=Message
 
 
+
+import  mavonEditor  from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+Vue.use(mavonEditor)
+
 // 按需引入element-ui组件
 import { RadioGroup, RadioButton, Menu, 
   Submenu, MenuItemGroup, MenuItem, Avatar, 
   PageHeader, Descriptions, DescriptionsItem, 
   Breadcrumb,BreadcrumbItem,DatePicker,Steps
   ,Step,Form,FormItem,Input,Dialog,Button,Carousel,CarouselItem,
-  Calendar,Table,TableColumn,Radio} from 'element-ui'
+  Calendar,Table,TableColumn,Radio,Badge,Option,Select,Popover
+  ,Empty,Aside,Tabs,TabPane,Link} from 'element-ui'
+
+import { Loading } from 'element-ui';
+Vue.use(Loading.directive);
 
 Vue.config.productionTip = false
 // 使用插件
@@ -51,6 +60,16 @@ Vue.component(Table.name, Table)
 Vue.component(TableColumn.name, TableColumn)
 Vue.component(Radio.name, Radio)
 Vue.component(Pagination.name, Pagination)
+Vue.component(Badge.name, Badge)
+Vue.component(Option.name, Option)
+Vue.component(Select.name, Select)
+Vue.component(Popover.name, Popover)
+Vue.component(Empty.name, Empty)
+Vue.component(Aside.name, Aside)
+Vue.component(Tabs.name, Tabs)
+Vue.component(TabPane.name, TabPane)
+Vue.component(Link.name, Link)
+
 
 
 

@@ -1,6 +1,5 @@
 <template>
     <div class="main">
-        
         <div class="wrapper">
             <div class="row">
                 <div class="col">
@@ -15,9 +14,19 @@
                                 </el-carousel>
                             </div>
                             <hr>
-                            <div>
-                                <el-calendar v-model="value">
-                                </el-calendar>
+                            <div class="main-box">
+<!--                                <div class="calendar-box">-->
+<!--                                    <el-calendar v-model="value">-->
+<!--                                    </el-calendar>-->
+<!--                                </div>-->
+                                <div class="recommend-box">
+                                    <div class="md-box">
+                                        <div class="link-box" v-for="folder in recommend.slice(0,5)" :key="folder.id">
+                                            <span class="route-style" @click="readMd(folder.id)">{{ folder.title }}</span>
+<!--                                            <span>{{folder.username}}</span>-->
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -28,12 +37,30 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
     name: 'MainContext',
     data() {
         return {
-            value: new Date()
+            value: new Date(),
+            recommend: [],
         }
+    },
+    methods: {
+        readMd(id) {
+            this.$router.push({
+                name: 'read',
+                query: {
+                    id: id,
+                }
+            })
+        },
+    },
+    mounted() {
+        axios.post("http://localhost:8080/api/md/recommend").then(res => {
+            this.recommend = res.data.data.reverse();
+        });
     }
 };
 </script>
@@ -157,5 +184,32 @@ table {
 
 th {
     text-align: left;
+}
+.main-box{
+    width: 100%;
+    display: flex;
+}
+.calendar-box{
+    width: 30%;
+}
+.recommend-box{
+    width: 70%;
+    padding: 15px;
+}
+.md-box：{
+    width: 100%;
+}
+.link-box{
+    width: 100%;
+}
+.route-style {
+    color: #0969da;
+    text-decoration: none;
+}
+
+.route-style:hover {
+    cursor: pointer;
+    color: #0969da;
+    text-decoration: underline;
 }
 </style>

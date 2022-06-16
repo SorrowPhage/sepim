@@ -10,7 +10,7 @@
             </el-menu-item>
             <el-submenu index="1">
                 <template slot="title">
-                    <i class="el-icon-location"></i>
+                    <i class="el-icon-user-solid"></i>
                     <span slot="title">个人中心</span>
                 </template>
                 <el-menu-item-group class="group">
@@ -25,11 +25,15 @@
                 <i class="el-icon-menu"></i>
                 <span slot="title">审核</span>
             </el-menu-item>
-            <el-menu-item v-if="type==='user' " index="3" @click="leave">
+<!--            <el-menu-item v-if="type==='user' " index="3" @click="leave">-->
+<!--                <i class="el-icon-menu"></i>-->
+<!--                <span slot="title">请假</span>-->
+<!--            </el-menu-item>-->
+            <el-menu-item v-if="type==='user' " index="5" @click="depository">
                 <i class="el-icon-menu"></i>
-                <span slot="title">请假</span>
+                <span slot="title">Depository</span>
             </el-menu-item>
-            <el-menu-item index="4" @click="logOut">
+            <el-menu-item index="6" @click="logOut">
                 <i class="el-icon-right"></i>
                 <span slot="title">退出</span>
             </el-menu-item>
@@ -50,7 +54,7 @@ export default {
         goIndex() {
             this.isTrue = false;
             this.$router.push({
-                name: 'main'
+                name: 'index'
             })
         },
         checkUserInfo() {
@@ -73,6 +77,11 @@ export default {
             this.$store.dispatch("Holiday/getLeaveList", this.$store.state.User.account);
             this.$router.push({
                 name: 'leave',
+            })
+        },
+        depository() {
+            this.$router.push({
+                name: 'doc_dep',
             })
         },
         logOut() {

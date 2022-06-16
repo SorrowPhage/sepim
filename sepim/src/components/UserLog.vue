@@ -9,7 +9,7 @@
                 </div>
                 <div class="input-text">
                     <img src="../assets/img/login/password.jpg" alt="">
-                    <input type="password" placeholder="密码" v-model="user.password"/><br/>
+                    <input type="password" @keydown.enter="login" placeholder="密码" v-model="user.password"/><br/>
                 </div>
                 <div class="about-password">
                     <!--没用-->

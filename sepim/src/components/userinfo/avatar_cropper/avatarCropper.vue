@@ -5,7 +5,7 @@
         <el-dialog
             :visible.sync="dialogVisible"
             title="图片剪切"
-            width="70%"
+            width="882px"
         >
             <div class="cropper-box">
                 <div class="cropper-warp">

@@ -1,6 +1,8 @@
 <template>
     <div class="header">
-        <!-- <button class="toggle-btn" @click="changeCollapse">切换</button> -->
+        <div class="search-box">
+            <input class="sp-search-input" placeholder="Search" type="text"/>
+        </div>
         <div class="menu-right">
             <ul class="notification-menu">
                 <li>
@@ -9,18 +11,28 @@
                         {{ userName }}
                         <span class="caret"></span>
                     </label>
-                    <!-- 有问题,隐藏 -->
-                    <ul v-show="isTrue" ref="myUl" class="dropdown-menu dropdown-menu-usermenu pull-right">
-                        <li @click="goIndex">
-                            <i class="el-icon-user-solid"></i> 主页
+                    <ul v-show="isTrue" ref="myUl" class="dropdown-menu dropdown-menu-usermenu pull-right sp-userinfo">
+                        <li class="sp-li-space" @click="goIndex">
+                            <i class="el-icon-menu"></i> 主页
                         </li>
-                        <li @click="checkUserInfo">
+                        <li class="sp-li-space" @click="detail">
+                            <i class="el-icon-user"></i> 个人中心
+                        </li>
+                        <li class="sp-li-space" @click="checkUserInfo">
                             <i class="el-icon-user-solid"></i> 个人信息
                         </li>
-                        <li @click="setPassword">
+                        <li class="sp-li-space" @click="setPassword">
                             <i class="el-icon-setting"></i> 修改密码
                         </li>
-                        <li @click="logOut">
+                        <div class="dropdown-divider"></div>
+                        <li class="sp-li-space" @click="depository">
+                            <i class="el-icon-s-management"></i> Repository
+                        </li>
+                        <li class="sp-li-space" @click="newdoc">
+                            <i class="el-icon-edit-outline"></i> New
+                        </li>
+                        <div class="dropdown-divider"></div>
+                        <li class="sp-li-space" @click="logOut">
                             <i class="el-icon-right"></i> 退出
                         </li>
                     </ul>
@@ -50,7 +62,16 @@ export default {
         goIndex() {
             this.isTrue = false;
             this.$router.push({
-                name:'main'
+                name: 'main'
+            })
+        },
+        detail(){
+            this.isTrue = false;
+            this.$router.push({
+                name: 'detail',
+                query:{
+                    account: this.$store.state.User.account,
+                }
             })
         },
         checkUserInfo() {
@@ -63,6 +84,18 @@ export default {
             this.isTrue = false;
             this.$router.push({
                 name: 'setpassword',
+            })
+        },
+        depository() {
+            this.isTrue = false;
+            this.$router.push({
+                name: 'doc_dep',
+            })
+        },
+        newdoc() {
+            this.isTrue = false;
+            this.$router.push({
+                name:'newdoc'
             })
         },
         logOut() {
@@ -98,7 +131,7 @@ export default {
 <style scoped>
 .header {
     position: fixed;
-    left: 240px;
+    /*left: 240px;*/
     width: 100%;
     background-color: white;
     top: 0;
@@ -106,17 +139,21 @@ export default {
     z-index: 100;
 }
 
-.toggle-btn {
-    outline: none;
-    margin-top: 0px;
-    width: 50px;
+.search-box {
+    margin-left: 15px;
     height: 50px;
-    /* font-size: 20px; */
-    /* padding: 15px; */
-    cursor: pointer;
-    /* float: left; */
-    background-color: white;
-    border: white;
+    margin-top: 0;
+    float: left;
+    /*background: rebeccapurple;*/
+}
+
+.message-box {
+    text-align: right;
+}
+
+.sp-search-input {
+    margin-top: 10px;
+    height: 30px;
 }
 
 .notification-menu {
@@ -131,8 +168,7 @@ export default {
 
 .menu-right {
     float: right;
-    margin-right: 15px;
-    margin-right: 255px;
+    margin-right: 10px;
     margin-top: 0;
     height: 50px;
 }
@@ -190,12 +226,11 @@ li {
 .dropdown-toggle {
     margin-top: 0;
     padding: 12px 10px;
-    border-color: #fff;
     background: white;
     -moz-border-radius: 0;
     -webkit-border-radius: 0;
     border-radius: 0;
-    border: none;
+    border: none #fff;
 }
 
 .dropdown-toggle img {
@@ -217,17 +252,16 @@ li {
     position: absolute;
     top: 100%;
     border: 0;
-    margin-top: 0px;
     -moz-border-radius: 2px 0 2px 2px;
     -webkit-border-radius: 2px 0 2px 2px;
     border-radius: 2px 0 2px 2px;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
-    padding: 5px;
+    padding: 0;
     margin: 2px 0 0;
     list-style: none;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .dropdown-menu:after {
@@ -276,5 +310,20 @@ li {
     border-top: 4px solid;
     border-right: 4px solid transparent;
     border-left: 4px solid transparent;
+}
+
+.dropdown-divider {
+    display: block;
+    height: 0;
+    margin: 8px 0;
+    border-top: 1px solid #d0d7de;
+}
+
+.sp-li-space {
+    margin: 4px 0;
+}
+
+.sp-userinfo {
+    z-index: 9999;
 }
 </style>

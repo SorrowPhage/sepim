@@ -13,7 +13,6 @@
                     <section class="panel">
                         <header class="table-heading">详情</header>
                         <div class="pane-body">
-                            <!--                            <section>-->
                             <avatarCropper></avatarCropper>
                             <div class="userinfo_box">
                                 <el-form ref="form" :model="form" label-width="100px">
@@ -31,7 +30,6 @@
                                     </el-form-item>
                                 </el-form>
                             </div>
-                            <!--                            </section>-->
                         </div>
                     </section>
                 </div>
