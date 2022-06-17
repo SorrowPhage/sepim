@@ -44,7 +44,8 @@ spring:
       #发送邮件的账户
     username: 470565129@qq.com
       #授权码
-    password: ruiponvkuqrtbjdf
+#    password: hngkhgvzpxwdbhgi
+    password: eelcdmqxjgxqbjig
     test-connection: true
     properties:
       mail:
