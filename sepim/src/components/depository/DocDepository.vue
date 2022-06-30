@@ -1,46 +1,55 @@
 <template>
     <div class="main">
-<!--        <div class="page-heading">-->
-<!--            <h3>Depository</h3>-->
-<!--        </div>-->
+        <!--        <div class="page-heading">-->
+        <!--            <h3>Depository</h3>-->
+        <!--        </div>-->
         <div class="wrapper">
             <div class="row">
                 <div class="col">
                     <section class="panel">
-                        <header class="table-heading">DocumentList</header>
+<!--                        <header class="table-heading">DocumentList</header>-->
                         <div class="pane-body">
                             <div class="sp-md-list-box">
-                            <div class="sp-md-list">
-                                <div class="sp-operation-bar">
-                                    <input class="sp-search-private" v-model="keyword" type="text" placeholder="Search" />
-                                    <el-select class="sp-space" v-model="value" placeholder="类型"  style="width: 100px">
-                                        <el-option
-                                            v-for="item in options"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                    <el-button type="primary" @click="newdoc">新建</el-button>
-                                </div>
-                                <div class="dropdown-divider"></div>
-                                <MdList v-for="md in folders.slice((currentPage-1)*pagesize,currentPage*pagesize)" :file_id="md.id" :url="md.url" :title="md.title" :describe="md.roughly" :type="md.type" :key="md.id"></MdList>
-                                <div class="page-box">
-                                    <el-pagination
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :page-sizes="[5, 10, 15, 20]"
-                                        :page-size="pagesize"
-                                        layout="total, sizes, prev, pager, next, jumper"
-                                        background
-                                        prev-text="上一页"
-                                        next-text="下一页"
-                                        :total="this.folders.length">
-                                    </el-pagination>
+                                <div class="sp-md-list">
+                                    <div class="sp-operation-bar">
+                                        <input v-model="keyword" class="sp-search-private" placeholder="Search"
+                                               type="text"/>
+                                        <el-select v-model="value" class="sp-space" placeholder="类型"
+                                                   style="width: 100px">
+                                            <el-option
+                                                v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                        <el-button type="primary" @click="newdoc">新建</el-button>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <div v-if="folders.length">
+                                        <MdList v-for="md in folders.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+                                                :key="md.id" :describe="md.roughly" :file_id="md.id" :title="md.title"
+                                                :type="md.type" :url="md.url"></MdList>
+                                        <div class="page-box" >
+                                            <el-pagination
+                                                :page-size="pagesize"
+                                                :page-sizes="[5, 10, 15, 20]"
+                                                :total="this.folders.length"
+                                                background
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                next-text="下一页"
+                                                prev-text="上一页"
+                                                @size-change="handleSizeChange"
+                                                @current-change="handleCurrentChange">
+                                            </el-pagination>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <el-empty></el-empty>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                     </section>
                 </div>
@@ -69,14 +78,14 @@ export default {
                 label: '公开的'
             }],
             value: '所有',
-            currentPage:1,
-            pagesize:10,
+            currentPage: 1,
+            pagesize: 10,
             keyword: '',
         }
     },
     computed: {
         ...mapState('Folder', ['list']),
-        folders(){
+        folders() {
             const arr = this.list.filter((folder) => {
                 return folder.title.indexOf(this.keyword) !== -1;
             });
@@ -101,7 +110,7 @@ export default {
             this.currentPage = val;
         },
     },
-    mounted() {
+    created() {
         this.$store.dispatch("Folder/getMdList", this.$store.state.User.account);
     },
 }
@@ -114,9 +123,9 @@ export default {
 
 .main {
     margin-top: 50px;
-    background-color: rgb(228, 228, 228);
+    /*background-color: rgb(228, 228, 228);*/
     height: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
 }
 
 .page-heading {
@@ -180,32 +189,38 @@ export default {
     border-top: 1px solid #d0d7de;
     width: 100%;
 }
+
 .sp-operation-bar {
     width: 100%;
     height: 60px;
     padding: 10px;
 }
-.sp-search-private{
+
+.sp-search-private {
     width: 50%;
     height: 40px;
     margin-right: 10px;
 }
-.sp-space{
+
+.sp-space {
     margin-right: 10px;
 }
-.page-box{
+
+.page-box {
     padding: 15px;
     text-align: center;
 }
+
 .sp-md-list {
     width: 50%;
     /*width: 410px;*/
 }
+
 .sp-md-list-box {
     width: 100%;
     display: flex;
     justify-content: center;
-
+    
 }
 
 </style>

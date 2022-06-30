@@ -1,7 +1,12 @@
 <template>
     <div class="header">
         <div class="search-box">
-            <input class="sp-search-input" placeholder="Search" type="text"/>
+            <input class="sp-search-input" v-model="search" placeholder="Search" @keydown.enter="goSearch" type="text"/>
+            <i class="el-icon-search sp-search-icon" @click="goSearch"></i>
+            <div style="display: inline">
+                <div class="sp-nav" @click="depository">Depository</div>
+                <div class="sp-nav" @click="newdoc">新建</div>
+            </div>
         </div>
         <div class="menu-right">
             <ul class="notification-menu">
@@ -11,6 +16,10 @@
                         {{ userName }}
                         <span class="caret"></span>
                     </label>
+<!--                    <label ref="showUl" class="btn btn-default dropdown-toggle" @click="isTrue=!isTrue">-->
+<!--                        你好,请登录-->
+<!--                        <span class="caret"></span>-->
+<!--                    </label>-->
                     <ul v-show="isTrue" ref="myUl" class="dropdown-menu dropdown-menu-usermenu pull-right sp-userinfo">
                         <li class="sp-li-space" @click="goIndex">
                             <i class="el-icon-menu"></i> 主页
@@ -25,11 +34,11 @@
                             <i class="el-icon-setting"></i> 修改密码
                         </li>
                         <div class="dropdown-divider"></div>
-                        <li class="sp-li-space" @click="depository">
-                            <i class="el-icon-s-management"></i> Repository
-                        </li>
+<!--                        <li class="sp-li-space" @click="depository">-->
+<!--                            <i class="el-icon-s-management"></i> Repository-->
+<!--                        </li>-->
                         <li class="sp-li-space" @click="newdoc">
-                            <i class="el-icon-edit-outline"></i> New
+                            <i class="el-icon-edit-outline"></i> 新建文件
                         </li>
                         <div class="dropdown-divider"></div>
                         <li class="sp-li-space" @click="logOut">
@@ -51,6 +60,7 @@ export default {
     data() {
         return {
             isTrue: false,
+            search: '',
         };
     },
     computed: {
@@ -65,11 +75,11 @@ export default {
                 name: 'main'
             })
         },
-        detail(){
+        detail() {
             this.isTrue = false;
             this.$router.push({
                 name: 'detail',
-                query:{
+                query: {
                     account: this.$store.state.User.account,
                 }
             })
@@ -95,7 +105,7 @@ export default {
         newdoc() {
             this.isTrue = false;
             this.$router.push({
-                name:'newdoc'
+                name: 'newdoc'
             })
         },
         logOut() {
@@ -108,8 +118,19 @@ export default {
         showUl(e) {
             //需要使用v-show绑定
             if (!(this.$refs.myUl.contains(e.target) || this.$refs.showUl.contains(e.target))) this.isTrue = false;
-        }
-        
+        },
+        goSearch() {
+            if (this.search === '') {
+                return;
+            }
+            this.$store.commit("Search/SET_SEARCH_CONTENT", this.search);
+            this.$router.push({
+                name: 'sl',
+                query: {
+                    q: this.search,
+                },
+            });
+        },
     },
     created() {
         // 页面刷新时恢复store数据
@@ -137,6 +158,7 @@ export default {
     top: 0;
     height: 50px;
     z-index: 100;
+    border-bottom: 1px solid #eef5fc;
 }
 
 .search-box {
@@ -325,5 +347,21 @@ li {
 
 .sp-userinfo {
     z-index: 9999;
+}
+.sp-nav {
+    display: inline;
+    margin-left: 10px;
+    font-weight: bold;
+    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace !important;
+    color:#80888c;
+    font-size: 16px !important;
+}
+.sp-nav:hover{
+    cursor: pointer;
+    color: #409EFF;
+}
+.sp-search-icon {
+    width: 20px;
+    margin-left: 5px;
 }
 </style>

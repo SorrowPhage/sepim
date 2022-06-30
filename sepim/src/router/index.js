@@ -44,27 +44,69 @@ const router = new VueRouter({
                     name: 'main',
                     meta: {ver: true},
                     component: () => import('@/components/MainContext'),
+                    redirect: '/index.html/main/el',
+                    children:[
+                        {
+                            name: 'bfag',
+                            path: 'bfag',
+                            component: () => import('@/components/main/BasicFormatAndGrammar'),
+                            meta: {ver: true}
+                        },
+                        {
+                            name: 'el',
+                            path: 'el',
+                            component: () => import('@/components/main/EntryLevel'),
+                            meta: {ver: true}
+                        },
+                    ]
                 },
                 {
-                    name:'detail',
-                    path:'detail',
-                    component:()=>import("@/components/userdetail/DetailNavMenu"),
-                    meta: {title: "UserDetail", ver: true},
-                    redirect: '/index.html/detail/files',
+                    name: 'sl',
+                    path: 'sl',
+                    component: () => import('@/components/search/SearchList'),
+                    meta:{ver: true},
+                    redirect:'/index.html/sl/rc',
                     children:[
-                        // {
-                        //     name:'center',
-                        //     path:'center',
-                        //     component:()=>import("@/components/userdetail/details/UserCenter"),
-                        //     meta: {title: "UserCenter", ver: true},
-                        // }
                         {
-                            name:'files',
-                            path:'files',
+                            name:'rc',
+                            path: 'rc',
+                            component: () => import('@/components/search/content/RepositoryContent'),
+                            meta: {ver: true}
+                        },
+                        {
+                            name:'uc',
+                            path: 'uc',
+                            component: () => import('@/components/search/content/UserContent'),
+                            meta: {ver: true}
+                        },
+                    ]
+                },
+                {
+                    name: 'detail',
+                    path: 'detail',
+                    component: () => import("@/components/userdetail/DetailNavMenu"),
+                    meta: {title: "UserDetail", ver: true},
+                    redirect: '/index.html/detail/overview',
+                    children: [
+                        {
+                            name: 'overview',
+                            path: 'overview',
+                            component: () => import("@/components/userdetail/details/UserOverview"),
+                            meta: {title: "Overview", ver: true},
+                        },
+                        {
+                            name: 'files',
+                            path: 'files',
                             component: () => import("@/components/userdetail/details/FolderList"),
                             meta: {title: "UserDetail", ver: true},
                         }
                     ]
+                },
+                {
+                    name: 'overvieweditor',
+                    path: 'overvieweditor',
+                    component: () => import("@/components/userdetail/mavonEditor/OverviewEditor"),
+                    meta: {title: "Overview", ver: true},
                 },
                 {
                     name: 'userinfo',
@@ -103,6 +145,12 @@ const router = new VueRouter({
                     meta: {title: "Repository", ver: true},
                 },
                 {
+                    name: 'edit',
+                    path: 'edit',
+                    component: () => import("@/components/depository/EditProject"),
+                    meta: {title: "Edit", ver: true},
+                },
+                {
                     name: 'newdoc',
                     path: 'ND',
                     component: () => import("@/components/depository/NewProject"),
@@ -113,10 +161,16 @@ const router = new VueRouter({
                     path: 'read',
                     component: () => import("@/components/depository/list/ReadMd"),
                     meta: {title: "Repository", ver: true},
-                }
+                },
+
             ]
         },
-
+        {
+            name:'404',
+            path:'404',
+            componentL:()=>import("@/components/error/404NotFond"),
+            meta:{title: "404",ver: true}
+        }
     ]
 })
 router.beforeEach((to,from,next)=>{

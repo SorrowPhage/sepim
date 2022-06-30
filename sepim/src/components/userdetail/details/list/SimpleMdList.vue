@@ -10,6 +10,9 @@
                         {{describe}}
                     </div>
                 </div>
+                <div class="sp-user-box">
+                    {{user}}
+                </div>
             </div>
         </div>
         <div class="dropdown-divider"></div>
@@ -21,7 +24,7 @@ import axios from "axios";
 
 export default {
     name: "SimpleMdList",
-    props: ['file_id','url','describe', 'type', 'title'],
+    props: ['file_id','url','describe', 'type', 'title','user'],
     methods:{
         readMd(id) {
             this.$router.push({
@@ -126,5 +129,11 @@ export default {
 .btn-box {
     display: flex;
     justify-content: center;
+}
+.sp-user-box{
+    font-size: 12px !important;
+    margin-top: 8px !important;
+    color: #57606a !important;
+    
 }
 </style>

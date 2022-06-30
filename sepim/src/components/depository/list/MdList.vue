@@ -18,7 +18,7 @@
                     trigger="click"
                     >
                     <div class="btn-box">
-                        <el-button type="primary" icon="el-icon-edit" circle></el-button>
+                        <el-button type="primary" icon="el-icon-edit" circle @click="edit(file_id)"></el-button>
                         <el-button type="danger" icon="el-icon-delete" circle @click="deleteMd(file_id)"></el-button>
                     </div>
                     <el-button slot="reference"  icon="el-icon-setting"></el-button>
@@ -45,10 +45,20 @@ export default {
                     }
                 })
         },
+        edit(id) {
+            this.$router.push({
+                name:'edit',
+                query:{
+                    id: id,
+                }
+            })
+        },
         deleteMd(id) {
             axios.get("http://localhost:8080/api/md/remove", {params: {id: id}}).then(res => {
                 if (res.data.flag === "md_delete_succeed") {
                     this.$store.dispatch("Folder/getMdList", this.$store.state.User.account);
+                    // this.$store.dispatch("Detail/getMdList", {id:this.$store.state.Detail.id,
+                    //     account:this.$store.state.User.account});
                     this.$message({
                         message: '删除成功',
                         showClose: true,

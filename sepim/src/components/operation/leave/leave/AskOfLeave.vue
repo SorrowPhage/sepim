@@ -1,43 +1,54 @@
 <template>
     <div>
         <div class="operation-box">
-            <el-button type="primary" @click="dialogVisible = true">请假</el-button>
+            <el-button type="primary" @click="dialogVisible = true">课程申请</el-button>
         </div>
         <div>
             <el-dialog
                 :visible.sync="dialogVisible"
-                title="请假"
+                title="课程申请"
                 width="60%"
             >
                 <el-form ref="form" label-width="100px">
-                    <el-form-item label="原因：">
-                        <el-radio-group v-model="radio">
-                            <el-radio :label="disease" border>病假</el-radio>
-                            <el-radio :label="routine" border>事假</el-radio>
-                            <el-radio :label="other" border>其他</el-radio>
-                        </el-radio-group>
+                    <el-form-item label="选择课程：">
+                        <el-select v-model="value" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
-                    <el-form-item label="请假时间：">
-                        <div class="block">
-                            <el-date-picker
-                                v-model="leave_time"
-                                :picker-options="pickerOptions"
-                                align="right"
-                                placeholder="选择日期时间"
-                                type="datetime">
-                            </el-date-picker>
-                        </div>
+                    <el-form-item label="学分：">
+                        <el-select v-model="value" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
-                    <el-form-item label="结假时间：">
-                        <div class="block">
-                            <el-date-picker
-                                v-model="release_time"
-                                :picker-options="pickerOptions"
-                                align="right"
-                                placeholder="选择日期时间"
-                                type="datetime">
-                            </el-date-picker>
-                        </div>
+                    <el-form-item label="选择教室：">
+                        <el-select v-model="value" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="选择时间：">
+                        <el-select v-model="value" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -56,6 +67,23 @@ export default {
     name: "AskOfLeave",
     data() {
         return {
+            options: [{
+                value: '选项1',
+                label: '黄金糕'
+            }, {
+                value: '选项2',
+                label: '双皮奶'
+            }, {
+                value: '选项3',
+                label: '蚵仔煎'
+            }, {
+                value: '选项4',
+                label: '龙须面'
+            }, {
+                value: '选项5',
+                label: '北京烤鸭'
+            }],
+            value: '',
             dialogVisible: false,
             pickerOptions: {
                 shortcuts: [{

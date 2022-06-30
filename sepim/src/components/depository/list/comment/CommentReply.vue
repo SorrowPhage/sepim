@@ -147,7 +147,7 @@ export default {
     /*margin:0 0 20px;*/
     -moz-box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
     -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.2);
-    box-shadow: inner 0 0 4px rgba(0, 0, 0, 0.2);
+    /*box-shadow: inner 0 0 4px rgba(0, 0, 0, 0.2);*/
     -webkit-border-radius:  3px;
     -moz-border-radius: 3px;
     border-radius: 3px 3px 0 0;

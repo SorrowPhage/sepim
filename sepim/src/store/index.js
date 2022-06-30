@@ -8,6 +8,8 @@ import User from './user'
 import Holiday from "@/store/holiday";
 import Folder from "@/store/folder";
 import Comment from "@/store/comment";
+import Detail from "@/store/detail";
+import Search from "@/store/search";
 //应用Vuex插件
 Vue.use(Vuex)
 
@@ -18,5 +20,7 @@ export default new Vuex.Store({
         Holiday,
         Folder,
         Comment,
+        Detail,
+        Search
     }
 })

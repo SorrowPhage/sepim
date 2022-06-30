@@ -11,6 +11,12 @@ Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message=Message
 
 
+// import BootstrapVue from 'bootstrap-vue'
+//
+// Vue.use(BootstrapVue)
+//
+// import 'bootstrap/dist/css/bootstrap.css'
+// import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import  mavonEditor  from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'

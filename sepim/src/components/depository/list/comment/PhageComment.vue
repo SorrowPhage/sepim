@@ -213,7 +213,7 @@ export default {
     position: relative;
     flex-basis: 70px;
     margin-left: 10px;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
 }
 .sp-comment-user{

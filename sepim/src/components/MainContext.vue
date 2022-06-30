@@ -4,28 +4,30 @@
             <div class="row">
                 <div class="col">
                     <section class="panel">
-                        <header class="table-heading">详情</header>
                         <div class="pane-body">
-                            <div class="block">
-                                <el-carousel height="250px">
-                                    <el-carousel-item v-for="item in 4" :key="item">
-                                        <h3 class="small">{{ item }}</h3>
-                                    </el-carousel-item>
-                                </el-carousel>
-                            </div>
-                            <hr>
                             <div class="main-box">
-<!--                                <div class="calendar-box">-->
-<!--                                    <el-calendar v-model="value">-->
-<!--                                    </el-calendar>-->
-<!--                                </div>-->
-                                <div class="recommend-box">
-                                    <div class="md-box">
-                                        <div class="link-box" v-for="folder in recommend.slice(0,5)" :key="folder.id">
-                                            <span class="route-style" @click="readMd(folder.id)">{{ folder.title }}</span>
-<!--                                            <span>{{folder.username}}</span>-->
-                                        </div>
-                                    </div>
+                                <div class="sp-main-left">
+                                    <el-menu
+                                        default-active="2"
+                                        class="el-menu-vertical-demo"
+                                        :router="true"
+                                        @open="handleOpen"
+                                        @close="handleClose">
+                                        <el-menu-item index="/index.html/main/el">
+                                            <span slot="title">入门</span>
+                                        </el-menu-item>
+                                        <el-submenu index="1">
+                                            <template slot="title">
+                                                <span>编写文章</span>
+                                            </template>
+                                            <el-menu-item-group>
+                                                <el-menu-item index="/index.html/main/bfag">基本格式和语法</el-menu-item>
+                                            </el-menu-item-group>
+                                        </el-submenu>
+                                    </el-menu>
+                                </div>
+                                <div class="sp-main-center">
+                                    <router-view></router-view>
                                 </div>
                             </div>
                         </div>
@@ -38,16 +40,31 @@
 
 <script>
 import axios from "axios";
+import {mapGetters,mapState} from "vuex";
 
 export default {
     name: 'MainContext',
     data() {
         return {
-            value: new Date(),
             recommend: [],
+            list: [],
         }
     },
+    computed: {
+        ...mapGetters("User", ['avatar_url'])
+    },
     methods: {
+        handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        newdoc() {
+            this.$router.push({
+                name: 'newdoc'
+            });
+        },
         readMd(id) {
             this.$router.push({
                 name: 'read',
@@ -58,8 +75,14 @@ export default {
         },
     },
     mounted() {
-        axios.post("http://localhost:8080/api/md/recommend").then(res => {
-            this.recommend = res.data.data.reverse();
+        axios.get("http://localhost:8080/api/md/rank").then(res => {
+            this.recommend = res.data.data;
+            // this.loading = false;
+        });
+        axios.post("http://localhost:8080/api/md/list",{userId:this.$store.state.User.account}).then(res => {
+            if (res.data.flag === "md_list_succeed") {
+                this.list = res.data.data.reverse();
+            }
         });
     }
 };
@@ -89,12 +112,11 @@ export default {
 
 .main {
     margin-top: 50px;
-    background-color: rgb(228, 228, 228);
+    /*background-color: rgb(228, 228, 228);*/
     height: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
 }
 .page-heading {
-    position: fixed;
     width: 100%;
     padding: 15px;
     position: relative;
@@ -105,8 +127,8 @@ export default {
     font-size: 1.17em;
     margin-block-start: 1em;
     margin-block-end: 1em;
-    margin-inline-start: 0px;
-    margin-inline-end: 0px;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
     font-weight: bold;
 }
 
@@ -130,10 +152,10 @@ export default {
 .panel {
     margin-bottom: 20px;
     background-color: white;
-    border: 1px solid transparent;
+    /*border: 1px solid transparent;*/
     border-radius: 4px;
-    -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
-    box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+    /*-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);*/
+    /*box-shadow: 0 1px 1px rgb(0 0 0 / 5%);*/
 }
 
 .table-heading {
@@ -146,7 +168,7 @@ export default {
 }
 
 .pane-body {
-    padding: 15px;
+    /*padding: 15px;*/
 }
 
 .table {
@@ -187,7 +209,7 @@ th {
 }
 .main-box{
     width: 100%;
-    display: flex;
+    /*display: flex;*/
 }
 .calendar-box{
     width: 30%;
@@ -203,7 +225,7 @@ th {
     width: 100%;
 }
 .route-style {
-    color: #0969da;
+    color:#80888c;
     text-decoration: none;
 }
 
@@ -211,5 +233,47 @@ th {
     cursor: pointer;
     color: #0969da;
     text-decoration: underline;
+}
+.sp-main-left {
+    width: 12.5%;
+    min-width: 225px;
+    font-weight: bold;
+    border-right: solid 1px #e6e6e6;
+    position: fixed;
+    height: 100%;
+    background-color: white;
+    /*background-color: #227cf9;*/
+}
+.sp-main-left-title {
+    /*text-align: center;*/
+    width: 100%;
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+}
+.sp-main-left-content {
+    width: 100%;
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+}
+.sp-main-center {
+    /*width: 87.5%;*/
+    /*background-color: #f6f8fa;*/
+    padding: 10px;
+    /*text-align: center;*/
+    /*margin-left: 12.5%;*/
+    display: block;
+    overflow: hidden;
+    margin-left: 225px;
+}
+h2{
+    display: inline;
+}
+.sp-btn-place{
+    display: inline;
+    margin-left: 10px;
 }
 </style>

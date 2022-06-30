@@ -3,34 +3,41 @@
         <div class="wrapper">
             <div class="row">
                 <div class="col">
-                    <section class="panel">
-                        <header class="table-heading">
-                            用户中心
-                        </header>
+                    <section class="panel"
+                             v-loading="$store.state.Detail.loading"
+                             element-loading-text="拼命加载中"
+                             element-loading-spinner="el-icon-loading"
+                             element-loading-background="rgba(0, 0, 0, 0.8)"
+                    >
                         <div class="pane-body">
-                            <div class="sp-user-body"
-                                 v-loading="loading"
-                                 element-loading-text="拼命加载中"
-                                 element-loading-spinner="el-icon-loading"
-                                 element-loading-background="rgba(0, 0, 0, 0.8)">
-                                <div class="sp-userinfo-box">
+                            <div class="sp-user-body">
+                                <div class="sp-userinfo-box" >
                                     <div class="sp-userinfo-avatar-box">
-                                        <el-avatar :src="avatarUrl" :size="100"></el-avatar>
+                                        <el-avatar :src="$store.state.Detail.avatarUrl" :size="100"></el-avatar>
                                     </div>
                                     <div class="sp-userinfo-info-box">
-                                        <div class="sp-info-username">{{username}}</div>
-<!--                                        <div>{{email}}</div>-->
-<!--                                        <div>{{account}}</div>-->
+                                        <div class="sp-info-username">{{$store.state.Detail.username}}</div>
                                     </div>
                                 </div>
                                 <div class="sp-repository-box">
+                                    <div>
+                                        <el-menu
+                                            :default-active="this.$route.path"
+                                            class="el-menu-demo"
+                                            mode="horizontal"
+                                            @select="handleSelect"
+                                            text-color="#000"
+                                            :router="true"
+                                            active-text-color="#398bff">
+                                            <el-menu-item index="/index.html/detail/overview" :route="{name:'overview',query:{account: this.$store.state.Detail.id}}" class="el-icon-reading">Overview</el-menu-item>
+                                            <el-menu-item index="/index.html/detail/files" class="el-icon-collection">Repositories</el-menu-item>
+                                        </el-menu>
+                                    </div>
                                     <div class="sp-center-content">
-                                        <FolderList :files="files"></FolderList>
+                                        <router-view></router-view>
                                     </div>
                                 </div>
-                                
                             </div>
-                            
                         </div>
                     </section>
                 </div>
@@ -42,38 +49,61 @@
 <script>
 
 import axios from "axios";
-import FolderList from "@/components/userdetail/details/FolderList";
 export default {
     name: "DetailNavMenu",
-    components:{FolderList},
+    inject:["reload"],
     data() {
         return {
             account: '',
             email: '',
             username: '',
             avatarUrl: '',
-            // id: '',
             loading: true,
-            files: [],
         };
     },
-    mounted() {
+    methods: {
+        handleSelect(key, keyPath) {
+            // console.log(this.$route.path)
+            // console.log(key, keyPath);
+        },
+        goOverview() {
+            this.$router.push({
+                name:'overview',
+                query:{
+                    account: this.$store.state.Detail.account,
+                }
+            })
+        },
+        goFolderList() {
+            this.$router.push({
+                name: 'files',
+            })
+        },
+    },
+    watch: {
+        $route:{
+            handler:function (val,oldVal){
+                this.reload();
+            },
+            deep: true,
+        }
+    },
+    created() {
         axios.post('http://localhost:8080/api/user/center/get', {id: this.$route.query.account}).then(res => {
             if (res.data.flag === "user_center_get_succeed") {
-                this.account = res.data.data.id;
-                this.email = res.data.data.email;
-                this.username = res.data.data.username;
-                this.avatarUrl = res.data.data.avatarUrl;
-                this.loading = false;
+                this.$store.commit("Detail/GET_DETAIL",{
+                    account:res.data.data.id,
+                    email:res.data.data.email,
+                    username:res.data.data.username,
+                    avatarUrl:res.data.data.avatarUrl,
+                    id:this.$route.query.account,
+                    loading:false,
+                })
             }
         }, Error => {
             console.log(Error.message)
         });
-        axios.post("http://localhost:8080/api/user/center/files", {userId: this.$route.query.account}).then(res => {
-            if (res.data.flag === "user_center_getPublicFolders_succeed") {
-                this.files = res.data.data;
-            }
-        });
+        
     }
 }
 </script>
@@ -85,7 +115,7 @@ export default {
 
 .main {
     margin-top: 50px;
-    background-color: rgb(228, 228, 228);
+    /*background-color: rgb(228, 228, 228);*/
     height: 100%;
     overflow: auto;
 }
@@ -140,7 +170,7 @@ export default {
 }
 
 .pane-body {
-    padding: 15px;
+    padding: 5px;
 }
 .overspread{
     width: 100vh;
@@ -149,39 +179,37 @@ export default {
     font-weight: bold;
 }
 .sp-user-body {
-    /*background-color: #0c9a9a;*/
     width: 100%;
     display: flex;
     justify-content: center;
 }
 .sp-userinfo-box {
-    width: 30%;
+    width: 25%;
+    height: 250px;
     display: flex;
-    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 .sp-userinfo-avatar-box{
-    background-color: white;
-    width: 40%;
+    width: 100%;
     display: flex;
     justify-content: center;
 }
 .sp-userinfo-info-box{
-    /*background-color: #227cf9;*/
-    width: 60%;
+    width: 100%;
+    text-align: center;
 }
 .sp-repository-box{
-    width: 70%;
-    /*background-color: dimgrey;*/
+    width: 75%;
     font-size: 10px;
     font-weight: bold;
-    padding: 12px;
-    border-left: 1px solid darkgray;
+    padding: 5px;
+    /*border-left: 1px solid darkgray;*/
 }
 .sp-center-content{
-    margin-top: 10px;
     width: 100%;
     background-color: white;
-    padding: 12px;
+    padding: 5px;
 }
 .sp-info-username{
     font-weight: bold;

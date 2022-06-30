@@ -1,17 +1,17 @@
 <template>
     <div class="main">
-        <div class="page-heading">
-            <h3>个人信息</h3>
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-                <el-breadcrumb-item>修改密码</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+<!--        <div class="page-heading">-->
+<!--            <h3>个人信息</h3>-->
+<!--            <el-breadcrumb separator="/">-->
+<!--                <el-breadcrumb-item>个人中心</el-breadcrumb-item>-->
+<!--                <el-breadcrumb-item>修改密码</el-breadcrumb-item>-->
+<!--            </el-breadcrumb>-->
+<!--        </div>-->
         <div class="wrapper">
             <div class="row">
                 <div class="col">
                     <section class="panel">
-                        <header class="table-heading">详情</header>
+<!--                        <header class="table-heading">详情</header>-->
                         <div class="pane-body">
                             <section>
                                 <el-form ref="ruleForm" :model="ruleForm" :rules="rules" class="demo-ruleForm"
@@ -138,13 +138,12 @@ export default {
 
 .main {
     margin-top: 50px;
-    background-color: rgb(228, 228, 228);
+    /*background-color: rgb(228, 228, 228);*/
     height: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
 }
 
 .page-heading {
-    position: fixed;
     width: 100%;
     padding: 15px;
     position: relative;
@@ -182,8 +181,8 @@ export default {
     background-color: white;
     border: 1px solid transparent;
     border-radius: 4px;
-    -webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
-    box-shadow: 0 1px 1px rgb(0 0 0 / 5%);
+    /*-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);*/
+    /*box-shadow: 0 1px 1px rgb(0 0 0 / 5%);*/
 }
 
 .table-heading {

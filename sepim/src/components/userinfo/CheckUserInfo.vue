@@ -1,17 +1,17 @@
 <template>
     <div class="main">
-        <div class="page-heading">
-            <h3>个人信息</h3>
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>个人中心</el-breadcrumb-item>
-                <el-breadcrumb-item>个人信息</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
+<!--        <div class="page-heading">-->
+<!--            <h3>个人信息</h3>-->
+<!--            <el-breadcrumb separator="/">-->
+<!--                <el-breadcrumb-item>个人中心</el-breadcrumb-item>-->
+<!--                <el-breadcrumb-item>个人信息</el-breadcrumb-item>-->
+<!--            </el-breadcrumb>-->
+<!--        </div>-->
         <div class="wrapper">
             <div class="row">
                 <div class="col">
                     <section class="panel">
-                        <header class="table-heading">详情</header>
+<!--                        <header class="table-heading">详情</header>-->
                         <div class="pane-body">
                             <avatarCropper></avatarCropper>
                             <div class="userinfo_box">
@@ -94,9 +94,9 @@ export default {
 
 .main {
     margin-top: 50px;
-    background-color: rgb(228, 228, 228);
+    /*background-color: rgb(228, 228, 228);*/
     height: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
 }
 
 .page-heading {

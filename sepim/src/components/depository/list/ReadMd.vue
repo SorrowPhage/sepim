@@ -4,30 +4,39 @@
             <div class="row">
                 <div class="col">
                     <section class="panel">
-                        <header class="table-heading">Document</header>
-                        <div class="pane-body"
-                             v-loading="loading"
-                             element-loading-text="拼命加载中"
-                             element-loading-spinner="el-icon-loading"
+<!--                        <header class="table-heading">Document</header>-->
+                        <div v-loading="loading"
+                             class="pane-body"
                              element-loading-background="rgba(0, 0, 0, 0.8)"
+                             element-loading-spinner="el-icon-loading"
+                             element-loading-text="拼命加载中"
                         >
                             <div class="md-pane">
                                 <div class="md-box">
-                                    <div class="author-box">
-                                        <span class="text-author">
-                                            作者：{{ author }}
-                                        </span>
-                                        <span>
-                                            描述:
+                                    <div class="sp-content-box">
+                                        <div class="author-box">
+                                            作者：
+                                            <span class="text-author route-style" @click="goDetail(account)">{{
+                                                    author
+                                                }}
+                                             </span>
+                                            <span>
+                                            &nbsp;&nbsp;&nbsp;描述:
                                             {{ roughly }}
-                                        </span>
-                                        <span>
-                                            浏览量:
+                                             </span>
+                                            <span>
+                                            &nbsp;&nbsp;&nbsp;浏览量:
                                             {{ readNum }}
-                                        </span>
+                                              </span>
+                                            <div class="sp-content-title">
+                                                {{ title }}
+                                            </div>
+                                        </div>
+                                        <div ref="md_show" class="markdown-body" v-html="content"></div>
                                     </div>
-                                    <div ref="md_show"  class="markdown-body" v-html="content"></div>
-                                    <PhageComment :userAvatarUrl="avatar_url" :comments="comments"></PhageComment>
+                                    <div class="sp-comment-box">
+                                        <PhageComment :comments="comments" :userAvatarUrl="avatar_url"></PhageComment>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -49,9 +58,11 @@ import PhageComment from "@/components/depository/list/comment/PhageComment";
 export default {
     name: "ReadMd",
     // eslint-disable-next-line vue/no-unused-components
-    components:{PhageComment},
+    components: {PhageComment},
     data() {
         return {
+            account: '',
+            title: '',
             author: '',
             roughly: "",
             readNum: '',
@@ -60,7 +71,7 @@ export default {
             tabPosition: 'right',
             scroll: '',
             navList: [],
-            substance:'',
+            substance: '',
             isShow: false,
             loading: true,
         };
@@ -71,6 +82,14 @@ export default {
         ...mapState("Comment", ['comments'])
     },
     methods: {
+        goDetail(account) {
+            this.$router.push({
+                name: 'detail',
+                query: {
+                    account: account,
+                }
+            })
+        },
         handleClick(tab, event) {
             this.jump(tab.index)
         },
@@ -148,6 +167,8 @@ export default {
         axios.get("http://localhost:8080/api/md/read", {params: {id: this.$route.query.id}}).then(res => {
             if (res.data.flag === "md_read_succeed") {
                 this.author = res.data.data.username;
+                this.account = res.data.data.userId;
+                this.title = res.data.data.title;
                 this.roughly = res.data.data.roughly;
                 this.readNum = res.data.data.readNum;
                 this.content = res.data.data.content;
@@ -196,25 +217,21 @@ export default {
                         }
                         lineNumBox.innerText = num;// 插入序号
                         item.parentElement.insertBefore(lineNumBox, item);
-                        
+
                         let codeBox = document.createElement('div');
                         codeBox.className = 'code-box';
                         codeBox.appendChild(item);
-                        
+
                         pre.appendChild(codeBox);
                         
                         let lang = pre.lastElementChild.firstElementChild.className;
                         let icon = `<div class="mac-icon">` +
-                            `<span class="mac-icon-red"></span>` +
-                            `<span class="mac-icon-yellow"></span>` +
-                            `<span class="mac-icon-green"></span>` +
-                            `<span class="mac-icon-lang">${lang.split('-')[1].toUpperCase()}</span>` +
-                            `<button class="copy-button">复制</button>` +
-                            `<button class="full-screen-button">全屏</button>` +
+                            `<button class="copy-button"><i class="el-icon-copy-document"></i></button>` +
                             `</div>`;
                         pre.insertAdjacentHTML('afterbegin', icon);
                         
                         let copyButton = pre.firstElementChild.getElementsByClassName('copy-button')[0];
+                        
                         copyButton.onclick = function () {
                             const copyPromise = navigator.clipboard.writeText(pre.lastElementChild.innerText);
                             copyPromise.then(() => {
@@ -233,28 +250,6 @@ export default {
                                 });
                             });
                         };
-                        // 获取全屏按钮元素
-                        let fullScreenButton = pre.firstElementChild.getElementsByClassName('full-screen-button')[0];
-                        fullScreenButton.onclick = function () {
-                            // 此写法基于 pre 元素没有其他任何类名的情况下
-                            if (pre.className === 'pre-full-screen') {
-                                this.innerText = '全屏';
-                                pre.className = '';
-                                pre.setAttribute("title", "");
-                            } else {
-                                this.innerText = '关闭';
-                                pre.className = 'pre-full-screen';
-                                pre.setAttribute("title", "双击关闭全屏");
-                            }
-                        };
-                        // 双击关闭全屏
-                        pre.ondblclick = function () {
-                            fullScreenButton.innerText = '全屏';
-                            // 此写法基于 pre 元素没有其他任何类名的情况下
-                            this.className = '';
-                            pre.setAttribute("title", "");
-                        };
-                        // hljs.highlightBlock(codeBox.firstElementChild);
                     });
                 });
             }
@@ -273,9 +268,9 @@ export default {
 
 .main {
     margin-top: 50px;
-    background-color: rgb(228, 228, 228);
+    /*background-color: rgb(228, 228, 228);*/
     height: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
 }
 
 .page-heading {
@@ -295,7 +290,7 @@ export default {
 }
 
 .wrapper {
-    padding: 15px;
+    /*padding: 15px;*/
 }
 
 .row {
@@ -335,7 +330,9 @@ export default {
 .author-box {
     width: 100%;
     padding: 15px;
-    border-bottom: 1px solid #9f0936;
+    background-color: #afb8c1;
+    margin-bottom: 5px;
+    /*border-bottom: 1px solid #9f0936;*/
 }
 
 .md-pane {
@@ -355,51 +352,20 @@ export default {
     font-weight: bold;
 }
 
-.author-pane {
-    width: 15%;
-    margin-right: 5px;
+>>> .hljs {
+    background-color: #f6f8fa;
 }
 
-.catalogue-pane {
-    width: 15%;
-    margin-left: 5px;
-}
-
-.catalogue-fixed {
-    position: fixed;
-    right: 15px;
-    background-color: white;
-    width: 320px;
-}
-
-.is-right {
-    float: left;
-}
-
->>> pre {
-    /*border: 1px solid #282c34;*/
-    border: 1px solid white;
-    background-color: white !important;
-    /*border-radius: 15px !important;*/
-}
-
-/* 自定义全屏样式 */
->>> .pre-full-screen {
-    position: fixed;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100vw !important;
-    z-index: 100;
-    height: 100vh !important;
-    background-color: white !important;
-    /*background-color: #282c34 !important;*/
-    overflow: auto;
-}
+/*>>> pre {*/
+/*    border: 1px solid white;*/
+/*    background-color: #f6f8fa;*/
+/*    border-radius: 6px;*/
+/*}*/
 
 >>> .line-num-box {
     display: inline-block;
-    color: #398bff;
-    border-right: 2px solid #398bff;
+    color: #807a7a;
+    border-right: 2px solid #807a7a;
     line-height: 20px !important;
     font-size: 16px !important;
     text-align: right;
@@ -412,6 +378,7 @@ export default {
     vertical-align: top;
     width: calc(100% - 50px);
     border-left-style: none;
+    padding: 0 5px;
 }
 
 /*滚动条样式 https://m.php.cn/article/475268.html*/
@@ -421,7 +388,7 @@ export default {
     vertical-align: top;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    padding-left: 10px !important;
+    /*padding-left: 10px !important;*/
 }
 
 >>> code::-webkit-scrollbar { /*滚动条整体样式*/
@@ -442,75 +409,63 @@ export default {
 /*}*/
 
 >>> .mac-icon {
-    border-bottom: 1px solid silver;
-    margin-bottom: 5px;
-    color: deeppink;
+    text-align: right;
 }
 
->>> .mac-icon > span {
-    display: inline-block;
-    letter-spacing: 5px;
-    word-spacing: 5px;
-    width: 16px;
-    height: 16px;
-    border-radius: 8px;
-}
+/*>>> .mac-icon-lang {*/
+/*    width: 50px !important;*/
+/*    padding-left: 10px;*/
+/*    font-size: 16px;*/
+/*    vertical-align: top;*/
+/*}*/
 
->>> .mac-icon-red {
-    background-color: red;
-}
-
->>> .mac-icon-yellow {
-    margin-left: 10px;
-    background-color: yellow;
-}
-
->>> .mac-icon-green {
-    margin-left: 10px;
-    background-color: green;
-}
-
->>> .mac-icon-lang {
-    width: 50px !important;
-    padding-left: 10px;
-    font-size: 16px;
-    vertical-align: top;
-}
-
->>> .copy-button, >>> .full-screen-button {
+>>> .copy-button {
     width: 40px;
-    height: 20px;
-    background-color: #398bff;
+    height: 30px;
+    background-color: #f6f8fa;
     margin-bottom: 3px;
     border-radius: 5px;
     outline: none;
-    border: none;
-}
-
->>> .full-screen-button {
-    width: 40px !important;
-    height: 20px;
+    border: 1px solid rgba(27, 31, 36, 0.15);
 }
 
 >>> .copy-button {
-    /*
-        减去padding 2*16（如果使box-sizing: border-box;则不用减去)，
-        减去图标 3*16
-        图标间隙 10*2
-        语言 宽度 50px
-        减去本身宽 40px
-        全屏按钮 margin-left 10px
-        全屏按钮宽 40px
-    */
-    margin-left: calc(100% - 208px);
+    /*margin-right: 10px;*/
 }
 
->>> .full-screen-button {
-    margin-left: 10px;
+>>> .copy-button:hover {
+    background-color: #e9ebef;
+    cursor: pointer;
 }
 
->>> .copy-button:hover, >>> .full-screen-button:hover {
-    background-color: dimgrey;
+.route-style {
+    text-decoration: none;
 }
 
+.route-style:hover {
+    cursor: pointer;
+    color: #0969da;
+    text-decoration: underline;
+}
+
+.sp-content-title {
+    /*text-align: center;*/
+    font-weight: bold;
+    font-size: 40px;
+    margin-top: 15px;
+}
+
+.sp-content-box {
+    border-radius: 3px;
+    border: 1px solid darkgray;
+    background-color: white;
+    padding: 10px;
+}
+
+.sp-comment-box {
+    margin-top: 5px;
+    border-radius: 3px;
+    border: 1px solid darkgray;
+    background-color: white;
+}
 </style>
