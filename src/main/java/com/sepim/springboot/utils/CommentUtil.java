@@ -8,11 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public class CommentUtil {
+
     public static List<Comment> processComments(List<Comment> comments) {
         Map<String, Comment> map = new HashMap<>();
         List<Comment> list = new ArrayList<>();
         for (Comment comment : comments) {
-            map.put(comment.getId(),comment);
+            map.put(comment.getId(), comment);
         }
         for (Comment comment : comments) {
             if (comment.getParentId() != null) {

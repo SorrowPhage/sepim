@@ -16,8 +16,11 @@ public class Folder {
     private String type;
     private String url;
     private String state;
+    private String mdUrl;
     @TableField(exist = false)
     private String content;
+    @TableField(exist = false)
+    private String mdContent;
     @TableField(exist = false)
     private List<Comment> comments;
 }

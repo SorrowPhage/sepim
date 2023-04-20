@@ -29,6 +29,12 @@ public class MarkDownController {
         return resultData;
     }
 
+    @PostMapping("/md/update")
+    public ResultData editMd(@RequestBody Folder folder) {
+        resultData = folderService.editMd(folder);
+        return resultData;
+    }
+
     @PostMapping("/md/list")
     public ResultData getMdList(@RequestBody Folder folder) {
         resultData = folderService.getMdList(folder.getUserId());
@@ -38,6 +44,12 @@ public class MarkDownController {
     @GetMapping("/md/read")
     public ResultData readMd(@RequestParam("id") String id) {
         resultData = folderService.readMd(id);
+        return resultData;
+    }
+
+    @GetMapping("/md/readMd")
+    public ResultData readMdContent(@RequestParam("id") String id) {
+        resultData = folderService.readMdContent(id);
         return resultData;
     }
 
@@ -76,6 +88,12 @@ public class MarkDownController {
         List<Comment> comments = commentService.getComments(folderId);
         resultData.setFlag("md_comment_get_succeed");
         resultData.setData(comments);
+        return resultData;
+    }
+
+    @GetMapping("/md/rank")
+    public ResultData getRankList() {
+        resultData = folderService.getRankList();
         return resultData;
     }
 }

@@ -12,6 +12,6 @@ public class VerCodeGenerateUtiTest {
     @Test
     void testUpload(){
         String avatar_url = "http://localhost:8088/upload/sepim/avatar/b6b78bfdc28f4f4485cbabba5d45c547function.ico";
-        SettingAvatarUtil.delete(avatar_url);
+        FileUploadUtil.delete(avatar_url);
     }
 }

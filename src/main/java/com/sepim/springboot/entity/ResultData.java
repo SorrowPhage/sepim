@@ -2,7 +2,6 @@ package com.sepim.springboot.entity;
 
 import lombok.Data;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 @Data
 @Component

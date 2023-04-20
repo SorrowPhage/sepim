@@ -2,6 +2,7 @@ package com.sepim.springboot.serviceimpl;
 
 import com.sepim.springboot.entity.Email;
 import com.sepim.springboot.service.EmailService;
+import com.sepim.springboot.service.MusicListService;
 import com.sepim.springboot.utils.VerCodeGenerateUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,9 @@ public class EmailTest {
         System.out.println(emailService);
         // emailService.send(email);
     }
+
+
+
+
 
 }

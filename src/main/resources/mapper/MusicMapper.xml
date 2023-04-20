@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个指定的Mapper接口-->
+<mapper namespace="com.sepim.springboot.mapper.MusicMapper">
+
+
+    <select id="getMusicListByMusicListId" resultType="com.sepim.springboot.entity.Music">
+        select music.id,music.music_name,music.singer,music.server_url,music.upload_time,music.picture_url  from music join music_music_list on music.id=music_music_list.mid where music_music_list.music_list_id=#{id}
+    </select>
+    <select id="getMusicById" resultType="com.sepim.springboot.entity.Music">
+        select * from music where id=#{id}
+    </select>
+</mapper>

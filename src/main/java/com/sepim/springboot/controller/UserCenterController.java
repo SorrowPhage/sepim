@@ -21,6 +21,7 @@ public class UserCenterController {
     @Autowired
     private ResultData resultData;
 
+
     @PostMapping("/user/center/get")
     public ResultData getUser(@RequestBody User user) {
         resultData = userService.getUser(user.getId());
@@ -30,6 +31,18 @@ public class UserCenterController {
     @PostMapping("/user/center/files")
     public ResultData getPublicFolders(@RequestBody Folder folder) {
         resultData = folderService.getPublicFolders(folder.getUserId());
+        return resultData;
+    }
+
+    @PostMapping("/md/overview")
+    public ResultData overview(@RequestBody User user) {
+        resultData = folderService.overview(user);
+        return resultData;
+    }
+
+    @PostMapping("/md/readme")
+    public ResultData readme(@RequestBody User user) {
+        resultData = userService.readme(user);
         return resultData;
     }
 }

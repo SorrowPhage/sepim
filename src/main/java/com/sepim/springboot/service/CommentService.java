@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.sepim.springboot.entity.Comment;
 import com.sepim.springboot.entity.ResultData;
 
-import java.security.PrivateKey;
 import java.util.List;
 
 public interface CommentService extends IService<Comment> {
@@ -12,4 +11,5 @@ public interface CommentService extends IService<Comment> {
 
     public ResultData release(Comment comment);
 
+    public void deleteByFolderId(String id);
 }

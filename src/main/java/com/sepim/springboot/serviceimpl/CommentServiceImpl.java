@@ -10,7 +10,6 @@ import com.sepim.springboot.utils.CommentUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.xml.ws.Action;
 import java.util.List;
 
 @Service
@@ -30,9 +29,18 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         boolean save = this.save(comment);
         if (save) {
             resultData.setFlag("md_comment_release_succeed");
+            resultData.setData(null);
         } else {
             resultData.setFlag("md_comment_release_defeat");
+            resultData.setData(null);
         }
         return resultData;
+    }
+
+    @Override
+    public void deleteByFolderId(String id) {
+        QueryWrapper<Comment> wrapper = new QueryWrapper<>();
+        wrapper.eq("folder_id", id);
+        this.remove(wrapper);
     }
 }

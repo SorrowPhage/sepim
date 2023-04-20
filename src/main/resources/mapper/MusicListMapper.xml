@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个指定的Mapper接口-->
+<mapper namespace="com.sepim.springboot.mapper.MusicListMapper">
+
+    <select id="getUserMusicList" resultType="com.sepim.springboot.entity.MusicList">
+        select * from music_list where owner=#{id}
+    </select>
+
+    <select id="getMusicListById" resultType="com.sepim.springboot.entity.MusicList">
+        select * from  music_list where id=#{id}
+    </select>
+
+    <update id="updateMusicListInformation">
+        update  music_list set `name`=#{name}, `describe`=#{describe}, list_image=#{listImage} ,owner=#{owner} where id=#{id}
+    </update>
+
+</mapper>

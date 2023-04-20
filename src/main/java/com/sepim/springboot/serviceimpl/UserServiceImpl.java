@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
@@ -32,6 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String verCode = (String) MySessionUtil.getSession("ver_code");
         if (!verCode.equals(user.getVerCode())) {
             resultData.setFlag("ver_defeat");
+            resultData.setData(null);
         } else {
             String account = AccountGenerateUtil.generateAccount();
             //保证账号的唯一性
@@ -65,6 +68,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             resultData.setData(admin);
         } else {
             resultData.setFlag("login_defeat");
+            resultData.setData(null);
         }
         return resultData;
     }
@@ -78,6 +82,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String verCode = (String) MySessionUtil.getSession("ver_code");
         if (!verCode.equals(user.getVerCode())) {
             resultData.setFlag("ver_defeat");
+            resultData.setData(null);
         } else {
             QueryWrapper<User> wrapper = new QueryWrapper<>();
             wrapper.eq("id", user.getId()).eq("email", user.getEmail());
@@ -88,6 +93,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 MySessionUtil.removeSession("ver_code");
             } else {
                 resultData.setFlag("ver_status_defeat");
+                resultData.setData(null);
             }
         }
         return resultData;
@@ -104,8 +110,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         boolean tag = this.update(wrapper);
         if (tag) {
             resultData.setFlag("succeed");
+            resultData.setData(null);
         } else {
             resultData.setFlag("defeat");
+            resultData.setData(null);
         }
         return resultData;
     }
@@ -134,18 +142,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 resultData.setData(avatarUrl);
             } else {
                 resultData.setFlag("avatar_set_defeat");
+                resultData.setData(null);
             }
         } else {
             resultData.setFlag("avatar_set_null");
+            resultData.setData(null);
         }
         return resultData;
     }
 
     @Override
     public ResultData userInfoUpdate(User user) {
-        this.saveOrUpdate(user);
-        resultData.setFlag("user_info_update_succeed");
-        resultData.setData(this.getById(user.getId()));
+        boolean b = this.saveOrUpdate(user);
+        if (b) {
+            resultData.setFlag("user_info_update_succeed");
+            resultData.setData(this.getById(user.getId()));
+        } else {
+            resultData.setFlag("user_info_update_defeat");
+            resultData.setData(null);
+        }
         return resultData;
     }
 
@@ -154,8 +169,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (this.getById(user.getId()).getPassword().equals(user.getOldPassword())) {
             this.saveOrUpdate(user);
             resultData.setFlag("user_info_update_password_succeed");
+            resultData.setData(null);
         } else {
             resultData.setFlag("user_info_update_password_defeat");
+            resultData.setData(null);
         }
         return resultData;
     }
@@ -169,6 +186,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } else {
             resultData.setFlag("user_center_get_succeed");
             resultData.setData(user);
+        }
+        return resultData;
+    }
+
+    @Override
+    public ResultData readme(User user) {
+        User byId = this.getById(user.getId());
+        if (byId == null ) {
+            resultData.setFlag("readme_defeat");
+            resultData.setData(null);
+        } else if (byId.getOverviewUrl() == null) {
+            byId.setContent(null);
+            byId.setMdContent(null);
+            resultData.setFlag("readme_succeed");
+            resultData.setData(byId);
+        } else {
+            byId.setContent(FileUploadUtil.readMdFile(byId.getOverviewUrl()));
+            byId.setMdContent(FileUploadUtil.readMdFile(byId.getOverviewMdUrl()));
+            resultData.setFlag("readme_succeed");
+            resultData.setData(byId);
+        }
+        return resultData;
+    }
+
+    @Override
+    public ResultData searchUser(String q) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.like("username", q);
+        List<User> list = this.list(wrapper);
+        if (list.size() > 0) {
+            resultData.setFlag("search_user_succeed");
+            resultData.setData(list);
+        } else {
+            resultData.setFlag("search_user_defeat");
+            resultData.setData(null);
         }
         return resultData;
     }

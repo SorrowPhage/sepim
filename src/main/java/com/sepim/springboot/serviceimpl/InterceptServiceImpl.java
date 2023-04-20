@@ -22,6 +22,7 @@ public class InterceptServiceImpl implements InterceptService {
     public ResultData verToken(String token) {
         if (token == null) {
             resultData.setFlag("token_null");
+            resultData.setData(null);
             return resultData;
         }
         //获取token中的id
@@ -29,6 +30,7 @@ public class InterceptServiceImpl implements InterceptService {
         User user = userService.getById(id);
         if (user == null) {
             resultData.setFlag("user_no_exist");
+            resultData.setData(null);
             return resultData;
         }
         JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
@@ -36,6 +38,7 @@ public class InterceptServiceImpl implements InterceptService {
             jwtVerifier.verify(token);
         } catch (JWTVerificationException j) {
             resultData.setFlag("user_ver_defeat");;
+            resultData.setData(null);
             return resultData;
         };
         resultData.setFlag("user_ver_succeed");
