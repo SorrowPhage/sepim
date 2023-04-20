@@ -1,14 +1,19 @@
 <template>
     <div class="header">
         <div class="search-box">
-            <input class="sp-search-input" v-model="search" placeholder="Search" @keydown.enter="goSearch" type="text"/>
+            <input v-model="search" class="sp-search-input" placeholder="Search" type="text" @keydown.enter="goSearch"/>
             <i class="el-icon-search sp-search-icon" @click="goSearch"></i>
             <div style="display: inline">
                 <div class="sp-nav" @click="depository">Depository</div>
                 <div class="sp-nav" @click="newdoc">新建</div>
+                <div class="sp-nav" @click="seckill">Redis</div>
+                <div class="sp-nav" @click="goBirthday">投诉</div>
+                <div class="sp-nav" @click="goMusicPlayer">音乐</div>
+<!--                <div class="sp-nav" @click="goVideoPlayer">视频</div>-->
+<!--                                <div class="sp-nav" @click="seckill">支付模块</div>-->
             </div>
         </div>
-        <div class="menu-right">
+        <div v-if="isLogin" class="menu-right">
             <ul class="notification-menu">
                 <li>
                     <label ref="showUl" class="btn btn-default dropdown-toggle" @click="isTrue=!isTrue">
@@ -16,10 +21,10 @@
                         {{ userName }}
                         <span class="caret"></span>
                     </label>
-<!--                    <label ref="showUl" class="btn btn-default dropdown-toggle" @click="isTrue=!isTrue">-->
-<!--                        你好,请登录-->
-<!--                        <span class="caret"></span>-->
-<!--                    </label>-->
+                    <!--                    <label ref="showUl" class="btn btn-default dropdown-toggle" @click="isTrue=!isTrue">-->
+                    <!--                        你好,请登录-->
+                    <!--                        <span class="caret"></span>-->
+                    <!--                    </label>-->
                     <ul v-show="isTrue" ref="myUl" class="dropdown-menu dropdown-menu-usermenu pull-right sp-userinfo">
                         <li class="sp-li-space" @click="goIndex">
                             <i class="el-icon-menu"></i> 主页
@@ -34,9 +39,9 @@
                             <i class="el-icon-setting"></i> 修改密码
                         </li>
                         <div class="dropdown-divider"></div>
-<!--                        <li class="sp-li-space" @click="depository">-->
-<!--                            <i class="el-icon-s-management"></i> Repository-->
-<!--                        </li>-->
+                        <!--                        <li class="sp-li-space" @click="depository">-->
+                        <!--                            <i class="el-icon-s-management"></i> Repository-->
+                        <!--                        </li>-->
                         <li class="sp-li-space" @click="newdoc">
                             <i class="el-icon-edit-outline"></i> 新建文件
                         </li>
@@ -47,6 +52,13 @@
                     </ul>
                 </li>
             </ul>
+        </div>
+        <div v-else class="menu-right">
+                <div class="sp-login-box">
+                    <div class="sp-login-btn"  @click="goLogin">
+                        登录
+                    </div>
+                </div>
         </div>
     </div>
 </template>
@@ -61,6 +73,7 @@ export default {
         return {
             isTrue: false,
             search: '',
+            isLogin: true,
         };
     },
     computed: {
@@ -82,6 +95,24 @@ export default {
                 query: {
                     account: this.$store.state.User.account,
                 }
+            })
+        },
+        goBirthday() {
+            this.isTrue = false;
+            this.$router.push({
+                name: 'birthday',
+            });
+        },
+        goMusicPlayer() {
+            this.isTrue = false;
+            this.$router.push({
+                name: 'music',
+            });
+        },
+        goVideoPlayer() {
+            this.isTrue = false;
+            this.$router.push({
+                name: "video",
             })
         },
         checkUserInfo() {
@@ -108,9 +139,20 @@ export default {
                 name: 'newdoc'
             })
         },
+        seckill() {
+            this.isTrue = false;
+            this.$router.push({
+                name: 'seckill'
+            })
+        },
         logOut() {
             this.isTrue = false;
             localStorage.removeItem("token");
+            this.$router.push({
+                name: "login"
+            });
+        },
+        goLogin() {
             this.$router.push({
                 name: "login"
             });
@@ -142,6 +184,10 @@ export default {
     },
     mounted() {
         document.addEventListener('click', this.showUl);
+        let token=localStorage.getItem("token")
+        if (token === null || token === '') {
+            this.isLogin = false;
+        }
     },
     destroyed() {
         document.removeEventListener('click', this.showUl);
@@ -154,6 +200,7 @@ export default {
     position: fixed;
     /*left: 240px;*/
     width: 100%;
+    min-width: 1026px;
     background-color: white;
     top: 0;
     height: 50px;
@@ -348,20 +395,39 @@ li {
 .sp-userinfo {
     z-index: 9999;
 }
+
 .sp-nav {
     display: inline;
     margin-left: 10px;
     font-weight: bold;
-    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace !important;
-    color:#80888c;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
+    color: #409EFF;
+    /*color: #5a8da1;*/
     font-size: 16px !important;
 }
-.sp-nav:hover{
+
+.sp-nav:hover {
     cursor: pointer;
-    color: #409EFF;
+    color: #5a8da1;
 }
+
 .sp-search-icon {
     width: 20px;
     margin-left: 5px;
+    cursor: pointer;
+}
+.sp-login-box{
+    /*background: #e0ac16;*/
+}
+.sp-login-btn{
+    background: #409EFF;
+    width: 44px;
+    height: 44px;
+    text-align: center;
+    cursor: pointer;
+    line-height: 44px;
+    border-radius: 22px;
+    color: white;
+    margin-top: 3px;
 }
 </style>

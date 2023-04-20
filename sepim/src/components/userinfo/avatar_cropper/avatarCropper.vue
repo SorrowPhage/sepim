@@ -53,8 +53,8 @@
                      <el-button type="primary" @click="transferUploadInput">选择头像</el-button>
                      <el-button icon="el-icon-zoom-in" plain size="mini" type="success"
                             @click="changeScale(1)">放大</el-button>
-                            <el-button icon="el-icon-zoom-out" plain size="mini" type="success"
-                                    @click="changeScale(-1)">缩小</el-button>
+                     <el-button icon="el-icon-zoom-out" plain size="mini" type="success"
+                            @click="changeScale(-1)">缩小</el-button>
                      <el-button plain size="mini" type="success"
                             @click="rotateLeft">↺ 左旋转</el-button>
                      <el-button plain size="mini" type="success"

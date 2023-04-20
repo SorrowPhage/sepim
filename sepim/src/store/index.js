@@ -10,6 +10,7 @@ import Folder from "@/store/folder";
 import Comment from "@/store/comment";
 import Detail from "@/store/detail";
 import Search from "@/store/search";
+import Music from "@/store/music";
 //应用Vuex插件
 Vue.use(Vuex)
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
         Folder,
         Comment,
         Detail,
-        Search
+        Search,
+        Music
     }
 })

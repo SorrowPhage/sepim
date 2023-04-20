@@ -1,17 +1,12 @@
 <template>
     <div>
-        <router-view v-if="showState"></router-view>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
 export default {
     name: 'App',
-    data(){
-        return{
-            showState: true,
-        }
-    },
     provide() {
         return {
             reload: this.reload

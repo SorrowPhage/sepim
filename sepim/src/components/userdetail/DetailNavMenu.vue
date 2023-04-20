@@ -12,11 +12,15 @@
                         <div class="pane-body">
                             <div class="sp-user-body">
                                 <div class="sp-userinfo-box" >
-                                    <div class="sp-userinfo-avatar-box">
+                                    <div class="sp-userinfo-avatar-box" >
                                         <el-avatar :src="$store.state.Detail.avatarUrl" :size="100"></el-avatar>
                                     </div>
                                     <div class="sp-userinfo-info-box">
                                         <div class="sp-info-username">{{$store.state.Detail.username}}</div>
+                                    </div>
+                                    <div v-show="$store.state.Detail.id!==$store.state.User.account"
+                                         class="sp-userinfo-info-box">
+                                        <el-button type="primary" @click="goChat()">私聊</el-button>
                                     </div>
                                 </div>
                                 <div class="sp-repository-box">
@@ -71,6 +75,15 @@ export default {
                 name:'overview',
                 query:{
                     account: this.$store.state.Detail.account,
+                }
+            })
+        },
+        goChat() {
+            this.$router.push({
+                name: 'chat',
+                params:{
+                    account: this.$store.state.Detail.account,
+                    username: this.$store.state.Detail.username,
                 }
             })
         },
@@ -213,5 +226,6 @@ export default {
 }
 .sp-info-username{
     font-weight: bold;
+    font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace !important;
 }
 </style>

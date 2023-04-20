@@ -25,7 +25,12 @@
 <style>
     .main-content {
         /*margin-left: 240px;*/
-        background: white;
+        /*background: white;*/
+        /*background-repeat: no-repeat;*/
+        /*background-position: center 40px;*/
+        /*background-image: url("~@/assets/img/user_bg/3-3.jpg");*/
+        /*background-size:cover;*/
+        /*background-attachment: fixed*/
     }
 
     ::-webkit-scrollbar {

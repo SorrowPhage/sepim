@@ -16,6 +16,8 @@ export default {
             state.userName = user.username;
             state.email = user.email;
             state.type = user.type;
+            state.sex = user.sex;
+            state.birthday = user.birthday;
         },
         changeAvatar(state,url){
             state.avatarUrl = url;
@@ -28,6 +30,8 @@ export default {
         email: '',
         isCollapse: true,
         type: '',
+        sex: '',
+        birthday: '',
     },
     getters: {
         avatar_url(state) {

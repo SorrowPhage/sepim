@@ -7,8 +7,10 @@ import VueRouter from 'vue-router'
 import router from './router/index'
 import VueCropper from "vue-cropper";
 import {MessageBox,Message,Pagination} from "element-ui";
+import jquery from 'jquery'
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message=Message
+Vue.prototype.$ = jquery;
 
 
 // import BootstrapVue from 'bootstrap-vue'
@@ -29,7 +31,7 @@ import { RadioGroup, RadioButton, Menu,
   Breadcrumb,BreadcrumbItem,DatePicker,Steps
   ,Step,Form,FormItem,Input,Dialog,Button,Carousel,CarouselItem,
   Calendar,Table,TableColumn,Radio,Badge,Option,Select,Popover
-  ,Empty,Aside,Tabs,TabPane,Link} from 'element-ui'
+  ,Empty,Aside,Tabs,TabPane,Link,Slider,Dropdown,DropdownItem,DropdownMenu} from 'element-ui'
 
 import { Loading } from 'element-ui';
 Vue.use(Loading.directive);
@@ -75,6 +77,10 @@ Vue.component(Aside.name, Aside)
 Vue.component(Tabs.name, Tabs)
 Vue.component(TabPane.name, TabPane)
 Vue.component(Link.name, Link)
+Vue.component(Slider.name, Slider)
+Vue.component(Dropdown.name, Dropdown)
+Vue.component(DropdownItem.name, DropdownItem)
+Vue.component(DropdownMenu.name, DropdownMenu)
 
 
 

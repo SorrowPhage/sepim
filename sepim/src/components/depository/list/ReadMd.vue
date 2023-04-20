@@ -15,6 +15,9 @@
                                 <div class="md-box">
                                     <div class="sp-content-box">
                                         <div class="author-box">
+                                            <div class="sp-content-title">
+                                                {{ title }}
+                                            </div>
                                             作者：
                                             <span class="text-author route-style" @click="goDetail(account)">{{
                                                     author
@@ -28,9 +31,7 @@
                                             &nbsp;&nbsp;&nbsp;浏览量:
                                             {{ readNum }}
                                               </span>
-                                            <div class="sp-content-title">
-                                                {{ title }}
-                                            </div>
+                                            
                                         </div>
                                         <div ref="md_show" class="markdown-body" v-html="content"></div>
                                     </div>
@@ -330,7 +331,7 @@ export default {
 .author-box {
     width: 100%;
     padding: 15px;
-    background-color: #afb8c1;
+    background-color: rgba(175, 184, 193, 0.1);
     margin-bottom: 5px;
     /*border-bottom: 1px solid #9f0936;*/
 }
@@ -452,7 +453,7 @@ export default {
     /*text-align: center;*/
     font-weight: bold;
     font-size: 40px;
-    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .sp-content-box {

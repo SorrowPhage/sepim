@@ -5,22 +5,16 @@ import store from "@/store";
 // 解决控制台因为冗余导航的报错
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
-   return originalPush.call(this, location).catch(err => err)
+    return originalPush.call(this, location).catch(err => err)
 }
 
 const router = new VueRouter({
     routes: [
         {
-            path: '/',
-            component: () => import('@/components/UserLog'),
-            meta: {title: '登录'}
-        },
-        {
             path: '/login',
             name: 'login',
             component: () => import('@/components/UserLog'),
             meta: {title: '登录'}
-
         },
         {
             path: '/register',
@@ -33,30 +27,38 @@ const router = new VueRouter({
             meta: {title: '找回密码'}
         },
         {
+            path: '/',
+            component: () => import('@/pages/HomePage'),
+            meta: {title: 'Home',ver:false},
+            redirect: '/index.html/main',
+        },
+        {
             name: 'index',
             path: '/index.html',
-            meta: {ver: true},
+            // meta: {ver: true},
             component: () => import('@/pages/HomePage'),
             redirect: '/index.html/main',
             children: [
                 {
                     path: 'main',
                     name: 'main',
-                    meta: {ver: true},
+                    // meta: {ver: true},
+                    meta: {ver: false},
                     component: () => import('@/components/MainContext'),
                     redirect: '/index.html/main/el',
-                    children:[
+                    children: [
                         {
                             name: 'bfag',
                             path: 'bfag',
                             component: () => import('@/components/main/BasicFormatAndGrammar'),
-                            meta: {ver: true}
+                            // meta: {ver: true}
+                            meta: {ver: false}
                         },
                         {
                             name: 'el',
                             path: 'el',
                             component: () => import('@/components/main/EntryLevel'),
-                            meta: {ver: true}
+                            meta: {ver: false}
                         },
                     ]
                 },
@@ -64,21 +66,92 @@ const router = new VueRouter({
                     name: 'sl',
                     path: 'sl',
                     component: () => import('@/components/search/SearchList'),
-                    meta:{ver: true},
-                    redirect:'/index.html/sl/rc',
-                    children:[
+                    // meta: {ver: true},
+                    meta: {ver: false},
+                    redirect: '/index.html/sl/rc',
+                    children: [
                         {
-                            name:'rc',
+                            name: 'rc',
                             path: 'rc',
                             component: () => import('@/components/search/content/RepositoryContent'),
-                            meta: {ver: true}
+                            // meta: {ver: true}
+                            meta: {ver: false}
                         },
                         {
-                            name:'uc',
+                            name: 'uc',
                             path: 'uc',
                             component: () => import('@/components/search/content/UserContent'),
-                            meta: {ver: true}
+                            // meta: {ver: true}
+                            meta: {ver: false}
+                        }
+                    ]
+                },
+                //秒杀案例
+                {
+                    name: 'seckill',
+                    path: 'seckill',
+                    component: () => import("@/components/seckill/SeckillContent"),
+                    // meta: {title: "Redis", ver: true},
+                    meta: {title: "Redis",ver:false},
+                },
+                {
+                    name: 'birthday',
+                    path: 'birthday',
+                    component: () => import("@/components/expression/HappyBirthday"),
+                    meta: {title: "生日快乐", ver: true},
+                },
+                {
+                    name: 'video',
+                    path: 'video',
+                    component: () => import("@/components/video/VideoPlayer"),
+                    // meta: {title: "Aurora", ver: true},
+                    meta: {title: "Aurora",ver:false},
+                },
+                {
+                    name:'aurora',
+                    path:'aurora',
+                    component: () => import("@/components/video/player/PhageAurora"),
+                    meta:{title: 'Aurora'}
+                },
+                {
+                    name: 'music',
+                    path: 'music',
+                    component: () => import("@/components/music/MusicPlayer"),
+                    meta: {title: "PhageVoice", ver: true},
+                    redirect: '/index.html/music/musicmain',
+                    children: [
+                        {
+                            name: 'musicmain',
+                            path: 'musicmain',
+                            component: () => import("@/components/music/main/MusicMain"),
+                            meta: {title: "PhageVoice", ver: true},
                         },
+                        {
+                            name: 'musiclist',
+                            path: 'musiclist',
+                            component: () => import("@/components/music/music_list/MusicList"),
+                            meta: {title: "PhageVoice", ver: true},
+                            // children:[
+                            //     {
+                            //         name: 'develop',
+                            //         path: 'develop',
+                            //         component: () => import("@/components/music/music_list/develop/DevelopMusicList"),
+                            //         meta: {title: "PhageVoice", ver: true},
+                            //     },
+                            // ]
+                        },
+                        {
+                            name: 'develop',
+                            path: 'develop',
+                            component: () => import("@/components/music/music_list/develop/DevelopMusicList"),
+                            meta: {title: "PhageVoice", ver: true},
+                        },
+                        {
+                            name: 'play',
+                            path: 'paly',
+                            component: () => import("@/components/music/player/SongPlayer"),
+                            meta: {title: "PhageVoice", ver: true},
+                        }
                     ]
                 },
                 {
@@ -101,6 +174,12 @@ const router = new VueRouter({
                             meta: {title: "UserDetail", ver: true},
                         }
                     ]
+                },
+                {
+                    name: 'chat',
+                    path: 'chat/:account/:username',
+                    component: () => import("@/components/chat/PhageChat"),
+                    meta: {title: "PhageChat", ver: true},
                 },
                 {
                     name: 'overvieweditor',
@@ -166,18 +245,38 @@ const router = new VueRouter({
             ]
         },
         {
-            name:'404',
-            path:'404',
-            componentL:()=>import("@/components/error/404NotFond"),
-            meta:{title: "404",ver: true}
+            name: '404',
+            path: '404',
+            componentL: () => import("@/components/error/404NotFond"),
+            meta: {title: "404", ver: true}
         }
     ]
 })
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to, from, next) => {
+    if (!to.meta.ver){
+        let token = localStorage.getItem("token");
+        if (token === null) {
+            next();
+        } else {
+            axios.post("http://localhost:8080/api/ver/token", {token: token}).then(res => {
+                //验证成功
+                if (res.data.flag === "user_ver_succeed") {
+                    store.commit("User/getUserInfo", res.data.data);
+                    next();
+                } else {
+                    //验证失败
+                    console.log("未登录");
+                    localStorage.removeItem("token")
+                    next();
+                }
+            });
+        }
+
+    }
     if (to.meta.ver) {
         let token = localStorage.getItem("token");
         if (token === null) {
-            next("/");
+            next("/login");
         }
         axios.post("http://localhost:8080/api/ver/token", {token: token}).then(res => {
             if (res.data.flag === "user_ver_succeed") {
@@ -185,14 +284,14 @@ router.beforeEach((to,from,next)=>{
                 next();
             } else {
                 console.log("未登录");
-                next("/");
+                next("/login");
             }
         });
     } else {
         next();
     }
 })
-router.afterEach((to)=>{
-	document.title = to.meta.title || '系统'
+router.afterEach((to) => {
+    document.title = to.meta.title || '系统'
 })
 export default router
