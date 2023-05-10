@@ -139,6 +139,9 @@
   </style>
   ```
 
+- 私信：使用了WebSocket
+
+  ![](https://s3.bmp.ovh/imgs/2023/05/10/6517e6fe576538b0.png)
   
 
 
