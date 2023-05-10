@@ -22,9 +22,13 @@
 
 - 搜索:默认搜索为文档，可以选择用户
 
+  ![](https://s3.bmp.ovh/imgs/2023/05/10/ed050a33d86cd312.png)
+
 - 查看所有文档：可以查看用户上传的文档
 
 - 查看文档：可以查看文档内容以及评论
+
+  ![](https://s3.bmp.ovh/imgs/2023/05/10/2ca4d9370ee4f419.png)
 
 - 新建文档：使用了mavon-editor组件，该组件支持Markdown文档的编辑，根据需要需要实现change，save等事件 
 
@@ -44,6 +48,8 @@
   ```
 
 - 用户界面：展示聊天记录，用户自述以及用户的文档列表
+
+  ![](https://s3.bmp.ovh/imgs/2023/05/10/2a3ad99b48b5ba23.png)
 
 - 个人信息：修改个人信息，头像上传使用了vueCropper组件
 
@@ -76,6 +82,57 @@
 - 修改密码：修改用户密码
 
 - 音乐
+
+- 天气:使用和风天气的插件
+
+  ```vue
+  <template>
+      <div>
+          <div id="he-plugin-simple"></div>
+      </div>
+  </template>
+  
+  <script>
+  export default {
+      name: "HeFenWeather",
+      created() {
+          window.WIDGET = {
+              "CONFIG": {
+                  "modules": "01234",
+                  "background": "4",
+                  "backgroundColor": "FFFFFF",
+                  "tmpColor": "40A0FF",
+                  "tmpSize": "16",
+                  "cityColor": "40A0FF",
+                  "citySize": "16",
+                  "aqiColor": "40A0FF",
+                  "aqiSize": "16",
+                  "weatherIconSize": "24",
+                  "alertIconSize": "18",
+                  "padding": "10px 10px 10px 10px",
+                  "shadow": "0",
+                  "language": "auto",
+                  "fixed": "false",
+                  "vertical": "top",
+                  "horizontal": "left",
+                  "key": "b9d32d2e8b89458585ac6be2391bb59a"
+              }
+          };
+          let script = document.createElement('script');
+          script.type = "text/javascript"
+          script.src="https://widget.qweather.net/simple/static/js/he-simple-common.js?v=2.0"
+          document.getElementsByTagName('head')[0].appendChild(script);
+      }
+  }
+  </script>
+  
+  <style scoped>
+  
+  
+  </style>
+  ```
+
+  
 
 
 
