@@ -9,6 +9,7 @@ VueRouter.prototype.push = function push(location) {
 }
 
 const router = new VueRouter({
+    // base:'phage',
     routes: [
         {
             path: '/login',
@@ -180,6 +181,18 @@ const router = new VueRouter({
                     path: 'chat/:account/:username',
                     component: () => import("@/components/chat/PhageChat"),
                     meta: {title: "PhageChat", ver: true},
+                },
+                {
+                    name: 'games',
+                    path: 'games',
+                    component:() => import("@/components/games/PhageGames"),
+                    meta:{title: "游戏", ver: true},
+                },
+                {
+                    name: 'wuziqi',
+                    path: "wuqizi/:account",
+                    component:() => import("@/components/games/FiveInRow"),
+                    meta:{title: "五子棋", ver: true},
                 },
                 {
                     name: 'overvieweditor',

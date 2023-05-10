@@ -12,15 +12,26 @@
                         <div class="pane-body">
                             <div class="sp-user-body">
                                 <div class="sp-userinfo-box" >
-                                    <div class="sp-userinfo-avatar-box" >
-                                        <el-avatar :src="$store.state.Detail.avatarUrl" :size="100"></el-avatar>
+                                    <div class="sp-userinfo-primary-box">
+                                        <div class="sp-userinfo-username-box">
+                                            <div class="sp-userinfo-avatar-box">
+                                                <el-avatar :src="$store.state.Detail.avatarUrl" :size="60"></el-avatar>
+                                            </div>
+                                            <div class="sp-userinfo-xxxx">
+                                                <div class="sp-info-username">{{$store.state.Detail.username}}</div>
+                                            </div>
+                                        </div>
+                                        <div v-show="$store.state.Detail.id!==$store.state.User.account"
+                                             class="sp-userinfo-info-box">
+                                            <el-button type="danger" @click="goChat()">私信</el-button>
+                                            <el-button type="danger" @click="goWUzQi">五子棋</el-button>
+                                        </div>
+                                        <div v-show="$store.state.Detail.id===$store.state.User.account">
+                                            <el-input v-model="searchUser"></el-input>
+                                        </div>
                                     </div>
-                                    <div class="sp-userinfo-info-box">
-                                        <div class="sp-info-username">{{$store.state.Detail.username}}</div>
-                                    </div>
-                                    <div v-show="$store.state.Detail.id!==$store.state.User.account"
-                                         class="sp-userinfo-info-box">
-                                        <el-button type="primary" @click="goChat()">私聊</el-button>
+                                    <div class="sp-user-line-box" v-show="$store.state.Detail.id===$store.state.User.account" v-for="chat in chatList" :key="chat.id">
+                                        <chat-user-line :account="chat.user.id" :username="chat.user.username" :avatar-url="chat.user.avatarUrl" :last-message="chat.content" :time="formatDate(chat.sendTime)" :num="chat.noReadNum"></chat-user-line>
                                     </div>
                                 </div>
                                 <div class="sp-repository-box">
@@ -34,7 +45,7 @@
                                             :router="true"
                                             active-text-color="#398bff">
                                             <el-menu-item index="/index.html/detail/overview" :route="{name:'overview',query:{account: this.$store.state.Detail.id}}" class="el-icon-reading">Overview</el-menu-item>
-                                            <el-menu-item index="/index.html/detail/files" class="el-icon-collection">Repositories</el-menu-item>
+                                            <el-menu-item index="/index.html/detail/files" :route="{name:'files',query:{account: this.$store.state.Detail.id}}" class="el-icon-collection">Repositories</el-menu-item>
                                         </el-menu>
                                     </div>
                                     <div class="sp-center-content">
@@ -53,19 +64,58 @@
 <script>
 
 import axios from "axios";
+import ChatUserLine from "@/components/chat/ChatUserLine";
+
 export default {
     name: "DetailNavMenu",
-    inject:["reload"],
+    inject: ["reload"],
+    components:{
+        ChatUserLine
+    },
     data() {
         return {
+            x: 'http://localhost:8088/upload/sepim/avatar/ba0640727d374101b6c041ece7a40b4afile.png',
+            m: 'SE,SrpingMVC,SpringBoot,Vue,MySql，Mybatis等技术有所了解。\n' +
+                '这个网站是前端页面用Vue写成的，后台用的是SpringBoot',
+            u: 'Hello',
+            time:'3-11',
             account: '',
             email: '',
             username: '',
             avatarUrl: '',
             loading: true,
+            chatList: [],
+            searchUser: '',
         };
     },
+    // computed: {
+    //     userlists() {
+    //         return this.chatList.filter((user) => {
+    //             return user.fromId.indexOf(this.searchUser) !== -1 || user.toId.indexOf(this.keyword)!== -1;
+    //         });
+    //     },
+    // },
     methods: {
+        formatDate(sendTime) {
+            let a = new Date(sendTime).getTime();
+            const date = new Date(a);
+            const Y = date.getFullYear() + '/';
+            const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
+            const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '  ';
+            const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+            const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+            // const s = date.getSeconds(); // 秒
+            // console.log('dateString', dateString); // > dateString 2021-07-06 14:23
+            return Y + M + D + h + m;
+        },
+        goWUzQi() {
+            this.$router.push({
+                name:'wuziqi',
+                params:{
+                    account: this.$store.state.Detail.account,
+                }
+            })
+        },
         handleSelect(key, keyPath) {
             // console.log(this.$route.path)
             // console.log(key, keyPath);
@@ -84,6 +134,7 @@ export default {
                 params:{
                     account: this.$store.state.Detail.account,
                     username: this.$store.state.Detail.username,
+                    url: this.$store.state.Detail.avatarUrl,
                 }
             })
         },
@@ -116,7 +167,12 @@ export default {
         }, Error => {
             console.log(Error.message)
         });
-        
+        axios.get('http://localhost:8080/api/chat/chatlist',{params:{user: this.$route.query.account}}).then(res=>{
+            if (res.data.flag === "200") {
+                this.chatList = res.data.data;
+                console.log(this.chatList)
+            }
+        })
     }
 }
 </script>
@@ -198,19 +254,44 @@ export default {
 }
 .sp-userinfo-box {
     width: 25%;
-    height: 250px;
+    padding: 5px;
+    min-width: 300px;
+    /*height: 250px;*/
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*flex-wrap: wrap;*/
+}
+.sp-userinfo-primary-box{
+    background-image: linear-gradient(
+        125deg,
+        #007fff,
+        #00bfff
+    );
+}
+.sp-userinfo-username-box{
     display: flex;
-    align-items: center;
-    flex-wrap: wrap;
 }
 .sp-userinfo-avatar-box{
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    width: 60px;
+    /*display: flex;*/
+    /*justify-content: center;*/
+    margin-top: 20px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+    
 }
 .sp-userinfo-info-box{
     width: 100%;
     text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.sp-userinfo-xxxx{
+    margin-top: 20px;
+    margin-left: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .sp-repository-box{
     width: 75%;
@@ -226,6 +307,24 @@ export default {
 }
 .sp-info-username{
     font-weight: bold;
+    color: white;
     font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace !important;
+    
 }
+.sp-user-line-box{
+    border-top: 1px solid dimgrey;
+    width: 100%;
+    height: 40%;
+    margin-top: 5px;
+    overflow: auto;
+}
+
+.el-input /deep/ .el-input__inner {
+    background-color: #00bfff;
+    border: 0;
+    border-radius: 0;
+    color: white;
+}
+
+
 </style>

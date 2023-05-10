@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个指定的Mapper接口-->
+<mapper namespace="com.sepim.springboot.mapper.ChatMessageMapper">
+
+    <select id="getChatMessage" resultType="com.sepim.springboot.entity.ChatMessage">
+        select * from chat_message where (from_id=#{s1} and to_id=#{s2}) or (from_id=#{s2} and to_id=#{s1})
+    </select>
+    <select id="getNoReadChatMessage" resultType="java.lang.Integer">
+        select count(`type` = 0 or null ) from chat_message  where `to_id`=#{s}
+    </select>
+
+    <insert id="addChatMessage" keyProperty="id" useGeneratedKeys="true" parameterType="com.sepim.springboot.entity.ChatMessage">
+        insert into chat_message (from_id,to_id,content,send_time,`type`,is_latest) values(#{fromId},#{toId},#{content},now(),#{type},#{isLatest})
+    </insert>
+
+    <update id="updateIsLatest">
+        update chat_message set `is_latest` = 0  where (from_id=#{s1} and to_id=#{s2} and is_latest=1) or (from_id=#{s2} and to_id=#{s1} and is_latest=1)
+    </update>
+    <update id="updateMessageType">
+        update chat_message set `type` =1 where (`from_id`=#{s1} and `to_id`=#{s2} and `type`=0)
+    </update>
+</mapper>

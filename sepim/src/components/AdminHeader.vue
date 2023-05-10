@@ -4,14 +4,18 @@
             <input v-model="search" class="sp-search-input" placeholder="Search" type="text" @keydown.enter="goSearch"/>
             <i class="el-icon-search sp-search-icon" @click="goSearch"></i>
             <div style="display: inline">
-                <div class="sp-nav" @click="depository">Depository</div>
+                <div class="sp-nav" @click="depository">Repository</div>
                 <div class="sp-nav" @click="newdoc">新建</div>
                 <div class="sp-nav" @click="seckill">Redis</div>
                 <div class="sp-nav" @click="goBirthday">投诉</div>
                 <div class="sp-nav" @click="goMusicPlayer">音乐</div>
+                <div class="sp-nav" @click="goGames">游戏</div>
 <!--                <div class="sp-nav" @click="goVideoPlayer">视频</div>-->
 <!--                                <div class="sp-nav" @click="seckill">支付模块</div>-->
             </div>
+        </div>
+        <div class="weather-box">
+            <HeFenWeather></HeFenWeather>
         </div>
         <div v-if="isLogin" class="menu-right">
             <ul class="notification-menu">
@@ -66,9 +70,13 @@
 <script>
 import {mapMutations, mapState, mapGetters} from "vuex";
 import {sessionReplaceStore} from "@/utils/session_util"
+import HeFenWeather from '@/components/userinfo/HeFenWeather'
 
 export default {
     name: "AdminHeader",
+    components:{
+        HeFenWeather
+    },
     data() {
         return {
             isTrue: false,
@@ -108,6 +116,12 @@ export default {
             this.$router.push({
                 name: 'music',
             });
+        },
+        goGames() {
+            this.isTrue = false;
+            this.$router.push({
+                name:'games'
+            })
         },
         goVideoPlayer() {
             this.isTrue = false;
@@ -188,6 +202,7 @@ export default {
         if (token === null || token === '') {
             this.isLogin = false;
         }
+        
     },
     destroyed() {
         document.removeEventListener('click', this.showUl);
@@ -429,5 +444,10 @@ li {
     border-radius: 22px;
     color: white;
     margin-top: 3px;
+}
+.weather-box{
+    width: 150px;
+    position: absolute;
+    right: 150px;
 }
 </style>

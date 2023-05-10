@@ -11,6 +11,7 @@ import Comment from "@/store/comment";
 import Detail from "@/store/detail";
 import Search from "@/store/search";
 import Music from "@/store/music";
+import ChatMessage from "@/store/chat-message";
 //应用Vuex插件
 Vue.use(Vuex)
 
@@ -23,6 +24,7 @@ export default new Vuex.Store({
         Comment,
         Detail,
         Search,
-        Music
+        Music,
+        ChatMessage
     }
 })

@@ -1,15 +1,12 @@
 package com.sepim.springboot;
 
-import com.sepim.springboot.entity.Comment;
-import com.sepim.springboot.entity.Email;
-import com.sepim.springboot.entity.MusicList;
-import com.sepim.springboot.entity.User;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.sepim.springboot.entity.*;
+import com.sepim.springboot.mapper.ChatMessageMapper;
 import com.sepim.springboot.mapper.MusicListMapper;
 import com.sepim.springboot.mapper.MusicMapper;
-import com.sepim.springboot.service.CommentService;
-import com.sepim.springboot.service.EmailService;
-import com.sepim.springboot.service.MusicListService;
-import com.sepim.springboot.service.UserService;
+import com.sepim.springboot.service.*;
 import com.sepim.springboot.utils.AccountGenerateUtil;
 import com.sepim.springboot.utils.FileUploadUtil;
 import com.sepim.springboot.utils.RedisUtil;
@@ -18,9 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
+import java.lang.reflect.Type;
+import java.sql.Timestamp;
 import java.util.List;
 
-@SpringBootTest
+@SpringBootTest( webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT )
 class SepimApplicationTests {
 
     @Autowired
@@ -38,13 +38,48 @@ class SepimApplicationTests {
     @Autowired
     private MusicListService musicListService;
 
+    @Autowired
+    private ChatMessageMapper chatMessageMapper;
+
+    @Autowired
+    private ChatMessageService chatMessageService;
+
+    @Test
+    void setChatMessageMapperTest() {
+        // List<ChatMessage> chatMessages = chatMessageMapper.getChatMessage("user", "sp2645354");
+        // for (ChatMessage message : chatMessages) {
+        //     System.out.println(message);
+        // }
+        //
+        // ChatMessage chatMessage = new ChatMessage();
+        // chatMessage.setFromId("user");
+        // chatMessage.setToId("sp2645354");
+        // // chatMessage.setSendTime(new Timestamp(System.currentTimeMillis()));
+        // chatMessage.setContent("这是测试");
+        // chatMessage.setIsLatest(1);
+        // chatMessage.setType(0);
+        // int i = chatMessageMapper.addChatMessage(chatMessage);
+        // System.out.println(i);
+
+        // int i = chatMessageMapper.updateIsLatest("user", "sp2645354");
+        int s = chatMessageMapper.getNoReadChatMessage("sp2645354");
+        System.out.println("xxx"+s);
+    }
+
     @Test
     void test2() {
         System.out.println(musicListService.getUserMusicList("user"));
     }
 
     @Test
+    void testChat() {
+        ResultData user = chatMessageService.getChatList("user");
+        System.out.println(user.getData());
+    }
+
+    @Test
     void getMusicList() {
+
         // List<MusicList> musicLists = new ArrayList<>();
         // musicLists = mapper.getUserMusicList("user");
         // System.out.println(musicLists);
@@ -53,6 +88,15 @@ class SepimApplicationTests {
         musicList.setName("Test");
         musicList.setDescribe("这是测试");
         mapper.updateMusicListInformation(musicList);
+    }
+
+    @Test
+    void testJson() {
+        String a= " {\"fromId\":\"user\",\"toId\":\"sp2645354\",\"content\":\"bb\"} ";
+        // ChatMessage chatMessage = JSON.parseObject(a, ChatMessage.class);
+        // System.out.println(chatMessage);
+        JSONObject jsonObject = JSONObject.parseObject(a);
+        System.out.println(jsonObject.getString("toId"));
     }
 
     @Test

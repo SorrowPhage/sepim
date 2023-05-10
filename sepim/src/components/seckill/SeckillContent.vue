@@ -33,6 +33,7 @@
                                     <el-button type="primary" @click="deleteRedis">delete</el-button>
                                     
                                 </div>
+                                
                                 <div class="sp-overview-box" ref="redis_context" v-html="pingresult">
                                 
                                 </div>
