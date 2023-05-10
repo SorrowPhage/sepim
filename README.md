@@ -6,9 +6,9 @@
 - Redis:
   ```yaml
   redis:
-  #Redis服务器地址
+    #Redis服务器地址
     host: 192.168.102.100
-   #端口号
+    #端口号
     port: 6379
   ```
 
