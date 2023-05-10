@@ -11,7 +11,19 @@
     #端口号
     port: 6379
   ```
+- RabbitMQ：
 
+  ```yaml
+  spring:
+    application:
+      name: springboot_rabbitmq
+    rabbitmq:
+      host: 192.168.102.100
+      port: 5673
+      username: ems
+      password: ems
+      virtual-host: /ems
+  ```
 
 新增功能：
 
