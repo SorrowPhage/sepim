@@ -1,8 +1,11 @@
 服务端口
 
 - 后端服务器端口：8085
+
 - 网站端口：8080
+
 - 资源服务器端口：8088
+
 - Redis:
   ```yaml
   redis:
@@ -11,6 +14,7 @@
     #端口号
     port: 6379
   ```
+  
 - RabbitMQ：
 
   ```yaml
@@ -24,6 +28,14 @@
       password: ems
       virtual-host: /ems
   ```
+
+  
+
+
+
+
+
+
 
 新增功能：
 
@@ -45,6 +57,8 @@
 
 - 查看所有文档：可以查看用户上传的文档
 
+  ![](https://s3.bmp.ovh/imgs/2023/05/11/b0a82c42df893953.png)
+
 - 查看文档：可以查看文档内容以及评论
 
   ![](https://s3.bmp.ovh/imgs/2023/05/10/2ca4d9370ee4f419.png)
@@ -65,6 +79,7 @@
       style="height: calc(100vh - 50px)"
   />
   ```
+
   ![](https://s3.bmp.ovh/imgs/2023/05/11/48b48b0babee919d.png)
 
 - 用户界面：展示聊天记录，用户自述以及用户的文档列表
@@ -152,10 +167,11 @@
   </style>
   ```
 
+  ![](https://s3.bmp.ovh/imgs/2023/05/11/36bbd3af39fad752.png)
+
 - 私信：使用了WebSocket
 
   ![](https://s3.bmp.ovh/imgs/2023/05/10/6517e6fe576538b0.png)
-  
 
 
 
