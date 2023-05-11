@@ -65,6 +65,7 @@
       style="height: calc(100vh - 50px)"
   />
   ```
+  ![](https://s3.bmp.ovh/imgs/2023/05/11/48b48b0babee919d.png)
 
 - 用户界面：展示聊天记录，用户自述以及用户的文档列表
 
