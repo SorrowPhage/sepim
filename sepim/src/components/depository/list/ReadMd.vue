@@ -466,7 +466,7 @@ export default {
 .sp-comment-box {
     margin-top: 5px;
     border-radius: 3px;
-    border: 1px solid darkgray;
-    background-color: white;
+    /*border: 1px solid darkgray;*/
+    /*background-color: white;*/
 }
 </style>

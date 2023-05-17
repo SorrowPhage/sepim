@@ -1,18 +1,34 @@
 <template>
     <div class="comment-box">
-        <div class="sp-make-comment-box">
-            <div class="sp-comment-avatar-box">
-                <el-avatar :size="30" :src="userAvatarUrl" class="avatar"></el-avatar>
-            </div>
-            <div class="sp-textarea-box">
-                <div class="sp-textarea-content-box">
-                    <textarea class="sp-textarea-comment" v-model.lazy="substance"></textarea>
+        <div class="sp-make-comment-headline-box">
+            <div class="relpay-nav">
+                <div class="relpay-title">
+                    <span class="relpay-nav-headline">评论</span>
+                    <span class="relpay-nav-comment-numbers">{{commentsLength}}</span>
                 </div>
-                <div class="sp-textarea-btn-box">
-                    <el-button  type="primary" @click="release"> 发布</el-button>
+            </div>
+            <div class="sp-make-comment-box">
+                <div class="sp-textarea-box">
+                    <div class="sp-comment-avatar-box">
+                        <el-avatar :size="30" :src="userAvatarUrl" class="avatar"></el-avatar>
+                    </div>
+                    <div class="sp-textarea-content-box" >
+<!--                        <textarea class="sp-textarea-comment" placeholder="Edit..." @focus="tools=true"  @blur="tools=false" v-model.lazy="substance"></textarea>-->
+                        <VueEmoji ref="emoji"  :value="substance"  @input="onInput" width="100%" height="30"></VueEmoji>
+<!--                        <div v-show="tools" class="tools-nav"  @focus="tools=true">-->
+<!--                            <div>-->
+<!--                            -->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                    <div class="sp-textarea-btn-box">
+                        <el-button  type="primary" @click="release"> 发布</el-button>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        
         <div class="sp-comments-box" v-for="comment in comments" :key="comment.id">
             <div class="sp-parent-comment">
                 <div class="sp-comment-avatar-box">
@@ -58,6 +74,7 @@
 </template>
 
 <script>
+import VueEmoji from "emoji-vue";
 import axios from "axios";
 import CommentReply from "@/components/depository/list/comment/CommentReply";
 export default {
@@ -65,11 +82,27 @@ export default {
     data(){
         return{
             substance: '',
+            tools: false,
         }
     },
     props:['userAvatarUrl','comments'],
-    components:{CommentReply},
+    components: {CommentReply, VueEmoji},
+    computed: {
+        commentsLength(){
+            let length = 0;
+            this.comments.forEach((e)=>{
+                length = length + 1;
+                if (e.child !== null) {
+                    length = length + e.child.length;
+                }
+            })
+            return length;
+        }
+    },
     methods:{
+        onInput(event) {
+            this.substance = event.data;
+        },
         goDetail(account) {
             this.$router.push({
                 name: 'detail',
@@ -93,6 +126,7 @@ export default {
                 account:this.$store.state.User.account,avatarUrl:this.$store.state.User.avatarUrl,data:this.commonDate()
             }).then(res=>{
                 if (res.data.flag === "md_comment_release_succeed") {
+                    this.$refs.emoji.clear();
                     this.substance = '';
                     this.$store.dispatch("Comment/getComments", this.$route.query.id);
                     this.$message({
@@ -137,7 +171,7 @@ export default {
 }
 .sp-comments-box {
     width: 100%;
-    border-bottom: 1px solid darkgray;
+    /*border-bottom: 1px solid darkgray;*/
 }
 .sp-parent-comment{
     width: 100%;
@@ -170,39 +204,79 @@ export default {
     display: flex;
     padding: 5px;
 }
+.sp-make-comment-headline-box {
+    width: 100%;
+    /*display: flex;*/
+    /*border-bottom: 1px solid dimgrey;*/
+    padding-bottom: 10px;
+}
+.relpay-nav{
+    /*font-size: 25px;*/
+    height: 36px;
+}
+.relpay-title{
+    display: flex;
+    /*background: #00aaaa;*/
+    align-items: center;
+}
+.relpay-nav-headline{
+    font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
+    font-size: 24px;
+    color: #18191c;
+}
+.relpay-nav-comment-numbers {
+    margin: 0 36px 0 6px;
+    font-size: 14px;
+    color: #c9ccd0;
+}
 .sp-make-comment-box {
     width: 100%;
-    display: flex;
-    border-bottom: 1px solid dimgrey;
-    padding-bottom: 10px;
+    padding: 5px;
+    /*display: flex;*/
+    /*border-bottom: 1px solid dimgrey;*/
+    /*padding-bottom: 10px;*/
 }
 .sp-textarea-box{
     width: 90%;
     display: flex;
+    align-items: center;
 }
 .sp-textarea-comment {
     display: block;
     width: 100%;
-    padding: 4px 12px;
+    /*padding: 4px 12px;*/
     resize: none;
+    /*height: 40px;*/
     height: 40px;
-    font-size: 14px;
-    line-height: 22px;
+    font-size: 20px;
+    /*line-height: 22px;*/
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-transition: height .3s ease-in-out;
     transition: height .3s ease-in-out;
     border-radius: 4px 4px 4px 4px;
-    border: 1px darkgray solid;
+    /*border: 1px darkgray solid;*/
 }
 .sp-textarea-content-box{
+    margin-left: 5px;
     width: 90%;
+}
+.tools-nav {
+    /*width: 100%;*/
+    /*background: #00aaaa;*/
+    height: 25px;
+    margin-top: 0;
+    border: 1px solid #719ECE;
+    
+    /*border-radius: 4px 4px 0 0;*/
 }
 .sp-textarea-content-box textarea:focus{
     height: 80px;
     outline: none !important;
     border-color: #719ECE;
+    border-bottom-color: white;
     box-shadow:  #719ECE;
+    border-radius: 4px 4px 0 0;
 }
 
 .sp-textarea-btn-box{

@@ -2,7 +2,8 @@
     <div>
         <div ref="replayBtn" class="sp-reply" @click="reply()">回复</div>
         <div ref="replay" v-show="isShow" class="sp-textarea-content-box">
-            <textarea  ref="replay_text" v-model="content" class="sp-textarea-comment" ></textarea>
+<!--            <textarea  ref="replay_text" v-model="content" class="sp-textarea-comment" ></textarea>-->
+            <VueEmoji ref="replay_emoji" :value="content" @input="onInput" width="100%" height="30"></VueEmoji>
             <div class="sp-replay-box">
                 <button class="sp-replay-btn"  @click="replayComment">评论</button>
             </div>
@@ -12,10 +13,11 @@
 
 <script>
 import axios from "axios";
-
+import VueEmoji from "emoji-vue";
 export default {
     name: "CommentReply",
     props: ['folderId', 'parentId', 'rootId', 'username', 'account', 'avatarUrl'],
+    components: {VueEmoji},
     data() {
         return {
             isShow: false,
@@ -23,11 +25,14 @@ export default {
         }
     },
     methods: {
+        onInput(event) {
+            this.content = event.data;
+        },
         reply() {
             this.isShow = true;
-            this.$nextTick(() => {
-                this.$refs.replay_text.focus();
-            })
+            // this.$nextTick(() => {
+            //     this.$refs.replay_text.focus();
+            // })
         },
         display() {
             this.isShow = false;
@@ -50,10 +55,12 @@ export default {
                 data: this.commonDate(), content: this.content
             }).then(res => {
                 this.isShow = false;
+                
+                this.$refs.replay_emoji.clear();
+                this.content = '';
                 if (res.data.flag === "md_comment_release_succeed") {
                     this.$store.dispatch("Comment/getComments", this.folderId);
                 }
-                this.content = '';
                 this.$message({
                     showClose: true,
                     message: '回复成功',
@@ -166,8 +173,8 @@ export default {
 .sp-replay-box {
     /*width: 90%;*/
     text-align: right;
-    background-color: white;
-    border: 1px solid #719ECE;
+    /*background-color: white;*/
+    border: 1px solid #d2dbe3;
     border-top: none;
     border-radius: 0 0 3px 3px;
     /*padding: 10px;*/

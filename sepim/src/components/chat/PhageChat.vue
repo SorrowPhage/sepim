@@ -18,7 +18,8 @@
                 <div class="replay-box">
 <!--                    <chat-reply></chat-reply>-->
                     <div class="reply-content-box">
-                        <textarea rows="4"  ref="replay_text" v-model="contentReply" class="sp-textarea-comment" ></textarea>
+<!--                        <textarea rows="4"  ref="replay_text" v-model="contentReply" class="sp-textarea-comment" ></textarea>-->
+                        <VueEmoji ref="chat_text" :value="contentReply" @input="onInput" width="100%" height="80"></VueEmoji>
                     </div>
                     <div class="btn-box">
                         <div class="btn-content-box">
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import VueEmoji from "emoji-vue";
 import ChatLine from "@/components/chat/Chat-Line";
 import ChatLineRight from "@/components/chat/ChatLineRight";
 import {mapState} from "vuex";
@@ -40,7 +42,7 @@ let socket;
 export default {
     name: "PhageChat",
     components: {
-        ChatLine,ChatLineRight
+        ChatLine,ChatLineRight,VueEmoji
     },
     computed: {
         ...mapState("User", ['account', 'avatarUrl']),
@@ -61,6 +63,9 @@ export default {
         this.init();
     },
     methods: {
+        onInput(event) {
+            this.contentReply = event.data;
+        },
         formatDate(sendTime) {
             let a = new Date(sendTime).getTime();
             const date = new Date(a);
@@ -90,7 +95,7 @@ export default {
                     content: this.contentReply,
                     user:{avatarUrl: this.$route.params.url}
                 });
-                
+                this.$refs.chat_text.clear();
                 this.contentReply = '';
                 this.$nextTick(()=>{
                     this.$refs["display-box"].scrollTop = this.$refs["display-box"].scrollHeight;
