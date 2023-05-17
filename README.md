@@ -174,6 +174,9 @@
   ![](https://s3.bmp.ovh/imgs/2023/05/10/6517e6fe576538b0.png)
 
 
+- 私信和评论添加表情，使用了VueEmoji组件
 
+  ![](https://s3.bmp.ovh/imgs/2023/05/17/58552069955e965a.png)
+  ![](https://s3.bmp.ovh/imgs/2023/05/17/0d767b5cdda254b4.png)
 
 
