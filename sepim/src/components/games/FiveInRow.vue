@@ -1,25 +1,39 @@
 <template>
     <div class="main">
-        <div>{{hostname}}</div>
-        <div>
-            <h2 class="h2Title">五子棋</h2>
-            <h3>{{victory}}</h3>
-            <div class="Fbuttons">
-                <input type="button" value="重新开始" class="restart" @click="restartInit()" />
-                <input type="button" value="悔棋" class="regret" @click="regret()" />
-                <input type="button" value="撤销悔棋" class="undo" @click="undo()" />
-                <input type="button" :value="toggle?'切换dom':'切换canvas'" class="toggle" @click="toggleF()" />
-            </div>
-            <div class="wuziqi-main">
-                <canvas v-show="toggle" id="myCanvas" ref="canvas" width="480" height="480">当前浏览器不支持Canvas</canvas>
-                <div v-show="!toggle" id="chess" ref="chessBox">
-                    <!-- <div id="box01"></div>
-                    <div id="box02"></div> -->
+        <div v-show="players">
+            <div>{{hostname}}</div>
+            <div>
+                <h2 class="h2Title">五子棋</h2>
+                <h3>{{victory}}</h3>
+                <div class="Fbuttons">
+<!--                    <input type="button" value="重新开始" class="restart" @click="restartInit()" />-->
+                    <input type="button" value="悔棋" class="regret" @click="regret()" />
+<!--                    <input type="button" value="撤销悔棋" class="undo" @click="undo()" />-->
+<!--                    <input type="button" :value="toggle?'切换dom':'切换canvas'" class="toggle" @click="toggleF()" />-->
+                </div>
+                <div class="wuziqi-main">
+                    <canvas v-show="toggle" id="myCanvas" ref="canvas" width="480" height="480">当前浏览器不支持Canvas</canvas>
+                    <div v-show="!toggle" id="chess" ref="chessBox">
+                        <!-- <div id="box01"></div>
+                        <div id="box02"></div> -->
+                    </div>
                 </div>
             </div>
+            <div>
+                {{opponent}}
+            </div>
         </div>
-        <div>
-            {{opponent}}
+        <div v-show="!players">
+            <div v-show="!cpb">
+                <el-button type="primary" @click="compatible()">匹配</el-button>
+            </div>
+            <div v-show="cpb">
+                <div class="loading">
+                </div>
+                <div class="time">
+                    {{compatibleTime}}
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -33,6 +47,10 @@ export default {
     ...mapState("User", ['account', 'avatarUrl']),
     data() {
         return{
+            compatibleTime: 0,
+            cpb: false,
+            intervalId: null,
+            players: false,
             hostname: 'user',
             opponent: 'sp2645354',
             pieceMapArr: [], //记录棋盘落子情况
@@ -54,7 +72,6 @@ export default {
         }
     },
     mounted() {
-        
         this.init();
         
         const myCanvas = document.getElementById("myCanvas");
@@ -79,7 +96,7 @@ export default {
                 }
                 let dx = Math.floor((e.offsetX + 15) / 30) * 30;
                 let dy = Math.floor((e.offsetY + 15) / 30) * 30;
-    
+                
                 if (this.pieceMapArr[dx / 30 - 1][dy / 30 - 1] === 0) {
                     let chess;
                     
@@ -87,26 +104,25 @@ export default {
                         if (this.hostname === this.$store.state.User.account) {
                             chess = {
                                 fromId: this.$store.state.User.account,
-                                toId: this.$route.params.account,
+                                toId: this.opponent,
                                 dx: dx,
                                 dy: dy,
                                 color: "black",
                             };
                         }
                     } else {
-                        if (this.hostname === this.$store.state.User.account && this.history[this.history.length-1].color==="white") {
+                        if (this.hostname === this.$store.state.User.account && this.history[this.history.length - 1].color === "white") {
                             chess = {
                                 fromId: this.$store.state.User.account,
-                                toId: this.$route.params.account,
+                                toId: this.opponent,
                                 dx: dx,
                                 dy: dy,
                                 color: "black",
                             };
-                        }
-                        else if (this.opponent === this.$store.state.User.account && this.history[this.history.length - 1].color === "black") {
+                        } else if (this.opponent === this.$store.state.User.account && this.history[this.history.length - 1].color === "black") {
                             chess = {
                                 fromId: this.$store.state.User.account,
-                                toId: this.$route.params.account,
+                                toId: this.hostname,
                                 dx: dx,
                                 dy: dy,
                                 color: "white",
@@ -123,7 +139,7 @@ export default {
                     this.history.push(chess);
                     this.historyVal.push(chess);
                     socket.send(JSON.stringify(chess));
-    
+                    
                     for (let i = 0; i < 4; i++) {
                         this.checkWin(dx / 30 - 1, dy / 30 - 1, chess.color, this.checkMode[i]);
                     }
@@ -137,11 +153,28 @@ export default {
                     });
                 }
             });
-            
-            
         }
+        
+    },
+    beforeDestroy() {
+        socket.close();
     },
     methods: {
+        add() {
+            this.intervalId = setInterval(() => {
+                this.compatibleTime += 1
+            }, 1000)
+        },
+        // 停止定时器
+        stop() {
+            clearInterval(this.intervalId)//清除计时器
+            this.intervalId = null;//设置为null
+        },
+        compatible() {
+            this.add();
+            this.cpb = true;
+            socket.send(JSON.stringify({cpb:true,formId:this.$store.state.User.account}))
+        },
         chessmanPush(data) {
             this.drawPiece(data.dx, data.dy, data.color); //落下棋子
             this.history.push(data);
@@ -173,7 +206,8 @@ export default {
                 socket.onopen = function () {
                     console.log("websocket已打开");
                 };
-
+    
+                
                 
                 //  浏览器端收消息，获得从服务端发送过来的文本消息
                 socket.onmessage = function (msg) {
@@ -185,9 +219,14 @@ export default {
                         _this.users = data.users.filter(user => user.username !== username);  // 获取当前连接的所有用户信息，并且排除自身，自己不会出现在自己的聊天列表里
                         console.log(_this.users)
                     } else {
-                        console.log("+++++++++++++++++++++")
                         if (data.fromId === _this.hostname || data.toId === _this.hostname) {
+                            console.log("+++++++++++++++++++++")
                             _this.chessmanPush(data);
+                        }
+                        if (data.hostname != null || data.hostname !== undefined) {
+                            _this.hostname = data.hostname;
+                            _this.opponent = data.opponent;
+                            _this.players = this;
                         }
                     }
                 };
@@ -663,5 +702,39 @@ body {
 .toggle{
     float: right;
 }
+.loading{
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #02b2c9;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.time {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #00bfff;
+}
+
+
 
 </style>

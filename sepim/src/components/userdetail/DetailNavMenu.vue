@@ -24,7 +24,7 @@
                                         <div v-show="$store.state.Detail.id!==$store.state.User.account"
                                              class="sp-userinfo-info-box">
                                             <el-button type="danger" @click="goChat()">私信</el-button>
-                                            <el-button type="danger" @click="goWUzQi">五子棋</el-button>
+<!--                                            <el-button type="danger" @click="goWUzQi">五子棋</el-button>-->
                                         </div>
                                         <div v-show="$store.state.Detail.id===$store.state.User.account">
                                             <el-input v-model="searchUser"></el-input>
@@ -97,8 +97,8 @@ export default {
     // },
     methods: {
         formatDate(sendTime) {
-            let a = new Date(sendTime).getTime();
-            const date = new Date(a);
+            let a = new Date(sendTime).getTime() - 8 * 3600 * 1000;
+            const date = new Date(a) ;
             const Y = date.getFullYear() + '/';
             const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
             const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '  ';
@@ -314,7 +314,7 @@ export default {
 .sp-user-line-box{
     border-top: 1px solid dimgrey;
     width: 100%;
-    height: 40%;
+    /*height: 40%;*/
     margin-top: 5px;
     overflow: auto;
 }

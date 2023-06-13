@@ -120,7 +120,10 @@ export default {
         goGames() {
             this.isTrue = false;
             this.$router.push({
-                name:'games'
+                name:'games',
+                params:{
+                    account: this.$store.state.User.account,
+                }
             })
         },
         goVideoPlayer() {
@@ -448,6 +451,6 @@ li {
 .weather-box{
     width: 150px;
     position: absolute;
-    right: 150px;
+    right: 250px;
 }
 </style>

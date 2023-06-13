@@ -31,7 +31,7 @@ import { RadioGroup, RadioButton, Menu,
   Breadcrumb,BreadcrumbItem,DatePicker,Steps
   ,Step,Form,FormItem,Input,Dialog,Button,Carousel,CarouselItem,
   Calendar,Table,TableColumn,Radio,Badge,Option,Select,Popover
-  ,Empty,Aside,Tabs,TabPane,Link,Slider,Dropdown,DropdownItem,DropdownMenu} from 'element-ui'
+  ,Empty,Aside,Tabs,TabPane,Link,Slider,Dropdown,DropdownItem,DropdownMenu,Image} from 'element-ui'
 
 import { Loading } from 'element-ui';
 Vue.use(Loading.directive);
@@ -81,6 +81,8 @@ Vue.component(Slider.name, Slider)
 Vue.component(Dropdown.name, Dropdown)
 Vue.component(DropdownItem.name, DropdownItem)
 Vue.component(DropdownMenu.name, DropdownMenu)
+Vue.component(Image.name, Image)
+
 
 
 

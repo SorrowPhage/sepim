@@ -184,7 +184,7 @@ const router = new VueRouter({
                 },
                 {
                     name: 'games',
-                    path: 'games',
+                    path: 'games:/account',
                     component:() => import("@/components/games/PhageGames"),
                     meta:{title: "游戏", ver: true},
                 },

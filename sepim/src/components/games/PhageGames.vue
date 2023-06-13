@@ -1,6 +1,16 @@
 <template>
     <div class="main">
-        <el-button type="primary" @click="goWUzQi">五子棋</el-button>
+        <div>
+            <div>
+                <el-image
+                    style="width: 200px; height: 100px"
+                    src="http://localhost:8088/upload/sepim/games/wuziqi.jpg"
+                    fit="contain"></el-image>
+            </div>
+            <div class="btn">
+                <el-button type="primary" @click="goWUzQi">五子棋</el-button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -17,7 +27,7 @@ export default {
             this.$router.push({
                 name:'wuziqi',
                 params:{
-                    account: this.$store.state.Detail.account,
+                    account: this.$store.state.User.account,
                 }
             })
         },
@@ -40,5 +50,8 @@ export default {
     display: flex;
     justify-content: center;
     /*align-items: center;*/
+}
+.btn{
+    text-align: center;
 }
 </style>
