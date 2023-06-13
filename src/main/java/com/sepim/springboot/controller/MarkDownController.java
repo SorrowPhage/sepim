@@ -1,10 +1,12 @@
 package com.sepim.springboot.controller;
 
+import com.sepim.springboot.common.aop.LogAnnotation;
 import com.sepim.springboot.entity.Comment;
 import com.sepim.springboot.entity.Folder;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class MarkDownController {
 
     @Autowired
@@ -42,12 +45,14 @@ public class MarkDownController {
     }
 
     @GetMapping("/md/read")
+    @LogAnnotation(module = "文章",operator = "获取文章")
     public ResultData readMd(@RequestParam("id") String id) {
         resultData = folderService.readMd(id);
         return resultData;
     }
 
     @GetMapping("/md/readMd")
+    @LogAnnotation(module = "文章",operator = "获取文章")
     public ResultData readMdContent(@RequestParam("id") String id) {
         resultData = folderService.readMdContent(id);
         return resultData;
@@ -84,7 +89,9 @@ public class MarkDownController {
     }
 
     @GetMapping("/md/comment/get")
+    @LogAnnotation(module = "文章",operator = "评论")
     public ResultData getComments(@RequestParam("folderId") String folderId) {
+        log.info("asdasdasd");
         List<Comment> comments = commentService.getComments(folderId);
         resultData.setFlag("md_comment_get_succeed");
         resultData.setData(comments);

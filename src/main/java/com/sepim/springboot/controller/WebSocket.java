@@ -1,7 +1,6 @@
 package com.sepim.springboot.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson2.JSON;
 import com.sepim.springboot.entity.ChatMessage;
@@ -63,9 +62,10 @@ public class WebSocket {
         log.info("[WebSocket] 连接成功，当前连接人数为：={}", webSocketSet.size());
         log.info("----------------------------------");
         log.info("");
-
-        GroupSending(JSONUtils.toJSONString(name + " 来了"));
+        log.info(name + "来了");
+        // GroupSending(JSONUtils.toJSONString(name + " 来了"));
     }
+
 
     /**
      * 连接关闭调用的方法
@@ -98,17 +98,6 @@ public class WebSocket {
             JSONObject o = (JSONObject) JSONObject.toJSON(chatMessage);
             AppointSending(chatMessage.getToId(), o.toJSONString());
         }
-        // if (message_str.contains("content")) {
-        //
-        // } else {
-        //     JSONArray objects = JSONObject.parseArray(message_str);
-        //     // log.info(objects.getString("\"toId\""));
-        //     log.info(message_str);
-        //     AppointSending("user", message_str);
-        // }
-
-
-
     }
 
     /**
@@ -122,6 +111,7 @@ public class WebSocket {
         log.info("发生错误");
         error.printStackTrace();
     }
+
 
     /**
      * 群发

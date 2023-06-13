@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -40,6 +42,9 @@ public class GoBangWebSocket {
      * 注意这里的kv,设计的很巧妙，v刚好是本类 WebSocket (用来存放每个客户端对应的MyWebSocket对象)
      */
     private static ConcurrentHashMap<String, GoBangWebSocket> webSocketSet = new ConcurrentHashMap<>();
+
+
+    private static List<String> compatibleQueue = new ArrayList<>();
 
 
     /**
@@ -80,9 +85,24 @@ public class GoBangWebSocket {
 
         // JSONArray objects = JSONObject.parseArray(message_str);
         JSONObject jsonObject = JSONObject.parseObject(message_str);
-        // log.info(objects.getString("\"toId\""));
-        log.info(message_str);
-        AppointSending(jsonObject.getString("toId"), message_str);
+        if (jsonObject.getString("cpb") != null) {
+            if (!compatibleQueue.contains(jsonObject.getString("formId"))) {
+                compatibleQueue.add(jsonObject.getString("formId"));
+            }
+            if (compatibleQueue.size() >= 2) {
+                String hostname = compatibleQueue.get(0);
+                String opponent = compatibleQueue.get(1);
+                compatibleQueue.remove(1);
+                compatibleQueue.remove(0);
+                String mes = "{\"hostname\":\"" + hostname + "\",\"opponent\":\"" + opponent + "\"}";
+                AppointSending(hostname, mes);
+                AppointSending(opponent, mes);
+            }
+        } else {
+            // log.info(objects.getString("\"toId\""));
+            log.info(message_str);
+            AppointSending(jsonObject.getString("toId"), message_str);
+        }
 
 
 

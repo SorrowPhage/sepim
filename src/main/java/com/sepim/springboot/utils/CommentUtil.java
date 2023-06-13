@@ -9,9 +9,15 @@ import java.util.Map;
 
 public class CommentUtil {
 
+    /**
+     * 评论列表处理
+     * @param comments 所有的评论
+     * @return 树状评论列表
+     */
     public static List<Comment> processComments(List<Comment> comments) {
         Map<String, Comment> map = new HashMap<>();
         List<Comment> list = new ArrayList<>();
+
         for (Comment comment : comments) {
             map.put(comment.getId(), comment);
         }
@@ -29,6 +35,7 @@ public class CommentUtil {
                 rootComment.getChild().add(comment);
             }
         }
+
         for (Comment comment : comments) {
             if (comment.getParentId() == null) {
                 list.add(comment);

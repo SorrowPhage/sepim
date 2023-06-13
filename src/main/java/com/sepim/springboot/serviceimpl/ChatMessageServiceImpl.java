@@ -40,9 +40,24 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
         //在用户调用信息后，发给他的信息未读改为已读
         chatMessageMapper.updateMessageType(s1, s2);
         List<ChatMessage> chatMessage = chatMessageMapper.getChatMessage(s1, s2);
+        /**
+         * 以下语句会导致疯狂查询数据库
+         */
+        // for (ChatMessage message : chatMessage) {
+        //     message.setUser(userService.getById(message.getFromId()));
+        // }
+
+        User user1 = userService.getById(s1);
+        User user2 = userService.getById(s2);
+
         for (ChatMessage message : chatMessage) {
-            message.setUser(userService.getById(message.getFromId()));
+            if (message.getFromId().equals(s1)) {
+                message.setUser(user1);
+            } else {
+                message.setUser(user2);
+            }
         }
+
         resultData.setFlag("200");
         resultData.setData(chatMessage);
         return resultData;
