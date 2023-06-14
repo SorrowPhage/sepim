@@ -151,6 +151,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return resultData;
     }
 
+    /**
+     * 用户信息更新
+     * @param user
+     * @return
+     */
     @Override
     public ResultData userInfoUpdate(User user) {
         boolean b = this.saveOrUpdate(user);
@@ -164,6 +169,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return resultData;
     }
 
+    /**
+     * 修改用户密码
+     * @param user
+     * @return
+     */
     @Override
     public ResultData userUpdatePassword(User user) {
         if (this.getById(user.getId()).getPassword().equals(user.getOldPassword())) {
@@ -177,6 +187,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return resultData;
     }
 
+    /**
+     * 获取用户信息
+     * @param id
+     * @return
+     */
     @Override
     public ResultData getUser(String id) {
         User user = this.getById(id);
@@ -189,6 +204,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return resultData;
     }
+
 
     @Override
     public ResultData readme(User user) {
@@ -210,6 +226,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return resultData;
     }
 
+    /**
+     * 搜索用户
+     * @param q
+     * @return
+     */
     @Override
     public ResultData searchUser(String q) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();

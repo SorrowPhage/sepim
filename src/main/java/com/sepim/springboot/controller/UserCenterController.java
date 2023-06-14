@@ -22,18 +22,33 @@ public class UserCenterController {
     private ResultData resultData;
 
 
+    /**
+     * 获取用户信息
+     * @param user
+     * @return
+     */
     @PostMapping("/user/center/get")
     public ResultData getUser(@RequestBody User user) {
         resultData = userService.getUser(user.getId());
         return resultData;
     }
 
+    /**
+     * 获取用户的文章列表
+     * @param folder
+     * @return
+     */
     @PostMapping("/user/center/files")
     public ResultData getPublicFolders(@RequestBody Folder folder) {
         resultData = folderService.getPublicFolders(folder.getUserId());
         return resultData;
     }
 
+    /**
+     * 获取用户的描述文件
+     * @param user
+     * @return
+     */
     @PostMapping("/md/overview")
     public ResultData overview(@RequestBody User user) {
         resultData = folderService.overview(user);

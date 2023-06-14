@@ -2,6 +2,7 @@ package com.sepim.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sepim.springboot.entity.Folder;
+import com.sepim.springboot.entity.FolderCondition;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,6 +11,8 @@ public interface FolderService extends IService<Folder> {
     public ResultData saveMd(Folder folder);
 
     public ResultData editMd(Folder folder);
+
+    public ResultData queryBYCondition(FolderCondition condition);
 
     public ResultData getMdList(String id);
 

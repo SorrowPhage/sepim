@@ -3,6 +3,7 @@ package com.sepim.springboot.controller;
 import com.sepim.springboot.common.aop.LogAnnotation;
 import com.sepim.springboot.entity.Comment;
 import com.sepim.springboot.entity.Folder;
+import com.sepim.springboot.entity.FolderCondition;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderService;
@@ -29,6 +30,12 @@ public class MarkDownController {
     @PostMapping("/md/save")
     public ResultData saveMd(@RequestBody Folder folder) {
         resultData = folderService.saveMd(folder);
+        return resultData;
+    }
+
+    @GetMapping("/md/list/page")
+    public ResultData getMdListPage(@RequestBody FolderCondition condition) {
+        resultData = folderService.queryBYCondition(condition);
         return resultData;
     }
 
