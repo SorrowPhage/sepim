@@ -7,10 +7,7 @@ import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.UserMapper;
 import com.sepim.springboot.service.UserService;
-import com.sepim.springboot.utils.AccountGenerateUtil;
-import com.sepim.springboot.utils.MySessionUtil;
-import com.sepim.springboot.utils.MyTokenUtil;
-import com.sepim.springboot.utils.FileUploadUtil;
+import com.sepim.springboot.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +20,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Autowired
     private ResultData resultData;
 
+    @Autowired
+    private StringRedisUtils stringRedisUtils;
+
 
 
     /**
@@ -31,7 +31,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 注册结果
      */
     public ResultData register(User user) {
-        String verCode = (String) MySessionUtil.getSession("ver_code");
+        // String verCode = (String) MySessionUtil.getSession("ver_code");
+        String verCode = stringRedisUtils.getRedis(user.getEmail());
         if (!verCode.equals(user.getVerCode())) {
             resultData.setFlag("ver_defeat");
             resultData.setData(null);
@@ -43,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             user.setId(AccountGenerateUtil.generateAccount());
             MySessionUtil.removeSession("ver_code");
-            user.setType("user");
+            // user.setType("user");
             this.save(user);
             resultData.setData(user);
             resultData.setFlag("succeed");
@@ -241,6 +242,46 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             resultData.setData(list);
         } else {
             resultData.setFlag("search_user_defeat");
+            resultData.setData(null);
+        }
+        return resultData;
+    }
+
+    /**
+     * 上传人脸
+     // * @return
+     */
+    @Override
+    public ResultData uploadFaceImage(MultipartFile file, String id) {
+        if (file != null) {
+            String face_Url = FileUploadUtil.uploadFare(file);
+            String s = FareUtils.checkFace(face_Url);
+            if (s!=null) {
+                FileUploadUtil.delete(face_Url);
+                resultData.setFlag("300");
+                resultData.setData(null);
+            } else {
+                //删除原来的图像
+                String old_avatar = this.getById(id).getFaceUrl();
+                FileUploadUtil.deleteFaceUrl(old_avatar);
+
+                //上传图像文件到服务器
+                String faceUrl = FileUploadUtil.uploadFace(file);
+
+                //修改用户新的图像访问路径
+                UpdateWrapper<User> wrapper = new UpdateWrapper<>();
+                wrapper.set("face_url", faceUrl).eq("id", id);
+                boolean update = this.update(wrapper);
+                if (update) {
+                    resultData.setFlag("200");
+                    resultData.setData(faceUrl);
+                } else {
+                    resultData.setFlag("400");
+                    resultData.setData(null);
+                }
+            }
+        } else {
+            resultData.setFlag("400");
             resultData.setData(null);
         }
         return resultData;

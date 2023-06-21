@@ -37,6 +37,12 @@ public class FileUploadUtil {
 
     private static final String LRC_SERVE_PATH = "http://localhost:8088/upload/sepim/music/lrc/";
 
+    private static final String FACE_BASE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\face\\";
+
+    private static final String FARE_BASE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\fare\\";
+
+    private static final String FACE_SERVER_PATH = "http://localhost:8088/upload/sepim/face/";
+
     public static String upload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
 
@@ -64,6 +70,65 @@ public class FileUploadUtil {
             file.delete();
         }
     }
+
+
+    public static String uploadFace(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+
+        //使用uuid保证图片名字的唯一
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+
+        String newFile = uuid + originalFilename;
+
+        File image = new File(FACE_BASE_PATH, newFile);
+        try {
+            file.transferTo(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return FACE_SERVER_PATH + newFile;
+    }
+
+    public static String uploadFare(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+
+        //使用uuid保证图片名字的唯一
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+
+        String newFile = uuid + originalFilename;
+
+        File image = new File(FARE_BASE_PATH, newFile);
+        try {
+            file.transferTo(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return FARE_BASE_PATH + newFile;
+    }
+    public static void deleteFare(String imgUrl) {
+        if (imgUrl == null) {
+            return;
+        }
+        File file = new File(imgUrl);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    public static void deleteFaceUrl(String imgUrl) {
+        if (imgUrl == null) {
+            return;
+        }
+        String deleteUrl = imgUrl.replace(FACE_SERVER_PATH, FACE_BASE_PATH);
+        File file = new File(deleteUrl);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+
+
+
 
     public static boolean uploadMdFile(String content,String absPath) {
         BufferedReader bufferedReader = null;

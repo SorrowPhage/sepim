@@ -92,7 +92,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
             String s = chatMessage.getFromId().equals(user) ? chatMessage.getToId() : chatMessage.getFromId();
             User userServiceById = userService.getById(s);
             chatMessage.setUser(userServiceById);
-            chatMessage.setNoReadNum(chatMessageMapper.getNoReadChatMessage(user));
+            chatMessage.setNoReadNum(chatMessageMapper.getNoReadChatMessage(s));
         }
         resultData.setFlag("200");
         resultData.setData(list);

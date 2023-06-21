@@ -5,6 +5,7 @@ import com.sepim.springboot.entity.Email;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.EmailService;
 import com.sepim.springboot.utils.MySessionUtil;
+import com.sepim.springboot.utils.StringRedisUtils;
 import com.sepim.springboot.utils.VerCodeGenerateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private ResultData resultData;
+
+    @Autowired
+    private StringRedisUtils stringRedisUtils;
 
 
     @Value("${spring.mail.username}")
@@ -43,6 +47,9 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(message);
 
         MySessionUtil.setSession("ver_code", verCode);
+
+        stringRedisUtils.addRedisTime(email.getTos(), verCode);
+
         resultData.setFlag("send_succeed");
         return resultData;
     }

@@ -17,6 +17,7 @@ public class Folder {
     private String url;
     private String state;
     private String mdUrl;
+    private String time;
     @TableField(exist = false)
     private String content;
     @TableField(exist = false)

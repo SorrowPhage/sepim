@@ -26,4 +26,6 @@ public interface UserService extends IService<User> {
     public ResultData readme(User user);
 
     public ResultData searchUser(String q);
+
+    public ResultData uploadFaceImage(MultipartFile file, String id);
 }

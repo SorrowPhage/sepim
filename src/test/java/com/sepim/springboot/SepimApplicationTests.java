@@ -7,10 +7,7 @@ import com.sepim.springboot.mapper.ChatMessageMapper;
 import com.sepim.springboot.mapper.MusicListMapper;
 import com.sepim.springboot.mapper.MusicMapper;
 import com.sepim.springboot.service.*;
-import com.sepim.springboot.utils.AccountGenerateUtil;
-import com.sepim.springboot.utils.FileUploadUtil;
-import com.sepim.springboot.utils.RedisUtil;
-import com.sepim.springboot.utils.VerCodeGenerateUtil;
+import com.sepim.springboot.utils.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -124,8 +121,13 @@ class SepimApplicationTests {
         user.setId(AccountGenerateUtil.generateAccount());
         user.setUsername("sorrow");
         user.setPassword("12346");
-        user.setType("user");
+        // user.setType("user");
         userService.save(user);
+    }
+
+    @Test
+    void fareTest() {
+        // System.out.println(FareUtils.checkFace());
     }
 
     // @Autowired

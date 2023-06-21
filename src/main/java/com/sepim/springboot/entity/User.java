@@ -10,13 +10,14 @@ public class User {
     private String id;
     private String password;
     private String username;
-    private String type;
+    // private String type;
     private String avatarUrl;
     private String email;
     private String overviewUrl;
     private String overviewMdUrl;
     private String sex;
     private String birthday;
+    private String faceUrl;
     //表中无此字段，但是注册和找回密码的时候需要
     @TableField(exist = false)
     private String verCode;

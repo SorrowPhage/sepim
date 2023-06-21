@@ -165,7 +165,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     }
 
     /**
-     * 删除文件中的土拍你
+     * 删除文件中的图片
      * @param url
      * @return
      */
