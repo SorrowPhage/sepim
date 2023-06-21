@@ -46,22 +46,22 @@ const router = new VueRouter({
                     // meta: {ver: true},
                     meta: {ver: false},
                     component: () => import('@/components/MainContext'),
-                    redirect: '/index.html/main/el',
-                    children: [
-                        {
-                            name: 'bfag',
-                            path: 'bfag',
-                            component: () => import('@/components/main/BasicFormatAndGrammar'),
-                            // meta: {ver: true}
-                            meta: {ver: false}
-                        },
-                        {
-                            name: 'el',
-                            path: 'el',
-                            component: () => import('@/components/main/EntryLevel'),
-                            meta: {ver: false}
-                        },
-                    ]
+                    // redirect: '/index.html/main/el',
+                    // children: [
+                    //     {
+                    //         name: 'bfag',
+                    //         path: 'bfag',
+                    //         component: () => import('@/components/main/BasicFormatAndGrammar'),
+                    //         // meta: {ver: true}
+                    //         meta: {ver: false}
+                    //     },
+                    //     {
+                    //         name: 'el',
+                    //         path: 'el',
+                    //         component: () => import('@/components/main/EntryLevel'),
+                    //         meta: {ver: false}
+                    //     },
+                    // ]
                 },
                 {
                     name: 'sl',
@@ -265,6 +265,7 @@ const router = new VueRouter({
         }
     ]
 })
+
 router.beforeEach((to, from, next) => {
     if (!to.meta.ver){
         let token = localStorage.getItem("token");

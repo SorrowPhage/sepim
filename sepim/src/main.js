@@ -36,6 +36,10 @@ import { RadioGroup, RadioButton, Menu,
 import { Loading } from 'element-ui';
 Vue.use(Loading.directive);
 
+//粒子特效
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
+
 Vue.config.productionTip = false
 // 使用插件
 Vue.use(VueRouter)

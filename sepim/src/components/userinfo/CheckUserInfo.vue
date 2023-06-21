@@ -13,7 +13,12 @@
                     <section class="panel">
                         <!--                        <header class="table-heading">详情</header>-->
                         <div class="pane-body">
-                            <avatarCropper></avatarCropper>
+                            <div>
+                                <avatarCropper></avatarCropper>
+                                <div v-if="face_url==null">
+                                    <PhotographComponent></PhotographComponent>   <!--摄像头-->
+                                </div>
+                            </div>
                             <div class="userinfo_box">
                                 <el-form ref="form" :model="userInfo" label-width="100px">
                                     <el-form-item label="账号：">
@@ -68,11 +73,12 @@ import {mapState} from 'vuex'
 import axios from "axios"
 import {sessionReplaceStore} from "@/utils/session_util"
 import avatarCropper from "@/components/userinfo/avatar_cropper/avatarCropper";
+import PhotographComponent from "@/components/userinfo/photograph/PhotographComponent";
 
 export default {
     name: "CheckUserInfo",
     components: {
-        avatarCropper,
+        avatarCropper,PhotographComponent
     },
     data() {
         return {
@@ -94,7 +100,7 @@ export default {
         }
     },
     computed: {
-        ...mapState("User", ["userName", "account", "email"]),
+        ...mapState("User", ["userName", "account", "email","face_url"]),
         age() {
             return this.toAge(this.commonDate(this.userInfo.birthday));
         }

@@ -1,46 +1,36 @@
 <template>
     <div class="main">
-        <div class="wrapper">
-            <div class="row">
-                <div class="col">
-                    <section class="panel">
-                        <div class="pane-body">
-                            <div class="main-box">
-                                <div class="sp-main-left">
-                                    <el-menu
-                                        default-active="2"
-                                        class="el-menu-vertical-demo"
-                                        :router="true"
-                                        @open="handleOpen"
-                                        @close="handleClose">
-                                        <el-menu-item index="/index.html/main/el">
-                                            <span slot="title">入门</span>
-                                        </el-menu-item>
-                                        <el-submenu index="1">
-                                            <template slot="title">
-                                                <span>编写文章</span>
-                                            </template>
-                                            <el-menu-item-group>
-                                                <el-menu-item index="/index.html/main/bfag">基本格式和语法</el-menu-item>
-                                            </el-menu-item-group>
-                                        </el-submenu>
-                                    </el-menu>
-                                </div>
-                                <div class="sp-main-center">
-                                    <router-view></router-view>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
+        <vue-particles
+            class="login-bg"
+            color="#39AFFD"
+            :particleOpacity="0.7"
+            :particlesNumber="100"
+            shapeType="circle"
+            :particleSize="4"
+            linesColor="#8DD1FE"
+            :linesWidth="1"
+            :lineLinked="true"
+            :lineOpacity="0.4"
+            :linesDistance="150"
+            :moveSpeed="3"
+            :hoverEffect="true"
+            hoverMode="grab"
+            :clickEffect="true"
+            clickMode="push"
+        >
+        </vue-particles>
+        <div class="line-box">
+            <div class="echart" id="mychart" :style="myChartStyle"></div>
         </div>
+  
     </div>
 </template>
 
 <script>
 import axios from "axios";
-import {mapGetters,mapState} from "vuex";
+import {mapGetters} from "vuex";
+import * as echarts from "echarts";
+
 
 export default {
     name: 'MainContext',
@@ -48,6 +38,12 @@ export default {
         return {
             recommend: [],
             list: [],
+            myChart: {},
+            // xData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], //横坐标
+            xData: [], //横坐标
+            // yData: [23, 24, 18, 25, 27, 28, 25], //人数数据
+            yData: [], //人数数据
+            myChartStyle: { float: "left", width: "100%", height: "400px" } //图表样式
         }
     },
     computed: {
@@ -73,22 +69,132 @@ export default {
                 }
             })
         },
+        initEcharts(x,y) {
+            const option = {
+                xAxis: {
+                    data: x,
+                    // axisLabel: { //设置x轴的字
+                    //     show: true,
+                    //     interval: 0,//使x轴横坐标全部显示
+                    //     textStyle: {//x轴字体样式
+                    //         color: "rgba(219,225,255,1)",
+                    //         margin: 15
+                    //     },
+                    // }
+                },
+                yAxis: {},
+                series: [
+                    {
+                        data: y,
+                        type: "line" // 类型设置为折线图
+                    }
+                ],
+                title: {
+                    show: true,
+                    text: "Creators",
+                    textStyle: {
+                        // 主标题文本样式
+                        fontFamily: "-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"Noto Sans\",Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"",
+                        fontSize: 24,
+                        fontStyle: "normal",
+                        color: "#333",
+                    },
+                },
+            };
+            this.myChart = echarts.init(document.getElementById("mychart"));
+            this.myChart.setOption(option);
+            //随着屏幕大小调节图表
+            window.addEventListener("resize", () => {
+                this.myChart.resize();
+            });
+        },
+    
+        initXData() {
+            for (var i = 13; i >= 0; i--)
+            {
+                var dd = new Date();
+                dd.setDate(dd.getDate() - i);
+                var y = dd.getFullYear();
+                var m = dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1;
+                var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
+                this.xData.push(y + "-" + m + "-" + d);
+            }
+        },
+
     },
     mounted() {
-        axios.get("http://localhost:8080/api/md/rank").then(res => {
-            this.recommend = res.data.data;
-            // this.loading = false;
-        });
+        // axios.get("http://localhost:8080/api/md/rank").then(res => {
+        //     this.recommend = res.data.data;
+        // });
         axios.post("http://localhost:8080/api/md/list",{userId:this.$store.state.User.account}).then(res => {
             if (res.data.flag === "md_list_succeed") {
                 this.list = res.data.data.reverse();
+                for (var i = 13; i >= 0; i--)
+                {
+                    var dd = new Date();
+                    dd.setDate(dd.getDate() - i);
+                    var y = dd.getFullYear();
+                    var m = dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1;
+                    var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
+                    this.xData.push(y + "-" + m + "-" + d);
+                }
+                for (var j = 0; j < this.xData.length; j++) {
+                    let arr = this.list.filter((el)=>{
+                        return this.xData[j] === el.time;
+                    })
+                    this.yData[j] = arr.length;
+                }
+                this.initEcharts(this.xData,this.yData);
             }
         });
+        
     }
 };
 </script>
 
 <style scoped>
+.user-body {
+    /* margin: 0;
+    padding: 0;
+    background: url("../assets/img/bg/eva1.jpg") no-repeat;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    position: fixed; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-image: linear-gradient(
+        125deg,
+        #7FFFD4,
+        #87CEEB,
+        #40E0D0,
+        #DA70D6
+    );
+    
+    background-size: 400%;
+    animation: bganimation 15s infinite;
+    position: fixed;
+}
+
+@keyframes bganimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    
+    50% {
+        background-position: 100% 50%;
+    }
+    
+    100% {
+        background-position: 0% 50%;
+    }
+}
 .el-carousel__item h3 {
     color: #475669;
     font-size: 14px;
@@ -134,146 +240,64 @@ export default {
 
 .wrapper {
     padding: 15px;
+    /*width: 80%;*/
+    display: flex;
 }
-
-.row {
-    margin-left: -15px;
-    margin-right: -15px;
+.res-box{
+    width: 20%;
+    /*background: #227cf9;*/
+    margin-top: 100px;
 }
-
-.col {
-    position: relative;
-    min-height: 1px;
-    padding-left: 15px;
-    padding-right: 15px;
-    width: 100%;
+.line-box {
+    /*width: 60%;*/
+    /*text-align: center;*/
+    /*background: white;*/
+    position: absolute;
+    top: 100px;
+    left: 200px;
+    width: 60%;
 }
-
-.panel {
-    margin-bottom: 20px;
-    background-color: white;
-    /*border: 1px solid transparent;*/
-    border-radius: 4px;
-    /*-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);*/
-    /*box-shadow: 0 1px 1px rgb(0 0 0 / 5%);*/
-}
-
-.table-heading {
-    border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
-    padding: 15px;
-    text-transform: uppercase;
-    color: #535351;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.pane-body {
-    /*padding: 15px;*/
-}
-
-.table {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.table-bordered {
-    border: 1px solid #ddd;
-}
-
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-.table thead > tr > th,
-.table tbody > tr > td {
-    padding: 10px;
-}
-
-.table-bordered > thead > tr > th {
-    border-bottom-width: 2px;
-}
-
-.table-bordered > thead > tr > th,
-.table-bordered > tbody > tr > td {
-    border: 1px solid #ddd;
-}
-
-.table-striped > tbody > tr:nth-child(odd) > td,
-.table-striped > tbody > tr:nth-child(odd) > th {
-    background-color: #f9f9f9e1;
-}
-
-th {
-    text-align: left;
-}
-.main-box{
-    width: 100%;
-    /*display: flex;*/
-}
-.calendar-box{
-    width: 30%;
-}
-.recommend-box{
-    width: 70%;
-    padding: 15px;
-}
-.md-box：{
-    width: 100%;
-}
-.link-box{
-    width: 100%;
-}
-.route-style {
-    color:#80888c;
-    text-decoration: none;
-}
-
-.route-style:hover {
-    cursor: pointer;
-    color: #0969da;
-    text-decoration: underline;
-}
-.sp-main-left {
-    width: 12.5%;
-    min-width: 225px;
-    font-weight: bold;
-    border-right: solid 1px #e6e6e6;
+/*.line-s{*/
+/*    margin-left:100px;*/
+/*    !*margin-top:100px;*!*/
+/*}*/
+.line-style{
+    background-image: linear-gradient(
+        125deg,
+        #7FFFD4,
+        #87CEEB,
+        #40E0D0,
+        #DA70D6
+    );
+    
+    background-size: 400%;
+    animation: bganimation 15s infinite;
     position: fixed;
+}
+@keyframes bganimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    
+    50% {
+        background-position: 100% 50%;
+    }
+    
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+.his-box{
+    width: 20%;
+}
+
+.login{
+    width: 100%;
     height: 100%;
-    background-color: white;
-    /*background-color: #227cf9;*/
-}
-.sp-main-left-title {
-    /*text-align: center;*/
-    width: 100%;
-    /*display: flex;*/
-    /*flex-wrap: wrap;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-}
-.sp-main-left-content {
-    width: 100%;
-    /*display: flex;*/
-    /*flex-wrap: wrap;*/
-    /*justify-content: center;*/
-    /*align-items: center;*/
-}
-.sp-main-center {
-    /*width: 87.5%;*/
-    /*background-color: #f6f8fa;*/
-    padding: 10px;
-    /*text-align: center;*/
-    /*margin-left: 12.5%;*/
-    display: block;
-    overflow: hidden;
-    margin-left: 225px;
-}
-h2{
-    display: inline;
-}
-.sp-btn-place{
-    display: inline;
-    margin-left: 10px;
+/*//color: #cccccc;*/
+    /*如果想做背景图片 可以给标签一个class 直接添加背景图*/
+    position: relative;
 }
 </style>

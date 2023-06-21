@@ -6,9 +6,9 @@
             <div style="display: inline">
                 <div class="sp-nav" @click="depository">Repository</div>
                 <div class="sp-nav" @click="newdoc">新建</div>
-                <div class="sp-nav" @click="seckill">Redis</div>
-                <div class="sp-nav" @click="goBirthday">投诉</div>
-                <div class="sp-nav" @click="goMusicPlayer">音乐</div>
+<!--                <div class="sp-nav" @click="seckill">Redis</div>-->
+<!--                <div class="sp-nav" @click="goBirthday">投诉</div>-->
+<!--                <div class="sp-nav" @click="goMusicPlayer">音乐</div>-->
                 <div class="sp-nav" @click="goGames">游戏</div>
 <!--                <div class="sp-nav" @click="goVideoPlayer">视频</div>-->
 <!--                                <div class="sp-nav" @click="seckill">支付模块</div>-->

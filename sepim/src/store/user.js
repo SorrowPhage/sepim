@@ -18,9 +18,14 @@ export default {
             state.type = user.type;
             state.sex = user.sex;
             state.birthday = user.birthday;
+            state.face_url = user.faceUrl;
+            console.log(state.face_url)
         },
         changeAvatar(state,url){
             state.avatarUrl = url;
+        },
+        changeFaceUrl(state,url){
+            state.face_url = url;
         },
     },
     state: {
@@ -32,6 +37,7 @@ export default {
         type: '',
         sex: '',
         birthday: '',
+        'face_url': '',
     },
     getters: {
         avatar_url(state) {

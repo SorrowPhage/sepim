@@ -20,6 +20,7 @@
                 <div class="input-btn">
                     <button @click="login">登录</button>
                 </div>
+                <FaceRecognition></FaceRecognition>
                 <div class="input-register">
                     还没有账号？
                     <router-link to="/register">注册</router-link>
@@ -30,6 +31,7 @@
 </template>
 
 <script>
+    import FaceRecognition from "@/components/userinfo/photograph/FaceRecognition";
     import axios from "axios";
     export default {
         name: "UserLog",
@@ -41,6 +43,9 @@
                 },
                 message:''
             };
+        },
+        components:{
+            FaceRecognition
         },
         methods: {
             login() {
@@ -57,6 +62,11 @@
                         }
                         if (response.data.flag === "login_succeed") {
                             this.$store.commit("User/getUserInfo", response.data.data);
+                            // const h = this.$createElement;
+                            // this.$notify({
+                            //     title: '标题名称',
+                            //     message: h('i', { style: 'color: teal'}, '这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案这是提示文案')
+                            // });
                             this.$router.push({
                                 name: 'main',
                             });
@@ -125,7 +135,7 @@
         align-content: space-around;
         flex-wrap: wrap;
         width: 300px;
-        height: 400px;
+        height: 500px;
         background-color: white;
         border: 10px;
         padding: 20px 50px;

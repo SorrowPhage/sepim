@@ -167,7 +167,7 @@
 
     .register-box {
         width: 300px;
-        height: 400px;
+        height: 500px;
         background-color: white;
         border: 10px;
         padding: 20px 50px;
