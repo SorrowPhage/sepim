@@ -17,6 +17,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     private ResultData resultData;
 
+    /**
+     * 获取评论列表的数据
+     * @param folderId 文章id
+     * @return 评论列表
+     */
     @Override
     public List<Comment> getComments(String folderId) {
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
@@ -24,6 +29,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return CommentUtil.processComments(this.list(wrapper));
     }
 
+    /**
+     *保存评论
+     * @param comment
+     * @return
+     */
     @Override
     public ResultData release(Comment comment) {
         boolean save = this.save(comment);
@@ -37,6 +47,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return resultData;
     }
 
+    /**
+     * 删除文字的所有评论
+     * @param id 文章id
+     */
     @Override
     public void deleteByFolderId(String id) {
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();

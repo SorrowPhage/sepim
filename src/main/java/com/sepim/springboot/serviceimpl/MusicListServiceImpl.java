@@ -27,6 +27,11 @@ public class MusicListServiceImpl implements MusicListService {
     @Autowired
     private MusicListMapper mapper;
 
+    /**
+     * 获取用户的歌单
+     * @param id 用户id
+     * @return
+     */
     @Override
     public ResultData getUserMusicList(String id) {
         List<MusicList> musicLists=mapper.getUserMusicList(id);
@@ -36,7 +41,14 @@ public class MusicListServiceImpl implements MusicListService {
     }
 
 
-
+    /**
+     * 修改用户的歌单信息
+     * @param file 歌单封面
+     * @param id 歌单id
+     * @param name 歌单名字
+     * @param describe 歌单描述
+     * @return 处理结果
+     */
     @Override
     public ResultData updateMusicListInformation(MultipartFile file, String id,String name, String describe) {
         MusicList musicList = mapper.getMusicListById(id);
@@ -58,6 +70,12 @@ public class MusicListServiceImpl implements MusicListService {
         return resultData;
     }
 
+
+    /**
+     * 获取歌单中所有音乐
+     * @param id
+     * @return
+     */
     public ResultData getMusicListName(String id) {
         MusicList musicListById = mapper.getMusicListById(id);
         resultData.setData(musicListById);

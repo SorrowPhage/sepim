@@ -32,6 +32,11 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String username;
 
+    /**
+     * 发送验证码
+     * @param email
+     * @return
+     */
     @Override
     public ResultData sendVerCode(Email email) {
         //生成验证码

@@ -18,6 +18,12 @@ public class InterceptServiceImpl implements InterceptService {
 
     @Autowired
     private ResultData resultData;
+
+    /**
+     * 验证用户的token是否合法
+     * @param token token
+     * @return
+     */
     @Override
     public ResultData verToken(String token) {
         if (token == null) {

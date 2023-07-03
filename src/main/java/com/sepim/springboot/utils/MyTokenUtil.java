@@ -10,6 +10,8 @@ public class MyTokenUtil {
     public static String getToken(User user) {
         Date start = new Date();
         //有效时间
+        //这部分应该保存到redis中
+        //时间也应该在redis中设置
         long currentTime = System.currentTimeMillis() + 60* 60 * 1000;
         Date end = new Date(currentTime);
         String token = "";

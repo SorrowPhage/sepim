@@ -27,13 +27,18 @@ public class MusicServiceImpl extends ServiceImpl<MusicMapper, Music> implements
     private MusicMapper musicMapper;
 
 
-
+    /**
+     * 保存音乐
+     * @param file
+     * @return
+     */
     @Override
     public ResultData saveMusic(MultipartFile file) {
         String s = FileUploadUtil.uploadMusic(file);
         resultData.setFlag(s);
         return resultData;
     }
+
 
     @Override
     public ResultData getMusicList() {

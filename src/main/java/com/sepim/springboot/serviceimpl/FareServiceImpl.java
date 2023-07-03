@@ -27,6 +27,13 @@ public class FareServiceImpl implements FareService {
     @Autowired
     private ResultData resultData;
 
+
+    /**
+     * 人脸识别
+     * 上传人脸图片，在人脸图片的文件中查找形似的人脸的图片名字，若找到，则说明人脸识别成功，可以进行登录
+     * @param file 人脸图片
+     * @return
+     */
     @Override
     public ResultData fare(MultipartFile file) {
         String faceUrl = FileUploadUtil.uploadFare(file);
