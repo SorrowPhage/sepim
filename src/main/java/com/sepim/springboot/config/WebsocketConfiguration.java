@@ -19,7 +19,7 @@ public class WebsocketConfiguration {
     }
 
     @Autowired
-    public void userService(UserService userService) {
+    public void userService(UserService userService)     {
         WebSocket.userService = userService;
     }
 }
