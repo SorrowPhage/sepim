@@ -19,8 +19,8 @@
             clickMode="push"
         >
         </vue-particles>
-        <div class="line-box">
-            <div class="echart" id="mychart" :style="myChartStyle"></div>
+        <div  class="line-box">
+            <div  class="echart" id="mychart" :style="myChartStyle"></div>
         </div>
   
     </div>
@@ -39,12 +39,13 @@ export default {
             recommend: [],
             list: [],
             myChart: {},
+            showLine: false,
             // xData: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], //横坐标
             xData: [], //横坐标
             // yData: [23, 24, 18, 25, 27, 28, 25], //人数数据
             yData: [], //人数数据
-            myChartStyle: { float: "left", width: "100%", height: "400px" } //图表样式
-        }
+            myChartStyle: {float: "left", width: "100%", height: "400px"} //图表样式
+        };
     },
     computed: {
         ...mapGetters("User", ['avatar_url'])
@@ -70,6 +71,7 @@ export default {
             })
         },
         initEcharts(x,y) {
+           
             const option = {
                 xAxis: {
                     data: x,
@@ -91,7 +93,7 @@ export default {
                 ],
                 title: {
                     show: true,
-                    text: "Creators",
+                    text: "",
                     textStyle: {
                         // 主标题文本样式
                         fontFamily: "-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"Noto Sans\",Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"",
@@ -104,28 +106,12 @@ export default {
             this.myChart = echarts.init(document.getElementById("mychart"));
             this.myChart.setOption(option);
             //随着屏幕大小调节图表
-            window.addEventListener("resize", () => {
-                this.myChart.resize();
-            });
+            // window.addEventListener("resize", () => {
+            //     this.myChart.resize();
+            // });
         },
-    
-        initXData() {
-            for (var i = 13; i >= 0; i--)
-            {
-                var dd = new Date();
-                dd.setDate(dd.getDate() - i);
-                var y = dd.getFullYear();
-                var m = dd.getMonth() + 1 < 10 ? "0" + (dd.getMonth() + 1) : dd.getMonth() + 1;
-                var d = dd.getDate() < 10 ? "0" + dd.getDate() : dd.getDate();
-                this.xData.push(y + "-" + m + "-" + d);
-            }
-        },
-
     },
     mounted() {
-        // axios.get("http://localhost:8080/api/md/rank").then(res => {
-        //     this.recommend = res.data.data;
-        // });
         axios.post("http://localhost:8080/api/md/list",{userId:this.$store.state.User.account}).then(res => {
             if (res.data.flag === "md_list_succeed") {
                 this.list = res.data.data.reverse();
