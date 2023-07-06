@@ -1,23 +1,38 @@
 <template>
     <div class="main">
-        <!--        <div class="page-heading">-->
-        <!--            <h3>个人信息</h3>-->
-        <!--            <el-breadcrumb separator="/">-->
-        <!--                <el-breadcrumb-item>个人中心</el-breadcrumb-item>-->
-        <!--                <el-breadcrumb-item>个人信息</el-breadcrumb-item>-->
-        <!--            </el-breadcrumb>-->
-        <!--        </div>-->
-        <div class="wrapper">
+        <vue-particles
+            class="login-bg"
+            color="#39AFFD"
+            :particleOpacity="0.7"
+            :particlesNumber="100"
+            shapeType="circle"
+            :particleSize="4"
+            linesColor="#8DD1FE"
+            :linesWidth="1"
+            :lineLinked="true"
+            :lineOpacity="0.4"
+            :linesDistance="150"
+            :moveSpeed="3"
+            :hoverEffect="true"
+            hoverMode="grab"
+            :clickEffect="true"
+            clickMode="push"
+        >
+        </vue-particles>
+<!--        left: 50%;right: 50%;transform: translate(-50%,0);-->
+        <div class="wrapper" style="position: absolute;top: 50px;">
             <div class="row">
                 <div class="col">
                     <section class="panel">
-                        <!--                        <header class="table-heading">详情</header>-->
                         <div class="pane-body">
                             <div>
+<!--                                <avatarCropper @farePC="farePC"></avatarCropper>-->
                                 <avatarCropper></avatarCropper>
-                                <div v-if="face_url==null">
-                                    <PhotographComponent></PhotographComponent>   <!--摄像头-->
-                                </div>
+<!--                                <transition name="changeShow">&lt;!&ndash;若检测到当前账号以绑定头像，则不显示&ndash;&gt;-->
+<!--                                    <PhotographComponent v-show="fare"  @farePC="farePC"></PhotographComponent>   &lt;!&ndash;人脸识别图像上传组件&ndash;&gt;-->
+                                    <PhotographComponent v-show="fare" ></PhotographComponent>   <!--人脸识别图像上传组件-->
+<!--                                </transition>-->
+                            
                             </div>
                             <div class="userinfo_box">
                                 <el-form ref="form" :model="userInfo" label-width="100px">
@@ -30,9 +45,6 @@
                                     <el-form-item label="邮箱：">
                                         <el-input v-model="userInfo.email"></el-input>
                                     </el-form-item>
-                                    <!--                                    <el-form-item label="性别：">-->
-                                    <!--                                        <el-input v-model="userInfo.sex"></el-input>-->
-                                    <!--                                    </el-form-item>-->
                                     <el-form-item label="性别：">
                                         <el-select v-model="userInfo.sex" class="sp-space" placeholder="类型"
                                                    style="width: 100px">
@@ -89,6 +101,7 @@ export default {
                 value: '女',
                 label: '女'
             }],
+            fare:false,
             form: {},
             userInfo: {
                 id: this.$store.state.User.account,
@@ -106,6 +119,10 @@ export default {
         }
     },
     methods: {
+        farePC(b) {
+            this.fare = b;
+        },
+
         updateUserInfo() {
             this.userInfo.birthday = this.commonDate(this.userInfo.birthday);
             axios.post("http://localhost:8080/api/update", this.userInfo).then(res => {
@@ -171,6 +188,21 @@ export default {
     height: 100%;
     /*overflow: auto;*/
 }
+.changeShow-enter-active {
+    animation: changeShow 0.8s;
+}
+.changeShow-leave-active {
+    animation: changeShow 0.8s reverse;
+}
+
+@keyframes changeShow {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0px);
+    }
+}
 
 .page-heading {
     width: 100%;
@@ -190,6 +222,7 @@ export default {
 
 .wrapper {
     padding: 15px;
+    /*background: #227cf9;*/
 }
 
 .row {
@@ -207,7 +240,7 @@ export default {
 
 .panel {
     margin-bottom: 20px;
-    background-color: white;
+    /*background-color: white;*/
     border: 1px solid transparent;
     border-radius: 4px;
     /*-webkit-box-shadow: 0 1px 1px rgb(0 0 0 / 5%);*/
@@ -251,7 +284,7 @@ table {
 
 .table-striped > tbody > tr:nth-child(odd) > td,
 .table-striped > tbody > tr:nth-child(odd) > th {
-    background-color: #f9f9f9e1;
+    /*background-color: #f9f9f9e1;*/
 }
 
 th {

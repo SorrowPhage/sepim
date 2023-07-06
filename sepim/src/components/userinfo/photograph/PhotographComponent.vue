@@ -1,6 +1,7 @@
 <template>
     <div>
-        <el-avatar :size="100" :src="face_url" class="avatar"></el-avatar>
+<!--        <el-avatar :size="100" :src="face_url" class="avatar" @mouseenter.native="enter" @mouseleave.native="leave"></el-avatar>-->
+        <el-avatar :size="100" :src="face_url" class="avatar" ></el-avatar>
         <el-button class="replace" type="primary" @click="getCompetence()">人脸上传</el-button>
         <el-dialog
             :visible.sync="dialogVisible"
@@ -57,7 +58,13 @@ export default {
         this.stopNavigator()
     },
     methods: {
-        
+        enter() {
+            console.log(1)
+            this.$emit("farePC", true);
+        },
+        leave() {
+            this.$emit("farePC", false);
+        },
         handleAvatarSuccess(res, file) {
             this.$emit('refreshDataList', res.data.url)
         },

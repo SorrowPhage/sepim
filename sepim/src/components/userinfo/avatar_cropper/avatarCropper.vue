@@ -1,7 +1,8 @@
 <template>
     <div class="avatar_box">
-        <el-avatar :size="100" :src="avatar_url" class="avatar"></el-avatar>
-        <el-button class="replace" type="primary" @click="dialogVisible = true">修改头像</el-button>
+<!--        <el-avatar :size="100" :src="avatar_url" class="avatar"  @click.native  ="dialogVisible = true" @mouseenter.native="enter" @mouseleave.native="leave"></el-avatar>-->
+        <el-avatar :size="100" :src="avatar_url" class="avatar"  @click.native  ="dialogVisible = true" ></el-avatar>
+<!--        <el-button class="replace" type="primary" @click="dialogVisible = true">修改头像</el-button>-->
         <el-dialog
             :visible.sync="dialogVisible"
             title="图片剪切"
@@ -42,7 +43,6 @@
                     </div>
                 </div>
             </div>
-            
             <span slot="footer" class="dialog-footer">
                  <div class="select-avatar-box">
                      <input ref="upload_input_cropper"
@@ -108,6 +108,13 @@ export default {
         };
     },
     methods: {
+        enter() {
+            console.log(1)
+            this.$emit("farePC", true);
+        },
+        leave() {
+            this.$emit("farePC", false);
+        },
         transferUploadInput() {
             this.$refs.upload_input_cropper.click()
         },
@@ -203,6 +210,9 @@ export default {
 
 .avatar {
     margin-left: 30%;
+}
+.avatar:hover{
+    cursor: pointer;
 }
 
 .replace {

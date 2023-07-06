@@ -240,8 +240,11 @@ export default {
     /*background: white;*/
     position: absolute;
     top: 100px;
-    left: 200px;
+    /*left: 200px;*/
     width: 60%;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, 0);
 }
 /*.line-s{*/
 /*    margin-left:100px;*/
