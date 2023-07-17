@@ -1,28 +1,56 @@
 <template>
     <div class="main">
         <vue-particles
-            class="login-bg"
-            color="#39AFFD"
-            :particleOpacity="0.7"
-            :particlesNumber="100"
-            shapeType="circle"
-            :particleSize="4"
-            linesColor="#8DD1FE"
-            :linesWidth="1"
+            :clickEffect="true"
+            :hoverEffect="true"
             :lineLinked="true"
             :lineOpacity="0.4"
             :linesDistance="150"
+            :linesWidth="1"
             :moveSpeed="3"
-            :hoverEffect="true"
-            hoverMode="grab"
-            :clickEffect="true"
+            :particleOpacity="0.7"
+            :particleSize="4"
+            :particlesNumber="100"
+            class="login-bg"
             clickMode="push"
+            color="#39AFFD"
+            hoverMode="grab"
+            linesColor="#8DD1FE"
+            shapeType="circle"
         >
         </vue-particles>
-        <div  class="line-box">
-            <div  class="echart" id="mychart" :style="myChartStyle"></div>
+        <div class="line-box">
+            <el-row>
+                <el-col :span="4" style="margin-top: 40px">
+                    <el-row>
+                        <el-col :span="24">
+                            <span style="font-size: 10px">Latest Folder</span>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <FolderDisplay v-for="folder in activities" :key="folder.id" :des="folder.roughly"
+                                       :file_id="folder.id" :name="$store.state.User.userName"
+                                       :time="folder.time" :title="folder.title" :type="folder.type"
+                                       :url="$store.state.User.avatarUrl"></FolderDisplay>
+                    </el-row>
+                </el-col>
+                <el-col :span="16" style="border-left: 1px solid #eef5fc;">
+                    <div id="mychart" :style="myChartStyle" class="echart"></div>
+                </el-col>
+                <el-col :span="4" style="margin-top: 40px">
+                    <el-timeline :reverse="false">
+                        <el-timeline-item v-for="(activity, index) in activities"
+                                          :key="index"
+                                          :timestamp="activity.time"
+                                          placement="top">
+                            {{ activity.title }}
+                        </el-timeline-item>
+                    </el-timeline>
+                </el-col>
+            </el-row>
+        
         </div>
-  
+    
     </div>
 </template>
 
@@ -30,10 +58,11 @@
 import axios from "axios";
 import {mapGetters} from "vuex";
 import * as echarts from "echarts";
-
+import FolderDisplay from "@/components/main/FolderDisplay";
 
 export default {
     name: 'MainContext',
+    components: {FolderDisplay},
     data() {
         return {
             recommend: [],
@@ -44,7 +73,9 @@ export default {
             xData: [], //横坐标
             // yData: [23, 24, 18, 25, 27, 28, 25], //人数数据
             yData: [], //人数数据
-            myChartStyle: {float: "left", width: "100%", height: "400px"} //图表样式
+            myChartStyle: {float: "left", width: "100%", height: "400px"}, //图表样式
+            activities: [],
+            
         };
     },
     computed: {
@@ -70,8 +101,8 @@ export default {
                 }
             })
         },
-        initEcharts(x,y) {
-           
+        initEcharts(x, y) {
+            
             const option = {
                 xAxis: {
                     data: x,
@@ -112,11 +143,11 @@ export default {
         },
     },
     mounted() {
-        axios.post("http://localhost:8080/api/md/list",{userId:this.$store.state.User.account}).then(res => {
+        axios.post("http://localhost:8080/api/md/list", {userId: this.$store.state.User.account}).then(res => {
             if (res.data.flag === "md_list_succeed") {
                 this.list = res.data.data.reverse();
-                for (var i = 13; i >= 0; i--)
-                {
+                this.activities = this.list.slice(0, 4);
+                for (var i = 13; i >= 0; i--) {
                     var dd = new Date();
                     dd.setDate(dd.getDate() - i);
                     var y = dd.getFullYear();
@@ -125,12 +156,12 @@ export default {
                     this.xData.push(y + "-" + m + "-" + d);
                 }
                 for (var j = 0; j < this.xData.length; j++) {
-                    let arr = this.list.filter((el)=>{
+                    let arr = this.list.filter((el) => {
                         return this.xData[j] === el.time;
                     })
                     this.yData[j] = arr.length;
                 }
-                this.initEcharts(this.xData,this.yData);
+                this.initEcharts(this.xData, this.yData);
             }
         });
         
@@ -181,6 +212,7 @@ export default {
         background-position: 0% 50%;
     }
 }
+
 .el-carousel__item h3 {
     color: #475669;
     font-size: 14px;
@@ -208,6 +240,7 @@ export default {
     height: 100%;
     /*overflow: auto;*/
 }
+
 .page-heading {
     width: 100%;
     padding: 15px;
@@ -229,28 +262,31 @@ export default {
     /*width: 80%;*/
     display: flex;
 }
-.res-box{
+
+.res-box {
     width: 20%;
     /*background: #227cf9;*/
     margin-top: 100px;
 }
+
 .line-box {
     /*width: 60%;*/
     /*text-align: center;*/
     /*background: white;*/
     position: absolute;
-    top: 100px;
+    top: 50px;
     /*left: 200px;*/
-    width: 60%;
+    width: 80%;
     left: 50%;
     right: 50%;
     transform: translate(-50%, 0);
 }
+
 /*.line-s{*/
 /*    margin-left:100px;*/
 /*    !*margin-top:100px;*!*/
 /*}*/
-.line-style{
+.line-style {
     background-image: linear-gradient(
         125deg,
         #7FFFD4,
@@ -263,6 +299,7 @@ export default {
     animation: bganimation 15s infinite;
     position: fixed;
 }
+
 @keyframes bganimation {
     0% {
         background-position: 0% 50%;
@@ -278,14 +315,14 @@ export default {
 }
 
 
-.his-box{
+.his-box {
     width: 20%;
 }
 
-.login{
+.login {
     width: 100%;
     height: 100%;
-/*//color: #cccccc;*/
+    /*//color: #cccccc;*/
     /*如果想做背景图片 可以给标签一个class 直接添加背景图*/
     position: relative;
 }

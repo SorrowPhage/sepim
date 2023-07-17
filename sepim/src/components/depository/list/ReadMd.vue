@@ -1,51 +1,86 @@
 <template>
-    <div class="main">
-        <div class="wrapper">
-            <div class="row">
-                <div class="col">
-                    <section class="panel">
-<!--                        <header class="table-heading">Document</header>-->
-                        <div v-loading="loading"
-                             class="pane-body"
-                             element-loading-background="rgba(0, 0, 0, 0.8)"
-                             element-loading-spinner="el-icon-loading"
-                             element-loading-text="拼命加载中"
-                        >
-                            <div class="md-pane">
-                                <div class="md-box">
-                                    <div class="sp-content-box">
-                                        <div class="author-box">
-                                            <div class="sp-content-title">
-                                                {{ title }}
-                                            </div>
-                                            作者：
-                                            <span class="text-author route-style" @click="goDetail(account)">{{
-                                                    author
-                                                }}
+    <div>
+        <el-main>
+            <div class="main">
+                <div class="wrapper">
+                    <div class="row">
+                        <div class="col">
+                            <section class="panel">
+                                <div v-loading="loading"
+                                     class="pane-body"
+                                     element-loading-background="rgba(0, 0, 0, 0.8)"
+                                     element-loading-spinner="el-icon-loading"
+                                     element-loading-text="拼命加载中"
+                                >
+                                    <div class="md-pane">
+                                        <div class="md-box">
+                                            <div class="sp-content-box">
+                                                <div class="author-box">
+                                                    <el-row>
+                                                        <el-col :span="3">
+                                                            <el-avatar :size="70" :src="$store.state.User.avatarUrl"
+                                                                       class="avatar"></el-avatar>
+                                                        </el-col>
+                                                        <el-col :span="21">
+                                                            <div class="sp-content-title">
+                                                                {{ title }}
+                                                            </div>
+                                                            作者：
+                                                            <span class="text-author route-style"
+                                                                  @click="goDetail(account)">{{
+                                                                    author
+                                                                }}
                                              </span>
-                                            <span>
+                                                            <span>
                                             &nbsp;&nbsp;&nbsp;描述:
                                             {{ roughly }}
                                              </span>
-                                            <span>
+                                                            <span>
                                             &nbsp;&nbsp;&nbsp;浏览量:
-                                            {{ readNum }}
+                                            {{ readNum }}&nbsp;&nbsp;&nbsp;
                                               </span>
+<!--                                                            <span class="text-author route-style" @click="downFile">下载-->
+<!--                                             </span>-->
+                                                        </el-col>
+                                                    </el-row>
+                                                
+                                                
+                                                </div>
+                                                <div ref="md_show" class="markdown-body" v-html="content"></div>
+                                                <div style="margin:0px 0 0 180px;font-size:18px;font-weight:bold;">
+                                                </div>
                                             
+                                            </div>
+                                            <div class="sp-comment-box">
+                                                <PhageComment :comments="comments"
+                                                              :userAvatarUrl="avatar_url"></PhageComment>
+                                            </div>
                                         </div>
-                                        <div ref="md_show" class="markdown-body" v-html="content"></div>
-                                    </div>
-                                    <div class="sp-comment-box">
-                                        <PhageComment :comments="comments" :userAvatarUrl="avatar_url"></PhageComment>
                                     </div>
                                 </div>
-                            </div>
+                            </section>
                         </div>
-                    </section>
+                    </div>
                 </div>
             </div>
+        </el-main>
+        <div style="position: fixed;left:0;top:50%;transform:translate(0%,-50%); background: white;padding: 5px">
+            <el-tabs v-model="activeName" :tab-position="tabPosition" style="height: auto;" @tab-click="handleClick">
+                <el-tab-pane v-for="(item, index) in navList"
+                             :key="index"
+                             :class="item.lev"
+                
+                             :name="'tab'+index"
+                >
+                    <!--                             :label="item.name.substring(item.name.lastIndexOf('>')+1)"-->
+                    <div slot="label" class="tab-pane">
+                        {{ item.name.substring(item.name.lastIndexOf('>') + 1) }}
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -130,7 +165,7 @@ export default {
             })
             this.navList.forEach(el => {
                 let index = el.localName.indexOf('h');
-                el.lev = 'lev' + el.localName.substring(index + 1, el.localName.length)
+                el.lev = 'lev' + el.localName.substring(index + 1, el.localName.length);
             });
         },
         dragAround(anyElement) {
@@ -157,7 +192,15 @@ export default {
                 mouseDown = false;
             };
         },
-        
+    
+        downFile(){
+            this.$message({
+                message: '下载成功',
+                showClose: true,
+                type: 'success',
+                center: true,
+            });
+        }
     },
     watch: {
         scroll: function () {
@@ -167,10 +210,14 @@ export default {
     mounted() {
         axios.get("http://localhost:8080/api/md/read", {params: {id: this.$route.query.id}}).then(res => {
             if (res.data.flag === "md_read_succeed") {
-                this.author = res.data.data.username;
+                this.author = res.data.data.user.username;
                 this.account = res.data.data.userId;
                 this.title = res.data.data.title;
-                this.roughly = res.data.data.roughly;
+                if (res.data.data.roughly === "" || res.data.data.roughly === null) {
+                    this.roughly = "没有描述";
+                } else {
+                    this.roughly = res.data.data.roughly;
+                }
                 this.readNum = res.data.data.readNum;
                 this.content = res.data.data.content;
                 this.$store.commit("Comment/GET_COMMENTS", res.data.data.comments);
@@ -195,9 +242,15 @@ export default {
                             } else if (this.navList[i].lev === 'lev5') {
                                 document.querySelector('#' + navs[i].id).style.paddingLeft = "25px";
                                 document.querySelector('#' + navs[i].id).style.fontWeight = "400";
+                            } else if (this.navList[i].lev === 'lev6') {
+                                document.querySelector('#' + navs[i].id).style.paddingLeft = "30px";
+                                document.querySelector('#' + navs[i].id).style.fontWeight = "400";
                             }
+                            
                         }
                     });
+                    // console.log(this.navList[0].name.substring(this.navList[0].name.lastIndexOf(">")))
+                    
                     
                     const code = document.querySelectorAll('pre code');
                     code.forEach((item) => {
@@ -218,11 +271,11 @@ export default {
                         }
                         lineNumBox.innerText = num;// 插入序号
                         item.parentElement.insertBefore(lineNumBox, item);
-
+                        
                         let codeBox = document.createElement('div');
                         codeBox.className = 'code-box';
                         codeBox.appendChild(item);
-
+                        
                         pre.appendChild(codeBox);
                         
                         let lang = pre.lastElementChild.firstElementChild.className;
@@ -255,13 +308,17 @@ export default {
                 });
             }
         })
-        
-        
     }
 }
 </script>
 
 <style scoped>
+.tab-pane {
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*background: #7e97b7;*/
+}
 
 * {
     box-sizing: border-box;
@@ -271,6 +328,7 @@ export default {
     margin-top: 50px;
     /*background-color: rgb(228, 228, 228);*/
     height: 100%;
+    
     /*overflow: auto;*/
 }
 
@@ -325,7 +383,7 @@ export default {
 
 .pane-body {
     padding: 15px;
-    background: #f9f9f9;
+    /*background: #f9f9f9;*/
 }
 
 .author-box {
@@ -344,8 +402,8 @@ export default {
 }
 
 .md-box {
-    width: 50%;
-    min-width: 900px;
+    width: 75%;
+    /*min-width: 900px;*/
     font-size: 17px;
 }
 
@@ -452,7 +510,7 @@ export default {
 .sp-content-title {
     /*text-align: center;*/
     font-weight: bold;
-    font-size: 40px;
+    font-size: 20px;
     margin-bottom: 15px;
 }
 
@@ -469,4 +527,6 @@ export default {
     /*border: 1px solid darkgray;*/
     /*background-color: white;*/
 }
+
+
 </style>

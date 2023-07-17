@@ -21,17 +21,21 @@
                     <el-menu-item index="1-3" @click="setPassword">修改密码</el-menu-item>
                 </el-menu-item-group>
             </el-submenu>
-            <el-menu-item v-if="type==='admin' " index="2" @click="audit">
-                <i class="el-icon-menu"></i>
-                <span slot="title">审核</span>
-            </el-menu-item>
+<!--            <el-menu-item v-if="type==='admin' " index="2" @click="audit">-->
+<!--                <i class="el-icon-menu"></i>-->
+<!--                <span slot="title">审核</span>-->
+<!--            </el-menu-item>-->
 <!--            <el-menu-item v-if="type==='user' " index="3" @click="leave">-->
 <!--                <i class="el-icon-menu"></i>-->
 <!--                <span slot="title">请假</span>-->
 <!--            </el-menu-item>-->
-            <el-menu-item v-if="type==='user' " index="5" @click="depository">
+            <el-menu-item index="5" @click="depository">
                 <i class="el-icon-menu"></i>
                 <span slot="title">Depository</span>
+            </el-menu-item>
+            <el-menu-item index="7" @click="pred">
+                <i class="el-icon-menu"></i>
+                <span slot="title">Pred</span>
             </el-menu-item>
             <el-menu-item index="6" @click="logOut">
                 <i class="el-icon-right"></i>
@@ -83,6 +87,9 @@ export default {
             this.$router.push({
                 name: 'doc_dep',
             })
+        },
+        pred() {
+        
         },
         logOut() {
             localStorage.removeItem("token");

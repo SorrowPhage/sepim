@@ -36,15 +36,15 @@ const router = new VueRouter({
         {
             name: 'index',
             path: '/index.html',
-            // meta: {ver: true},
+            meta: {ver: true},
             component: () => import('@/pages/HomePage'),
             redirect: '/index.html/main',
             children: [
                 {
                     path: 'main',
                     name: 'main',
-                    // meta: {ver: true},
-                    meta: {ver: false},
+                    meta: {ver: true},
+                    // meta: {ver: false},
                     component: () => import('@/components/MainContext'),
                     // redirect: '/index.html/main/el',
                     // children: [
@@ -67,23 +67,23 @@ const router = new VueRouter({
                     name: 'sl',
                     path: 'sl',
                     component: () => import('@/components/search/SearchList'),
-                    // meta: {ver: true},
-                    meta: {ver: false},
+                    meta: {ver: true},
+                    // meta: {ver: false},
                     redirect: '/index.html/sl/rc',
                     children: [
                         {
                             name: 'rc',
                             path: 'rc',
                             component: () => import('@/components/search/content/RepositoryContent'),
-                            // meta: {ver: true}
-                            meta: {ver: false}
+                            meta: {ver: true}
+                            // meta: {ver: false}
                         },
                         {
                             name: 'uc',
                             path: 'uc',
                             component: () => import('@/components/search/content/UserContent'),
-                            // meta: {ver: true}
-                            meta: {ver: false}
+                            meta: {ver: true}
+                            // meta: {ver: false}
                         }
                     ]
                 },
@@ -92,8 +92,8 @@ const router = new VueRouter({
                     name: 'seckill',
                     path: 'seckill',
                     component: () => import("@/components/seckill/SeckillContent"),
-                    // meta: {title: "Redis", ver: true},
-                    meta: {title: "Redis",ver:false},
+                    meta: {title: "Redis", ver: true},
+                    // meta: {title: "Redis",ver:false},
                 },
                 {
                     name: 'birthday',
@@ -105,14 +105,14 @@ const router = new VueRouter({
                     name: 'video',
                     path: 'video',
                     component: () => import("@/components/video/VideoPlayer"),
-                    // meta: {title: "Aurora", ver: true},
-                    meta: {title: "Aurora",ver:false},
+                    meta: {title: "Aurora", ver: true},
+                    // meta: {title: "Aurora",ver:false},
                 },
                 {
                     name:'aurora',
                     path:'aurora',
                     component: () => import("@/components/video/player/PhageAurora"),
-                    meta:{title: 'Aurora'}
+                    meta:{title: 'Aurora', ver: true}
                 },
                 {
                     name: 'music',
@@ -254,9 +254,42 @@ const router = new VueRouter({
                     component: () => import("@/components/depository/list/ReadMd"),
                     meta: {title: "Repository", ver: true},
                 },
-
+                {
+                    name: 'analysis',
+                    path: 'analysis',
+                    component: () => import("@/components/analysis/UserDataAnalysis"),
+                    meta: {title: "Analysis", ver: true},
+                    redirect: "/index.html/analysis/analysis",
+                    children: [
+                        {
+                            name: 'analysis_index',
+                            path: 'analysis',
+                            component: () => import("@/components/analysis/vcharts/UserOverviewData"),
+                            meta: {title: "Analysis", ver: true},
+                        },
+                        {
+                            name: 'analysis_line',
+                            path: 'line',
+                            component: () => import("@/components/analysis/vcharts/FolderCreateLine"),
+                            meta: {title: "Analysis", ver: true},
+                        },
+                        {
+                            name: 'rediction',
+                            path: 'predict',
+                            component: () => import("@/components/analysis/prediction/PredictionModel"),
+                            meta: {title: "Analysis", ver: true},
+                        },
+                        {
+                            name: 'survey_csv',
+                            path: 'csv',
+                            component: () => import("@/components/analysis/prediction/survey/SurveyCSV"),
+                            meta: {title: "Analysis", ver: true},
+                        }
+                    ]
+                }
             ]
         },
+
         {
             name: '404',
             path: '404',

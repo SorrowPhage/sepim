@@ -6,7 +6,7 @@ import store from './store'
 import VueRouter from 'vue-router'
 import router from './router/index'
 import VueCropper from "vue-cropper";
-import {MessageBox,Message,Pagination} from "element-ui";
+import {MessageBox, Message} from "element-ui";
 import jquery from 'jquery'
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message=Message
@@ -25,13 +25,60 @@ import 'mavon-editor/dist/css/index.css'
 Vue.use(mavonEditor)
 
 // 按需引入element-ui组件
-import { RadioGroup, RadioButton, Menu, 
-  Submenu, MenuItemGroup, MenuItem, Avatar, 
-  PageHeader, Descriptions, DescriptionsItem, 
-  Breadcrumb,BreadcrumbItem,DatePicker,Steps
-  ,Step,Form,FormItem,Input,Dialog,Button,Carousel,CarouselItem,
-  Calendar,Table,TableColumn,Radio,Badge,Option,Select,Popover
-  ,Empty,Aside,Tabs,TabPane,Link,Slider,Dropdown,DropdownItem,DropdownMenu,Image} from 'element-ui'
+import {
+  RadioGroup,
+  RadioButton,
+  Menu,
+  Submenu,
+  MenuItemGroup,
+  MenuItem,
+  Avatar,
+  PageHeader,
+  Descriptions,
+  DescriptionsItem,
+  Breadcrumb,
+  BreadcrumbItem,
+  DatePicker,
+  Steps
+  ,
+  Step,
+  Form,
+  FormItem,
+  Input,
+  Dialog,
+  Button,
+  Carousel,
+  CarouselItem,
+  Calendar,
+  Table,
+  TableColumn,
+  Radio,
+  Badge,
+  Option,
+  Select,
+  Popover
+  ,
+  Empty,
+  Aside,
+  Tabs,
+  TabPane,
+  Link,
+  Slider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  Image,
+  Row,
+  Col,
+  Timeline,
+  TimelineItem,
+  Container,
+  Pagination,
+  Main,
+  Upload,
+  Drawer,
+  Divider
+} from 'element-ui';
 
 import { Loading } from 'element-ui';
 Vue.use(Loading.directive);
@@ -86,6 +133,17 @@ Vue.component(Dropdown.name, Dropdown)
 Vue.component(DropdownItem.name, DropdownItem)
 Vue.component(DropdownMenu.name, DropdownMenu)
 Vue.component(Image.name, Image)
+Vue.component(Row.name, Row)
+Vue.component(Col.name, Col)
+Vue.component(Timeline.name, Timeline)
+Vue.component(TimelineItem.name, TimelineItem)
+Vue.component(Container.name, Container)
+Vue.component(Aside.name, Aside)
+Vue.component(Main.name, Main)
+Vue.component(Upload.name, Upload)
+Vue.component(Drawer.name, Drawer)
+Vue.component(Divider.name, Divider)
+
 
 
 

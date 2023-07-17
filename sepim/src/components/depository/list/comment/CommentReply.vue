@@ -3,7 +3,7 @@
         <div ref="replayBtn" class="sp-reply" @click="reply()">回复</div>
         <div ref="replay" v-show="isShow" class="sp-textarea-content-box">
 <!--            <textarea  ref="replay_text" v-model="content" class="sp-textarea-comment" ></textarea>-->
-            <VueEmoji ref="replay_emoji" :value="content" @input="onInput" width="100%" height="30"></VueEmoji>
+            <VueEmoji ref="replay_emoji" class="emoji-textarea" :value="content" @input="onInput" width="100%" height="30"></VueEmoji>
             <div class="sp-replay-box">
                 <button class="sp-replay-btn"  @click="replayComment">评论</button>
             </div>
@@ -106,6 +106,9 @@ export default {
 </script>
 
 <style scoped>
+.emoji-textarea>>>.emoji-vue-textarea{
+    outline: none;
+}
 .sp-reply {
     color: darkgray;
     font-size: 14px;

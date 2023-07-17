@@ -5,7 +5,7 @@
                 <h3><span class="v-align-middle">Showing {{list.length}}  available repository results </span></h3>
             </div>
             <SimpleMdList v-for="md in list.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-                    :key="md.id" :describe="md.roughly" :file_id="md.id" :title="md.title" :user="md.username"
+                    :key="md.id" :describe="md.roughly" :file_id="md.id" :title="md.title" :user="md.user.username"
                     :type="md.type" :url="md.url" :isShow="$store.state.Detail.id===$store.state.User.account"></SimpleMdList>
             <div class="page-box">
                 <el-pagination

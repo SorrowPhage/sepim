@@ -6,12 +6,12 @@
             <div style="display: inline">
                 <div class="sp-nav" @click="depository">Repository</div>
                 <div class="sp-nav" @click="newdoc">新建</div>
-<!--                <div class="sp-nav" @click="seckill">Redis</div>-->
-<!--                <div class="sp-nav" @click="goBirthday">投诉</div>-->
-<!--                <div class="sp-nav" @click="goMusicPlayer">音乐</div>-->
-                <div class="sp-nav" @click="goGames">游戏</div>
-<!--                <div class="sp-nav" @click="goVideoPlayer">视频</div>-->
-<!--                                <div class="sp-nav" @click="seckill">支付模块</div>-->
+                                <div class="sp-nav" @click="seckill">Redis</div>
+                <!--                <div class="sp-nav" @click="goBirthday">投诉</div>-->
+                                <div class="sp-nav" @click="goMusicPlayer">音乐</div>
+                                <div class="sp-nav" @click="goGames">游戏</div>
+                                <div class="sp-nav" @click="goVideoPlayer">视频</div>
+                <!--                <div class="sp-nav" @click="seckill">支付模块</div>-->
             </div>
         </div>
         <div class="weather-box">
@@ -49,6 +49,9 @@
                         <li class="sp-li-space" @click="newdoc">
                             <i class="el-icon-edit-outline"></i> 新建文件
                         </li>
+                        <li class="sp-li-space" @click="anslysis">
+                            <i class="el-icon-setting"></i> Analysis
+                        </li>
                         <div class="dropdown-divider"></div>
                         <li class="sp-li-space" @click="logOut">
                             <i class="el-icon-right"></i> 退出
@@ -58,11 +61,11 @@
             </ul>
         </div>
         <div v-else class="menu-right">
-                <div class="sp-login-box">
-                    <div class="sp-login-btn"  @click="goLogin">
-                        登录
-                    </div>
+            <div class="sp-login-box">
+                <div class="sp-login-btn" @click="goLogin">
+                    登录
                 </div>
+            </div>
         </div>
     </div>
 </template>
@@ -74,7 +77,7 @@ import HeFenWeather from '@/components/userinfo/HeFenWeather'
 
 export default {
     name: "AdminHeader",
-    components:{
+    components: {
         HeFenWeather
     },
     data() {
@@ -120,8 +123,8 @@ export default {
         goGames() {
             this.isTrue = false;
             this.$router.push({
-                name:'games',
-                params:{
+                name: 'games',
+                params: {
                     account: this.$store.state.User.account,
                 }
             })
@@ -162,6 +165,12 @@ export default {
                 name: 'seckill'
             })
         },
+        anslysis() {
+            this.isTrue = false;
+            this.$router.push({
+                name: 'analysis'
+            })
+        },
         logOut() {
             this.isTrue = false;
             localStorage.removeItem("token");
@@ -182,6 +191,8 @@ export default {
             if (this.search === '') {
                 return;
             }
+            
+            //意义不明的代码
             this.$store.commit("Search/SET_SEARCH_CONTENT", this.search);
             this.$router.push({
                 name: 'sl',
@@ -201,7 +212,7 @@ export default {
     },
     mounted() {
         document.addEventListener('click', this.showUl);
-        let token=localStorage.getItem("token")
+        let token = localStorage.getItem("token")
         if (token === null || token === '') {
             this.isLogin = false;
         }
@@ -434,10 +445,12 @@ li {
     margin-left: 5px;
     cursor: pointer;
 }
-.sp-login-box{
+
+.sp-login-box {
     /*background: #e0ac16;*/
 }
-.sp-login-btn{
+
+.sp-login-btn {
     background: #409EFF;
     width: 44px;
     height: 44px;
@@ -448,7 +461,8 @@ li {
     color: white;
     margin-top: 3px;
 }
-.weather-box{
+
+.weather-box {
     width: 150px;
     position: absolute;
     right: 250px;

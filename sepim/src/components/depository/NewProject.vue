@@ -18,7 +18,8 @@
                                     >
                                     </el-option>
                                 </el-select>
-                                <el-button class="sp-space" type="primary" @click="save">上传</el-button>
+                                <el-button class="sp-space" type="primary" @click="save">创建</el-button>
+                                <UploadFile></UploadFile>
                             </div>
                             <div class="sp-mavon">
                                 <mavon-editor
@@ -46,9 +47,10 @@
 <script>
 
 import axios from "axios";
-
+import UploadFile from "@/components/depository/upload/UploadFile";
 export default {
     name: "NewProject",
+    components:{UploadFile},
     data() {
         return {
             options: [{

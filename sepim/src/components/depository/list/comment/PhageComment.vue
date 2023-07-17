@@ -14,7 +14,7 @@
                     </div>
                     <div class="sp-textarea-content-box" >
 <!--                        <textarea class="sp-textarea-comment" placeholder="Edit..." @focus="tools=true"  @blur="tools=false" v-model.lazy="substance"></textarea>-->
-                        <VueEmoji ref="emoji"  :value="substance"  @input="onInput" width="100%" height="30"></VueEmoji>
+                        <VueEmoji class="emoji-textarea" ref="emoji"  :value="substance"  @input="onInput" width="100%" height="30"></VueEmoji>
 <!--                        <div v-show="tools" class="tools-nav"  @focus="tools=true">-->
 <!--                            <div>-->
 <!--                            -->
@@ -28,14 +28,14 @@
             </div>
         </div>
         
-        
+        <!--先将跟评论找出来，再找出各个跟评论下面的子评论-->
         <div class="sp-comments-box" v-for="comment in comments" :key="comment.id">
             <div class="sp-parent-comment">
                 <div class="sp-comment-avatar-box">
-                    <el-avatar class="avatar_hover" :size="30"  :src="comment.avatarUrl" @click.native="goDetail(comment.account)"></el-avatar>
+                    <el-avatar class="avatar_hover" :size="30"  :src="comment.user.avatarUrl" @click.native="goDetail(comment.account)"></el-avatar>
                 </div>
                 <div class="sp-comment-content-box">
-                    <div class="sp-comment-user">{{comment.username}}</div>
+                    <div class="sp-comment-user">{{comment.user.username}}</div>
                     <div class="sp-comment-data"> 发布于 {{comment.data}}</div>
                     <div class="sp-font-family">{{comment.content}}</div>
                     <CommentReply
@@ -51,10 +51,10 @@
             <div v-for="comment in comment.child" :key="comment.id">
                 <div class="sp-comment">
                     <div class="sp-comment-avatar-box">
-                        <el-avatar class="avatar_hover" :size="30"  :src="comment.avatarUrl" @click.native="goDetail(comment.account)"></el-avatar>
+                        <el-avatar class="avatar_hover" :size="30"  :src="comment.user.avatarUrl" @click.native="goDetail(comment.account)"></el-avatar>
                     </div>
                     <div  class="sp-comment-content-box">
-                        <div class="sp-comment-user">{{comment.username}}</div>
+                        <div class="sp-comment-user">{{comment.user.username}}</div>
                         <div class="sp-comment-parent-user"> @ {{comment.parentUsername}}</div>
                         <div class="sp-comment-data"> 发布于 {{comment.data}}</div>
                         <div class="sp-font-family">{{comment.content}}</div>
@@ -160,6 +160,9 @@ export default {
 </script>
 
 <style scoped>
+.emoji-textarea>>>.emoji-vue-textarea{
+    outline: none;
+}
 .comment-box{
     margin-top: 30px;
     width: 100%;
@@ -305,4 +308,5 @@ export default {
 .sp-font-family{
     font-family:"Ubuntu Light","Ubuntu","Ubuntu Mono","Segoe Print","Segoe UI",serif;
 }
+
 </style>

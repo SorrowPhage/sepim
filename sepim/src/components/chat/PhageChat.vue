@@ -18,7 +18,7 @@
                 <div v-show="isLast" class="last-messages">您有新消息</div>
                 <div class="replay-box">
                     <div class="reply-content-box">
-                        <VueEmoji ref="chat_text" :value="contentReply" @input="onInput" width="100%" height="80"></VueEmoji>
+                        <VueEmoji ref="chat_text" class="emoji-textarea" :value="contentReply" @input="onInput" width="100%" height="80"></VueEmoji>
                     </div>
                     <div class="btn-box">
                         <div class="btn-content-box">
@@ -163,6 +163,9 @@ export default {
 </script>
 
 <style scoped>
+.emoji-textarea>>>.emoji-vue-textarea{
+    outline: none;
+}
 * {
     box-sizing: border-box;
 }
