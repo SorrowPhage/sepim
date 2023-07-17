@@ -92,6 +92,9 @@ public class FareUtils {
 
         log.info("图片总数:" + files.length);
         //我这里使用简单的for循环，数据库过大考虑用分布式
+
+        // List<String> faceList = new ArrayList<>();
+
         for(int i=0;i<files.length;i++) {
             System.out.println(files[i].getName());
 
@@ -118,7 +121,9 @@ public class FareUtils {
             errorCode = faceEngine.compareFaceFeature(targetFaceFeature, sourceFaceFeature, faceSimilar);
 
             log.info(i+"与该图片相似度：" + faceSimilar.getScore());
-            if (faceSimilar.getScore()>=0.85){
+            if (faceSimilar.getScore() >= 0.85) {
+                //真正想要的效果是，检索图片和图库中所有相似的，在页面中列出所有的账号，让用户选择登录，而不是这种检索到第一张就返回结果。
+                // faceList.add(files[i].getName());
                 return files[i].getName();
             }
         }

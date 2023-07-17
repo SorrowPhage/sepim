@@ -26,6 +26,12 @@ public class SearchController {
         return resultData;
     }
 
+
+    /**
+     * 搜索文章
+     * @param q
+     * @return
+     */
     @GetMapping("/search/rep")
     public ResultData searchRep(@RequestParam("q") String q) {
         resultData = folderService.searchRep(q);

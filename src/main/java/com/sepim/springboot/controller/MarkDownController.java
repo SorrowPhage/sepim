@@ -7,6 +7,7 @@ import com.sepim.springboot.entity.FolderCondition;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,11 @@ import java.util.List;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class MarkDownController {
 
-    @Autowired
-    private FolderService folderService;
+
+    private final FolderService folderService;
 
     @Autowired
     private CommentService commentService;
@@ -27,6 +29,11 @@ public class MarkDownController {
     @Autowired
     private ResultData resultData;
 
+    /**
+     * 文章上传
+     * @param folder
+     * @return
+     */
     @PostMapping("/md/save")
     public ResultData saveMd(@RequestBody Folder folder) {
         resultData = folderService.saveMd(folder);
@@ -45,6 +52,11 @@ public class MarkDownController {
         return resultData;
     }
 
+    /**
+     * 获取文章列表
+     * @param folder 这个参数应该直接使用String
+     * @return
+     */
     @PostMapping("/md/list")
     public ResultData getMdList(@RequestBody Folder folder) {
         resultData = folderService.getMdList(folder.getUserId());
@@ -89,6 +101,11 @@ public class MarkDownController {
         return resultData;
     }
 
+    /**
+     *
+     * @param comment
+     * @return
+     */
     @PostMapping("/md/comment/release")
     public ResultData release(@RequestBody Comment comment) {
         resultData = commentService.release(comment);
@@ -108,6 +125,16 @@ public class MarkDownController {
     @GetMapping("/md/rank")
     public ResultData getRankList() {
         resultData = folderService.getRankList();
+        return resultData;
+    }
+
+    /**
+     * 文章上传
+     */
+    @PostMapping("/md/store")
+    public ResultData storeMd(@RequestParam(value = "file") MultipartFile file,@RequestParam("userId") String userId,
+                             @RequestParam("roughly") String roughly,@RequestParam("title")String title,@RequestParam("type") String type
+                              ) {
         return resultData;
     }
 }

@@ -2,7 +2,6 @@ server:
   servlet:
     session:
       timeout: 600
-
   port: 8085
 
 spring:
@@ -56,7 +55,6 @@ spring:
   jdbc:
     template:
       query-timeout: 3
-
   redis:
 #    Redis服务器地址
     host: 192.168.102.100
@@ -76,6 +74,10 @@ spring:
         max-idle: 5
 #        连接池的最小空闲连接
         min-idle: 0
+  servlet:
+    multipart:
+      max-file-size:
+        10MB
 
 mybatis:
   #  config-location: classpath:mybatis/mybatis-config.xml

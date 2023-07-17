@@ -6,6 +6,7 @@ import com.sepim.springboot.entity.Comment;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.mapper.CommentMapper;
 import com.sepim.springboot.service.CommentService;
+import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.CommentUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Autowired
     private ResultData resultData;
 
+    @Autowired
+    private UserService userService;
+
     /**
      * 获取评论列表的数据
      * @param folderId 文章id
@@ -26,7 +30,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public List<Comment> getComments(String folderId) {
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
         wrapper.eq("folder_id", folderId);
-        return CommentUtil.processComments(this.list(wrapper));
+        List<Comment> list = this.list(wrapper);
+        for (Comment comment : list) {
+            comment.setUser(userService.getById(comment.getAccount()));
+        }
+        return CommentUtil.processComments(list);
     }
 
     /**

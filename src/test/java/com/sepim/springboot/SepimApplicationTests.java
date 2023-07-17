@@ -1,20 +1,19 @@
 package com.sepim.springboot;
 
-import com.alibaba.fastjson.JSON;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.sepim.springboot.entity.*;
 import com.sepim.springboot.mapper.ChatMessageMapper;
 import com.sepim.springboot.mapper.MusicListMapper;
 import com.sepim.springboot.mapper.MusicMapper;
+import com.sepim.springboot.mapper.TestGeneratorMapper;
 import com.sepim.springboot.service.*;
 import com.sepim.springboot.utils.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
-import java.lang.reflect.Type;
-import java.sql.Timestamp;
 import java.util.List;
 
 @SpringBootTest( webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT )
@@ -200,4 +199,52 @@ class SepimApplicationTests {
         // System.out.println(redisUtil.get("user"));  //myValue
         System.out.println(redisUtil.ping());
     }
+
+    @Autowired
+    private TestGeneratorMapper testGeneratorMapper;
+
+    @Test
+    void generatorTest() {
+        TestGenerator testGenerator = new TestGenerator();
+        // testGenerator.setId(1);
+        testGenerator.setName("测试");
+
+        //针对单表进行查询的类
+        TestGeneratorExample testGeneratorExample = new TestGeneratorExample();
+        //让name升序
+        testGeneratorExample.setOrderByClause("name asc");
+        //选择不重复的记录
+        testGeneratorExample.setDistinct(true);
+
+        //定义sql语句where后的查询条件
+        TestGeneratorExample.Criteria criteria = testGeneratorExample.createCriteria();
+        testGeneratorMapper.insert(testGenerator);
+        // criteria.andNameEqualTo(testGenerator.getName());
+        // criteria.andNameEqualTo("haha");
+        // System.out.println(testGeneratorMapper.countByExample(testGeneratorExample));
+
+        // testGeneratorMapper.updateByPrimaryKeySelective(testGenerator);
+        // testGeneratorMapper.updateByPrimaryKey(testGenerator);
+        // testGeneratorMapper.updateByExample(testGenerator, testGeneratorExample);
+
+        List<TestGenerator> list = testGeneratorMapper.selectByExample(testGeneratorExample);
+        for (TestGenerator generator : list) {
+            System.out.println(generator);
+        }
+        // list.stream().map(x -> {
+        //     if ("测试".equals(x.getName())) {
+        //         x.setName(x.getName() + "x");
+        //     }
+        //     return x;
+        // }).filter(x -> x.getId() < 2).forEach(System.out::println);
+
+
+    }
+
+    @Test
+    void testHutoolsDataUtil() {
+        System.out.println(DateUtil.format(LocalDateTimeUtil.now(), "yyyy-MM-dd"));
+    }
+
+
 }

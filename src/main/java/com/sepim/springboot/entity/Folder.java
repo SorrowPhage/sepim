@@ -9,6 +9,7 @@ import java.util.List;
 public class Folder {
     private String id;
     private String userId;
+    @TableField(exist = false)
     private String username;
     private String title;
     private String roughly;
@@ -24,4 +25,6 @@ public class Folder {
     private String mdContent;
     @TableField(exist = false)
     private List<Comment> comments;
+    @TableField(exist = false)
+    private User user;
 }

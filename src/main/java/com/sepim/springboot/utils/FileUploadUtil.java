@@ -43,6 +43,42 @@ public class FileUploadUtil {
 
     private static final String FACE_SERVER_PATH = "http://localhost:8088/upload/sepim/face/";
 
+    public static final String PRED_BASE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\file\\";
+
+    public static final String PRED_SERVER_PATH = "http://localhost:8088/upload/sepim/file/";
+
+
+
+    public static String uploadPred(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+
+        //使用uuid保证图片名字的唯一
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+
+        String newFile = uuid + originalFilename;
+
+        File image = new File(PRED_BASE_PATH, newFile);
+        try {
+            file.transferTo(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return PRED_SERVER_PATH + newFile;
+    }
+
+    public static void deletePred(String imgUrl) {
+        if (imgUrl == null) {
+            return;
+        }
+        String deleteUrl = imgUrl.replace(PRED_SERVER_PATH, PRED_BASE_PATH);
+        File file = new File(deleteUrl);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+
+
     public static String upload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
 
@@ -70,7 +106,6 @@ public class FileUploadUtil {
             file.delete();
         }
     }
-
 
     public static String uploadFace(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
@@ -126,10 +161,6 @@ public class FileUploadUtil {
         }
     }
 
-
-
-
-
     public static boolean uploadMdFile(String content,String absPath) {
         BufferedReader bufferedReader = null;
         BufferedWriter bufferedWriter = null;
@@ -182,7 +213,6 @@ public class FileUploadUtil {
                 e.printStackTrace();
             }
         }
-
     }
 
     public static boolean deleteMd(String url) {

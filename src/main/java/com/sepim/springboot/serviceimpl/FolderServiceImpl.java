@@ -1,5 +1,7 @@
 package com.sepim.springboot.serviceimpl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -13,6 +15,8 @@ import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderService;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.FileUploadUtil;
+import com.sepim.springboot.utils.StringRedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> implements FolderService {
     @Autowired
     private ResultData resultData;
@@ -33,6 +38,9 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     @Autowired
     private FolderMapper folderMapper;
+
+    @Autowired
+    private StringRedisUtils stringRedisUtils;
 
     private static final String MD_FILE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\md\\file\\";
 
@@ -69,6 +77,8 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String absPath = MD_FILE_PATH + uuid + folder.getTitle() + ".txt";
         String mdAbsPath = MD_FILE_PATH + uuid + folder.getTitle() + ".md";
+        folder.setTime(DateUtil.format(LocalDateTimeUtil.now(), "yyyy-MM-dd"));
+        // folder.setTime(DateUtil.now());
         if (FileUploadUtil.uploadMdFile(folder.getContent(), absPath)&&
             FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
             folder.setUrl(absPath);
@@ -122,6 +132,13 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         QueryWrapper<Folder> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", id);
         List<Folder> list = this.list(wrapper);
+        // for (Folder folder : list) {
+        //     String redis = stringRedisUtils.getRedis("folder_" + folder.getUserId());
+        //     if (redis == null) {
+        //         stringRedisUtils.addRedisTime("folder_" + folder.getUserId(), userService.getById(folder.getUserId()));
+        //     }
+        //     // folder.setUser();
+        // }
         resultData.setFlag("md_list_succeed");
         resultData.setData(list);
         return resultData;
@@ -134,6 +151,9 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
      */
     public ResultData readMd(String id) {
         Folder file = this.getById(id);
+
+        file.setUser(userService.getById(file.getUserId()));
+
         file.setReadNum(file.getReadNum() + 1);
         this.updateById(file);
         file.setContent(FileUploadUtil.readMdFile(file.getUrl()));
@@ -284,11 +304,23 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         return resultData;
     }
 
+    /**
+     * 搜索功能---文章列表
+     * @param q
+     * @return
+     */
     @Override
     public ResultData searchRep(String q) {
         QueryWrapper<Folder> wrapper = new QueryWrapper<>();
         wrapper.like("title", q);
         List<Folder> list = this.list(wrapper);
+
+        for (Folder folder : list) {
+            // log.info("设置用户信息，", folder.getUserId());
+            folder.setUser(userService.getById(folder.getUserId()));
+        }
+
+
         if (list.size() > 0) {
             resultData.setFlag("search_rep_succeed");
             resultData.setData(list);

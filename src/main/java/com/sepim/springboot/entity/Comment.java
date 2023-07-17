@@ -25,4 +25,6 @@ public class Comment {
     private String parentUsername;
     @TableField(exist = false)
     private String parentAccount;
+    @TableField(exist = false)
+    private User user;
 }
