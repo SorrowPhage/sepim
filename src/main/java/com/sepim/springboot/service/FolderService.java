@@ -26,13 +26,11 @@ public interface FolderService extends IService<Folder> {
 
     public ResultData deleteMd(String id);
 
-    public ResultData recommendMd();
-
-    public ResultData getPublicFolders(String id);
-
     public ResultData getRankList();
 
     public ResultData overview(User user);
 
     public ResultData searchRep(String q);
+
+    public ResultData storeMd(MultipartFile file, Folder folder);
 }

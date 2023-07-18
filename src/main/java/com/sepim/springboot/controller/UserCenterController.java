@@ -1,63 +1,51 @@
 package com.sepim.springboot.controller;
 
-import com.sepim.springboot.entity.Folder;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.service.FolderService;
 import com.sepim.springboot.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class UserCenterController {
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private FolderService folderService;
+    private final UserService userService;
 
-    @Autowired
-    private ResultData resultData;
-
+    private final FolderService folderService;
 
     /**
      * 获取用户信息
-     * @param user
-     * @return
+     * @param user 得到用户id
+     * @return 返回获取结果
      */
     @PostMapping("/user/center/get")
     public ResultData getUser(@RequestBody User user) {
-        resultData = userService.getUser(user.getId());
-        return resultData;
+        return userService.getUser(user.getId());
     }
 
-    /**
-     * 获取用户的文章列表
-     * @param folder
-     * @return
-     */
-    @PostMapping("/user/center/files")
-    public ResultData getPublicFolders(@RequestBody Folder folder) {
-        resultData = folderService.getPublicFolders(folder.getUserId());
-        return resultData;
-    }
+
 
     /**
-     * 获取用户的描述文件
-     * @param user
-     * @return
+     * 修改用户的描述文件
+     * @param user 用户的信息，文件的内容
+     * @return 返回获取结果
      */
     @PostMapping("/md/overview")
     public ResultData overview(@RequestBody User user) {
-        resultData = folderService.overview(user);
-        return resultData;
+        return folderService.overview(user);
     }
 
+    /**
+     * 获取readme文档
+     * @param user 用户的id
+     * @return 返回获取结果
+     */
     @PostMapping("/md/readme")
     public ResultData readme(@RequestBody User user) {
-        resultData = userService.readme(user);
-        return resultData;
+        return userService.readme(user);
     }
 }

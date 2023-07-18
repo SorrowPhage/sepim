@@ -9,14 +9,10 @@ import java.util.List;
 public class Folder {
     private String id;
     private String userId;
-    @TableField(exist = false)
-    private String username;
     private String title;
     private String roughly;
     private int readNum;
     private String type;
-    private String url;
-    private String state;
     private String mdUrl;
     private String time;
     @TableField(exist = false)

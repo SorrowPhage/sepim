@@ -2,14 +2,10 @@ package com.sepim.springboot.controller;
 
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.PredDataSetService;
-import com.sepim.springboot.utils.FileUploadUtil;
-import lombok.extern.log4j.Log4j;
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -18,15 +14,15 @@ import java.util.Map;
  */
 @CrossOrigin
 @RestController
+@RequiredArgsConstructor
 public class PredictionController {
 
-    @Autowired
-    private PredDataSetService predDataSetService;
+    private final PredDataSetService predDataSetService;
+
 
     @PostMapping("/file/save")
     public ResultData saveFile(@RequestParam(value = "file") MultipartFile file, @RequestParam("id") String id) {
-        ResultData resultData = predDataSetService.uploadPredFile(file, id);
-        return resultData;
+        return predDataSetService.uploadPredFile(file, id);
     }
 
     @PostMapping("/file/get")

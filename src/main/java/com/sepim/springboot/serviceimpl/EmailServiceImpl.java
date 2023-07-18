@@ -7,6 +7,7 @@ import com.sepim.springboot.service.EmailService;
 import com.sepim.springboot.utils.MySessionUtil;
 import com.sepim.springboot.utils.StringRedisUtils;
 import com.sepim.springboot.utils.VerCodeGenerateUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,16 +18,14 @@ import org.springframework.stereotype.Service;
  * 发送验证码
  */
 @Service
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
 
-    @Autowired
-    private ResultData resultData;
+    private final JavaMailSender javaMailSender;
 
-    @Autowired
-    private StringRedisUtils stringRedisUtils;
+
+    private final StringRedisUtils stringRedisUtils;
 
 
     @Value("${spring.mail.username}")
@@ -34,11 +33,12 @@ public class EmailServiceImpl implements EmailService {
 
     /**
      * 发送验证码
-     * @param email
-     * @return
+     * @param email 发送邮箱账号
+     * @return 返回发送结果
      */
     @Override
     public ResultData sendVerCode(Email email) {
+        ResultData resultData = new ResultData();
         //生成验证码
         String verCode = VerCodeGenerateUtil.generateVerCode();
         //设置邮件发送内容
@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(message);
 
         MySessionUtil.setSession("ver_code", verCode);
-
+        //将验证嘛存到redis中，并设置5分钟的过期时间
         stringRedisUtils.addRedisTime(email.getTos(), verCode);
 
         resultData.setFlag("send_succeed");

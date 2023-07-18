@@ -13,7 +13,7 @@ public class User {
     // private String type;
     private String avatarUrl;
     private String email;
-    private String overviewUrl;
+    // private String overviewUrl;
     private String overviewMdUrl;
     private String sex;
     private String birthday;

@@ -6,11 +6,11 @@ import com.sepim.springboot.entity.ResultData;
 
 public interface ChatMessageService extends IService<ChatMessage> {
 
-    public ResultData getChatMessageList(String s1, String s2);
+    ResultData getChatMessageList(String s1, String s2);
 
-    ResultData insertChatMessage(ChatMessage chatMessage);
+    void insertChatMessage(ChatMessage chatMessage);
 
-    public ResultData getChatList(String user);
+    ResultData getChatList(String user);
 
 
 }

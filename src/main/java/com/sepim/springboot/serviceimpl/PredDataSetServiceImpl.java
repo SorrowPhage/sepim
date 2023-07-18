@@ -1,12 +1,11 @@
 package com.sepim.springboot.serviceimpl;
 
 import com.sepim.springboot.entity.PredDataSet;
-import com.sepim.springboot.entity.PredDataSetExample;
+import com.sepim.springboot.entity.example.PredDataSetExample;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.mapper.PredDataSetMapper;
 import com.sepim.springboot.service.PredDataSetService;
 import com.sepim.springboot.utils.FileUploadUtil;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

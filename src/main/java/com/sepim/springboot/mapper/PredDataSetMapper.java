@@ -1,7 +1,7 @@
 package com.sepim.springboot.mapper;
 
 import com.sepim.springboot.entity.PredDataSet;
-import com.sepim.springboot.entity.PredDataSetExample;
+import com.sepim.springboot.entity.example.PredDataSetExample;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;

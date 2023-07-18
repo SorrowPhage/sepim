@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.sepim.springboot.entity.*;
+import com.sepim.springboot.entity.example.TestGeneratorExample;
 import com.sepim.springboot.mapper.ChatMessageMapper;
 import com.sepim.springboot.mapper.MusicListMapper;
 import com.sepim.springboot.mapper.MusicMapper;

@@ -50,6 +50,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 分页查询，FolderCondition中有用户的id，查询的使该用户的所有文章
+     *
      * @param condition
      * @return
      */
@@ -69,19 +70,17 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 保存MD文件
+     *
      * @param folder
      * @return
      */
     @Override
     public ResultData saveMd(Folder folder) {
         String uuid = UUID.randomUUID().toString().replace("-", "");
-        String absPath = MD_FILE_PATH + uuid + folder.getTitle() + ".txt";
         String mdAbsPath = MD_FILE_PATH + uuid + folder.getTitle() + ".md";
         folder.setTime(DateUtil.format(LocalDateTimeUtil.now(), "yyyy-MM-dd"));
         // folder.setTime(DateUtil.now());
-        if (FileUploadUtil.uploadMdFile(folder.getContent(), absPath)&&
-            FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
-            folder.setUrl(absPath);
+        if (FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
             folder.setMdUrl(mdAbsPath);
             this.save(folder);
             resultData.setFlag("md_save_succeed");
@@ -95,18 +94,19 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 修改文件内容
+     *
      * @param folder
      * @return
      */
     @Override
     public ResultData editMd(Folder folder) {
-        if (FileUploadUtil.deleteMd(this.getById(folder.getId()).getUrl())&&FileUploadUtil.deleteMd(this.getById(folder.getId()).getMdUrl())) {
+        if (FileUploadUtil.deleteMd(this.getById(folder.getId()).getMdUrl())) {
             String uuid = UUID.randomUUID().toString().replace("-", "");
-            String absPath = MD_FILE_PATH + uuid + folder.getTitle() + ".txt";
+
             String mdAbsPath = MD_FILE_PATH + uuid + folder.getTitle() + ".md";
-            if (FileUploadUtil.uploadMdFile(folder.getContent(), absPath) &&
-                FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
-                folder.setUrl(absPath);
+            if (
+                    FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
+
                 folder.setMdUrl(mdAbsPath);
                 this.saveOrUpdate(folder);
                 resultData.setFlag("md_edit_succeed");
@@ -124,6 +124,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 获取文件列表
+     *
      * @param id
      * @return
      */
@@ -146,17 +147,17 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 读取文件
+     *
      * @param id
      * @return
      */
     public ResultData readMd(String id) {
         Folder file = this.getById(id);
-
         file.setUser(userService.getById(file.getUserId()));
-
         file.setReadNum(file.getReadNum() + 1);
         this.updateById(file);
-        file.setContent(FileUploadUtil.readMdFile(file.getUrl()));
+        log.info(file.getMdUrl());
+        file.setContent(FileUploadUtil.readMdFile(file.getMdUrl()));
         file.setComments(commentService.getComments(id));
         resultData.setFlag("md_read_succeed");
         resultData.setData(file);
@@ -174,6 +175,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 上传文件中图片
+     *
      * @param file
      * @return
      */
@@ -186,6 +188,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 删除文件中的图片
+     *
      * @param url
      * @return
      */
@@ -198,54 +201,29 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 删除文件
-     * @param id
-     * @return
+     * @param id 文件id
+     * @return 返回删除结果
      */
     @Override
     public ResultData deleteMd(String id) {
-        if (FileUploadUtil.deleteMd(this.getById(id).getUrl())) {
+        if (FileUploadUtil.deleteMd(this.getById(id).getMdUrl())) {
             commentService.deleteByFolderId(id);
             boolean b = this.removeById(id);
             if (b) {
                 resultData.setFlag("md_delete_succeed");
                 resultData.setData(null);
-            }
-            else {
+            } else {
                 resultData.setFlag("md_delete_defeat");
                 resultData.setData(null);
             }
-        }
-        else {
+        } else {
             resultData.setFlag("md_delete_defeat");
             resultData.setData(null);
         }
         return resultData;
     }
 
-    @Override
-    public ResultData recommendMd() {
-        QueryWrapper<Folder> wrapper = new QueryWrapper<>();
-        wrapper.eq("type", "公开的").eq("state", "1");
-        List<Folder> list = this.list(wrapper);
-        resultData.setFlag("md_recommend_succeed");
-        resultData.setData(list);
-        return resultData;
-    }
 
-    @Override
-    public ResultData getPublicFolders(String id) {
-        QueryWrapper<Folder> wrapper = new QueryWrapper<>();
-        wrapper.eq("type", "公开的").eq("state", "1").eq("user_id", id);
-        List<Folder> list = this.list(wrapper);
-        if (list.size() > 0) {
-            resultData.setFlag("user_center_getPublicFolders_succeed");
-            resultData.setData(list);
-        } else {
-            resultData.setFlag("user_center_getPublicFolders_defeat");
-            resultData.setData(null);
-        }
-        return resultData;
-    }
 
     @Override
     public ResultData getRankList() {
@@ -262,16 +240,18 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         return resultData;
     }
 
+    /**
+     * 修改用户的描述md文档
+     * @param user 用户的id，文档的信息
+     * @return 返回获取结果
+     */
     @Override
     public ResultData overview(User user) {
         User userById = userService.getById(user.getId());
-        if (userById.getOverviewUrl() == null) {
+        if (userById.getOverviewMdUrl() == null) {
             String uuid = UUID.randomUUID().toString().replace("-", "");
-            String absPath = MD_FILE_PATH + uuid + "readMe.txt";
             String mdAbsPath = MD_FILE_PATH + uuid + "readMe.md";
-            if (FileUploadUtil.uploadMdFile(user.getContent(), absPath) &&
-                    FileUploadUtil.uploadMdFile(user.getMdContent(), mdAbsPath)) {
-                userById.setOverviewUrl(absPath);
+            if (FileUploadUtil.uploadMdFile(user.getMdContent(), mdAbsPath)) {
                 userById.setOverviewMdUrl(mdAbsPath);
                 userService.saveOrUpdate(userById);
                 resultData.setFlag("md_overview_succeed");
@@ -281,13 +261,10 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
                 resultData.setData(null);
             }
         } else {
-            if (FileUploadUtil.deleteMd(userById.getOverviewUrl())&&FileUploadUtil.deleteMd(userById.getOverviewMdUrl())) {
+            if (FileUploadUtil.deleteMd(userById.getOverviewMdUrl())) {
                 String uuid = UUID.randomUUID().toString().replace("-", "");
-                String absPath = MD_FILE_PATH + uuid +  "readMe.txt";
-                String mdAbsPath = MD_FILE_PATH + uuid  + "readMe.md";
-                if (FileUploadUtil.uploadMdFile(user.getContent(), absPath) &&
-                        FileUploadUtil.uploadMdFile(user.getMdContent(), mdAbsPath)) {
-                    userById.setOverviewUrl(absPath);
+                String mdAbsPath = MD_FILE_PATH + uuid + "readMe.md";
+                if (FileUploadUtil.uploadMdFile(user.getMdContent(), mdAbsPath)) {
                     userById.setOverviewMdUrl(mdAbsPath);
                     userService.saveOrUpdate(userById);
                     resultData.setFlag("md_overview_succeed");
@@ -306,8 +283,8 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     /**
      * 搜索功能---文章列表
-     * @param q
-     * @return
+     * @param q 文章标题
+     * @return 搜索结果
      */
     @Override
     public ResultData searchRep(String q) {
@@ -326,6 +303,29 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
             resultData.setData(list);
         } else {
             resultData.setFlag("search_res_defeat");
+            resultData.setData(null);
+        }
+        return resultData;
+    }
+
+    /**
+     * 用户上传本地文章
+     * @param file 上传文件
+     * @param folder 文章数据
+     * @return 返回上传结果
+     */
+    @Override
+    public ResultData storeMd(MultipartFile file, Folder folder) {
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        String mdAbsPath = MD_FILE_PATH + uuid + folder.getTitle() + ".md";
+        folder.setTime(DateUtil.format(LocalDateTimeUtil.now(), "yyyy-MM-dd"));
+        if (FileUploadUtil.storeMd(file, mdAbsPath)) {
+            folder.setMdUrl(mdAbsPath);
+            this.save(folder);
+            resultData.setFlag("md_save_succeed");
+            resultData.setData(null);
+        } else {
+            resultData.setFlag("md_save_defeat");
             resultData.setData(null);
         }
         return resultData;

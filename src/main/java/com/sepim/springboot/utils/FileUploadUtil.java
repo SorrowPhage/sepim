@@ -1,5 +1,6 @@
 package com.sepim.springboot.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.util.UUID;
  *
  * 作者：phage
  */
+@Slf4j
 public class FileUploadUtil {
     //图片上传的路径
     private static final String BASE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\avatar\\";
@@ -47,6 +49,31 @@ public class FileUploadUtil {
 
     public static final String PRED_SERVER_PATH = "http://localhost:8088/upload/sepim/file/";
 
+    /**
+     * 用户上传本地文章
+     * @param file 文件
+     * @param url 上传地址
+     * @return 上传结果
+     */
+    public static Boolean storeMd(MultipartFile file, String url) {
+        File file1 = new File(url);
+        try {
+            file.transferTo(file1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
+
+
+
+
 
 
     public static String uploadPred(MultipartFile file) {
@@ -78,7 +105,11 @@ public class FileUploadUtil {
     }
 
 
-
+    /**
+     * 上传文件
+     * @param file 文件
+     * @return 上传结果
+     */
     public static String upload(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
 
@@ -215,6 +246,12 @@ public class FileUploadUtil {
         }
     }
 
+    /**
+     * 删除文章
+     *
+     * @param url 文章地址
+     * @return 返回删除结果
+     */
     public static boolean deleteMd(String url) {
         File file = new File(url);
         if (file.exists()) {

@@ -1,7 +1,7 @@
 package com.sepim.springboot.mapper;
 
 import com.sepim.springboot.entity.TestGenerator;
-import com.sepim.springboot.entity.TestGeneratorExample;
+import com.sepim.springboot.entity.example.TestGeneratorExample;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;

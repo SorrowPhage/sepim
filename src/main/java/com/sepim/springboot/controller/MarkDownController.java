@@ -18,38 +18,38 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@CrossOrigin
 public class MarkDownController {
 
 
     private final FolderService folderService;
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    @Autowired
-    private ResultData resultData;
 
     /**
      * 文章上传
-     * @param folder
-     * @return
+     * @param folder 文章数据
+     * @return 返回上传结果
      */
     @PostMapping("/md/save")
     public ResultData saveMd(@RequestBody Folder folder) {
-        resultData = folderService.saveMd(folder);
-        return resultData;
+        return folderService.saveMd(folder);
     }
 
+    /**
+     * 分页查询
+     * @param condition 查询规则
+     * @return 返回查询结果
+     */
     @GetMapping("/md/list/page")
     public ResultData getMdListPage(@RequestBody FolderCondition condition) {
-        resultData = folderService.queryBYCondition(condition);
-        return resultData;
+        return folderService.queryBYCondition(condition);
     }
 
     @PostMapping("/md/update")
     public ResultData editMd(@RequestBody Folder folder) {
-        resultData = folderService.editMd(folder);
-        return resultData;
+        return folderService.editMd(folder);
     }
 
     /**
@@ -59,47 +59,37 @@ public class MarkDownController {
      */
     @PostMapping("/md/list")
     public ResultData getMdList(@RequestBody Folder folder) {
-        resultData = folderService.getMdList(folder.getUserId());
-        return resultData;
+        return folderService.getMdList(folder.getUserId());
     }
 
     @GetMapping("/md/read")
     @LogAnnotation(module = "文章",operator = "获取文章")
     public ResultData readMd(@RequestParam("id") String id) {
-        resultData = folderService.readMd(id);
-        return resultData;
+        return folderService.readMd(id);
     }
 
     @GetMapping("/md/readMd")
     @LogAnnotation(module = "文章",operator = "获取文章")
     public ResultData readMdContent(@RequestParam("id") String id) {
-        resultData = folderService.readMdContent(id);
-        return resultData;
+        return folderService.readMdContent(id);
     }
 
     @PostMapping("/md/upload")
     public ResultData uploadMdImg(@RequestParam(value = "file") MultipartFile file) {
-        resultData = folderService.uploadMdImg(file);
-        return resultData;
+        return folderService.uploadMdImg(file);
     }
 
     @GetMapping("/md/delete")
     public ResultData deleteImgUrl(@RequestParam("url") String url) {
-        resultData = folderService.deleteImgUrl(url);
-        return resultData;
+        return folderService.deleteImgUrl(url);
     }
 
     @GetMapping("/md/remove")
     public ResultData deleteMd(@RequestParam("id") String id) {
-        resultData = folderService.deleteMd(id);
-        return resultData;
+        return folderService.deleteMd(id);
     }
 
-    @PostMapping("/md/recommend")
-    public ResultData recommendMd() {
-        resultData = folderService.recommendMd();
-        return resultData;
-    }
+
 
     /**
      *
@@ -108,13 +98,13 @@ public class MarkDownController {
      */
     @PostMapping("/md/comment/release")
     public ResultData release(@RequestBody Comment comment) {
-        resultData = commentService.release(comment);
-        return resultData;
+        return commentService.release(comment);
     }
 
     @GetMapping("/md/comment/get")
     @LogAnnotation(module = "文章",operator = "评论")
     public ResultData getComments(@RequestParam("folderId") String folderId) {
+        ResultData resultData = new ResultData();
         log.info("asdasdasd");
         List<Comment> comments = commentService.getComments(folderId);
         resultData.setFlag("md_comment_get_succeed");
@@ -124,17 +114,26 @@ public class MarkDownController {
 
     @GetMapping("/md/rank")
     public ResultData getRankList() {
-        resultData = folderService.getRankList();
-        return resultData;
+        return folderService.getRankList();
     }
 
     /**
-     * 文章上传
+     * 用户上传本地文章
+     * @param file 文件
+     * @param userId 用户id
+     * @param roughly 文章描述
+     * @param title 文章标题
+     * @param type 文章类型
+     * @return 上传结果返回
      */
     @PostMapping("/md/store")
     public ResultData storeMd(@RequestParam(value = "file") MultipartFile file,@RequestParam("userId") String userId,
-                             @RequestParam("roughly") String roughly,@RequestParam("title")String title,@RequestParam("type") String type
-                              ) {
-        return resultData;
+                             @RequestParam("roughly") String roughly,@RequestParam("title")String title,@RequestParam("type") String type) {
+        Folder folder = new Folder();
+        folder.setUserId(userId);
+        folder.setRoughly(roughly);
+        folder.setTitle(title);
+        folder.setType(type);
+        return folderService.storeMd(file, folder);
     }
 }

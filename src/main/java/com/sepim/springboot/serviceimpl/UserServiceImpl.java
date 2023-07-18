@@ -8,20 +8,18 @@ import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.UserMapper;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Autowired
-    private ResultData resultData;
 
-    @Autowired
-    private StringRedisUtils stringRedisUtils;
+    private final StringRedisUtils stringRedisUtils;
 
 
 
@@ -31,7 +29,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 注册结果
      */
     public ResultData register(User user) {
-        // String verCode = (String) MySessionUtil.getSession("ver_code");
+        ResultData resultData = new ResultData();
         String verCode = stringRedisUtils.getRedis(user.getEmail());
         if (!verCode.equals(user.getVerCode())) {
             resultData.setFlag("ver_defeat");
@@ -58,6 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 用户登录结果
      */
     public ResultData login(User user) {
+        ResultData resultData = new ResultData();
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("id", user.getId()).eq("password", user.getPassword());
         User admin = this.getOne(wrapper);
@@ -80,6 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 验证结果
      */
     public ResultData retrieve(User user) {
+        ResultData resultData = new ResultData();
         String verCode = (String) MySessionUtil.getSession("ver_code");
         if (!verCode.equals(user.getVerCode())) {
             resultData.setFlag("ver_defeat");
@@ -106,6 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 改变密码结果
      */
     public ResultData changePassword(User user) {
+        ResultData resultData = new ResultData();
         UpdateWrapper<User> wrapper = new UpdateWrapper<>();
         wrapper.set("password", user.getPassword()).eq("id", user.getId());
         boolean tag = this.update(wrapper);
@@ -126,6 +127,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 修改结果
      */
     public ResultData settingAvatar(MultipartFile file, String id) {
+        ResultData resultData = new ResultData();
         if (file != null) {
             //删除原来的图像
             String old_avatar = this.getById(id).getAvatarUrl();
@@ -154,11 +156,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 用户信息更新
-     * @param user
-     * @return
+     * @param user 用户信息
+     * @return 返回更新结果
      */
     @Override
     public ResultData userInfoUpdate(User user) {
+        ResultData resultData = new ResultData();
         boolean b = this.saveOrUpdate(user);
         if (b) {
             resultData.setFlag("user_info_update_succeed");
@@ -172,11 +175,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 修改用户密码
-     * @param user
-     * @return
+     * @param user 用户信息
+     * @return 返回更新结果
      */
     @Override
     public ResultData userUpdatePassword(User user) {
+        ResultData resultData = new ResultData();
         if (this.getById(user.getId()).getPassword().equals(user.getOldPassword())) {
             this.saveOrUpdate(user);
             resultData.setFlag("user_info_update_password_succeed");
@@ -190,11 +194,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 获取用户信息
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return 返回结果
      */
     @Override
     public ResultData getUser(String id) {
+        ResultData resultData = new ResultData();
         User user = this.getById(id);
         if (user == null) {
             resultData.setFlag("user_center_get_defeat");
@@ -207,19 +212,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
 
+    /**
+     * 获取用户的readme文档
+     * @param user 用户id
+     * @return 获取结果
+     */
     @Override
     public ResultData readme(User user) {
+        ResultData resultData = new ResultData();
         User byId = this.getById(user.getId());
         if (byId == null ) {
             resultData.setFlag("readme_defeat");
             resultData.setData(null);
-        } else if (byId.getOverviewUrl() == null) {
+        } else if (byId.getOverviewMdUrl() == null) {
             byId.setContent(null);
             byId.setMdContent(null);
             resultData.setFlag("readme_succeed");
             resultData.setData(byId);
         } else {
-            byId.setContent(FileUploadUtil.readMdFile(byId.getOverviewUrl()));
             byId.setMdContent(FileUploadUtil.readMdFile(byId.getOverviewMdUrl()));
             resultData.setFlag("readme_succeed");
             resultData.setData(byId);
@@ -229,11 +239,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 搜索用户
-     * @param q
-     * @return
+     * @param q 用户名
+     * @return 搜索结果
      */
     @Override
     public ResultData searchUser(String q) {
+        ResultData resultData = new ResultData();
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.like("username", q);
         List<User> list = this.list(wrapper);
@@ -253,6 +264,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public ResultData uploadFaceImage(MultipartFile file, String id) {
+        ResultData resultData = new ResultData();
         if (file != null) {
             String face_Url = FileUploadUtil.uploadFare(file);
             String s = FareUtils.checkFace(face_Url);

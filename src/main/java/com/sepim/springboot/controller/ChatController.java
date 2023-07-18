@@ -2,7 +2,7 @@ package com.sepim.springboot.controller;
 
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.ChatMessageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,23 +12,29 @@ import org.springframework.web.bind.annotation.RestController;
  * @date: 2023/4/24
  */
 @RestController
+@RequiredArgsConstructor
 public class ChatController {
 
-    @Autowired
-    private ChatMessageService chatMessageService;
+    private final ChatMessageService chatMessageService;
 
-    @Autowired
-    private ResultData resultData;
-
+    /**
+     * 找出两个用户之间的聊天信息
+     * @param s1 用户1
+     * @param s2 用户2
+     * @return 搜索结果
+     */
     @GetMapping("/chat/get")
     public ResultData getChatMessageList(@RequestParam(value = "s1") String s1, @RequestParam(value = "s2") String s2) {
-        resultData = chatMessageService.getChatMessageList(s1, s2);
-        return resultData;
+        return chatMessageService.getChatMessageList(s1, s2);
     }
 
+    /**
+     * 获取用户和其它用户之间的最后一条信息
+     * @param user 用户
+     * @return 搜索结果
+     */
     @GetMapping("/chat/chatlist")
     public ResultData getChatList(@RequestParam(value = "user") String user) {
-        resultData = chatMessageService.getChatList(user);
-        return resultData;
+        return chatMessageService.getChatList(user);
     }
 }

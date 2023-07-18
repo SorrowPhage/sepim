@@ -5,33 +5,30 @@ import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.service.EmailService;
 import com.sepim.springboot.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin //解决跨域
+@CrossOrigin
 @RestController
+@RequiredArgsConstructor
 public class LoginController {
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private ResultData resultData;
+    private final UserService userService;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
     /**
      * 用户发送验证码
-     *
      * @param email   前端传的邮箱账号
+     * @return 返回发送结果
      */
     @PostMapping("/sendcode")
     public ResultData sendVerCode(@RequestBody Email email) {
-        resultData = emailService.sendVerCode(email);
-        return resultData;
+        return emailService.sendVerCode(email);
     }
 
     /**
@@ -41,8 +38,7 @@ public class LoginController {
      */
     @PostMapping("/enrol")
     public ResultData register(@RequestBody User user) {
-        resultData = userService.register(user);
-        return resultData;
+        return userService.register(user);
     }
 
     /**
@@ -52,8 +48,7 @@ public class LoginController {
      */
     @PostMapping("/login")
     public ResultData login(@RequestBody User user) {
-        resultData = userService.login(user);
-        return resultData;
+        return userService.login(user);
     }
 
     /**
@@ -63,8 +58,7 @@ public class LoginController {
      */
     @PostMapping("/retrieve")
     public ResultData retrieve(@RequestBody User user) {
-        resultData = userService.retrieve(user);
-        return resultData;
+        return userService.retrieve(user);
     }
 
     /**
@@ -74,7 +68,6 @@ public class LoginController {
      */
     @PostMapping("/change")
     public ResultData changePassword(@RequestBody User user) {
-        resultData = userService.changePassword(user);
-        return resultData;
+        return userService.changePassword(user);
     }
 }

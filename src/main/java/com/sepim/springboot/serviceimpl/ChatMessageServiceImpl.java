@@ -8,7 +8,7 @@ import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.ChatMessageMapper;
 import com.sepim.springboot.service.ChatMessageService;
 import com.sepim.springboot.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,16 +18,13 @@ import java.util.List;
  * @date: 2023/4/24
  */
 @Service
+@RequiredArgsConstructor
 public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMessage> implements ChatMessageService {
 
-    @Autowired
-    private ChatMessageMapper chatMessageMapper;
+    private final ChatMessageMapper chatMessageMapper;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private ResultData resultData;
 
     /**
      * 找出用户的聊天信息
@@ -37,15 +34,10 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
      */
     @Override
     public ResultData getChatMessageList(String s1, String s2) {
+        ResultData resultData = new ResultData();
         //在用户调用信息后，发给他的信息未读改为已读
         chatMessageMapper.updateMessageType(s1, s2);
         List<ChatMessage> chatMessage = chatMessageMapper.getChatMessage(s1, s2);
-        /**
-         * 以下语句会导致疯狂查询数据库
-         */
-        // for (ChatMessage message : chatMessage) {
-        //     message.setUser(userService.getById(message.getFromId()));
-        // }
 
         User user1 = userService.getById(s1);
         User user2 = userService.getById(s2);
@@ -66,15 +58,14 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
     /**
      * 增加一条信息
      * @param chatMessage 信息
-     * @return 返回插入结果
      */
     @Override
-    public ResultData insertChatMessage(ChatMessage chatMessage) {
+    public void insertChatMessage(ChatMessage chatMessage) {
+        ResultData resultData = new ResultData();
         chatMessageMapper.updateIsLatest(chatMessage.getFromId(), chatMessage.getToId());
         chatMessageMapper.addChatMessage(chatMessage);
         resultData.setFlag("200");
         resultData.setData(chatMessage);
-        return resultData;
     }
 
 
@@ -85,6 +76,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
      */
     @Override
     public ResultData getChatList(String user) {
+        ResultData resultData = new ResultData();
         QueryWrapper<ChatMessage> wrapper = new QueryWrapper<>();
         wrapper.eq("is_latest", 1).eq("from_id", user).or().eq("to_id", user).eq("is_latest", 1);
         List<ChatMessage> list = this.list(wrapper);
