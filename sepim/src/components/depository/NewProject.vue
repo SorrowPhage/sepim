@@ -18,7 +18,7 @@
                                     >
                                     </el-option>
                                 </el-select>
-                                <el-button class="sp-space" type="primary" @click="save">创建</el-button>
+                                <el-button class="sp-space" type="primary" @click="save" plain>创建</el-button>
                                 <UploadFile></UploadFile>
                             </div>
                             <div class="sp-mavon">

@@ -1,6 +1,6 @@
 <template>
     <div class="sp-upload">
-        <el-button type="primary"  @click.native  ="drawer = true">上传</el-button>
+        <el-button type="primary"  @click.native  ="drawer = true" plain>上传</el-button>
         <el-drawer
             title="文件上传"
             :size="500"
@@ -11,6 +11,8 @@
             <div style="display: flex;justify-content: center">
                 <el-upload
                     ref="upload"
+                    class="upload-demo"
+                    v-show="ud"
                     :auto-upload="false"
                     :before-remove="beforeRemove"
                     :data="{userId:$store.state.User.account,roughly:des,title:title,type: this.value}"
@@ -19,6 +21,8 @@
                     :on-exceed="handleExceed"
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
+                    :on-success="storeSuccess"
+                    :on-error="storeError"
                     action="http://localhost:8085/md/store"
                     drag
                 >
@@ -27,7 +31,7 @@
                 </el-upload>
             </div>
     
-            <div style="padding: 5px">
+            <div style="padding: 5px;margin-top: 16px">
                 <label class="sp-text">
                     <div style="width: 90%;flex-grow: 1;">
                             <textarea class="sp-textarea" style="height: 34px;" rows="1" placeholder="文章标题" maxlength="20" v-model="title">
@@ -59,7 +63,7 @@
                 </label>
             </div>
             
-            <div style="margin-top: 16px;padding: 0 16px">
+            <div style="margin-top: 16px;padding: 0 25px">
                 <el-select class="sp-space" v-model="value" placeholder="类型" >
                     <el-option
                         v-for="item in options"
@@ -71,7 +75,7 @@
                 </el-select>
             </div>
             
-            <el-button size="small" style="position: absolute;bottom: 20px;right: 20px" type="success" @click="submitUpload">Submit
+            <el-button size="small" style="position: absolute;bottom: 20px;right: 20px" type="primary" plain @click="submitUpload">SUBMIT
             </el-button>
         </el-drawer>
     </div>
@@ -96,23 +100,40 @@ export default {
                 label: '公开的'
             }],
             value: '私有的',
+            ud: true,
         }
     },
     methods:{
         handleClose(done) {
             done();
-            // this.$confirm('确认关闭？')
-            //     .then(_ => {
-            //         done();
-            //     })
-            //     .catch(_ => {});
         },
         submitUpload() {
+            if (this.title === ''||this.title===null) {
+                this.$message({
+                    message: '标题不能为空',
+                    showClose: true,
+                    type: 'error',
+                    center: true,
+                });
+                return;
+            }
             this.$refs.upload.submit();
+        },
+        storeSuccess() {
             this.$message({
                 message: '上传成功',
                 showClose: true,
                 type: 'success',
+                center: true,
+            });
+            this.des = '';
+            this.title = '';
+        },
+        storeError() {
+            this.$message({
+                message: '上传失败',
+                showClose: true,
+                type: 'error',
                 center: true,
             });
         },
@@ -133,6 +154,15 @@ export default {
 </script>
 
 <style scoped>
+.upload-demo{
+    width: 90%;
+}
+.upload-demo>>>.el-upload {
+    width: 100%;
+}
+.upload-demo>>>.el-upload-dragger{
+    width: 100%;
+}
 .sp-upload{
     display: inline;
 }
@@ -210,7 +240,6 @@ export default {
     font-size: 13.5px !important;
     color: rgb(95, 99, 104);
     transform: translateY(-8px) scale(.75);
-    background: #ce4c56;
     display: inline-block;
     position: relative;
     cursor: auto;

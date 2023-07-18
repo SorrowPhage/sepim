@@ -10,7 +10,7 @@
 
 <script>
 import axios from "axios";
-
+import {marked} from "marked";
 export default {
     name: "UserOverview",
     data(){
@@ -28,7 +28,7 @@ export default {
     created() {
         axios.post("http://localhost:8080/api/md/readme", {id: this.$route.query.account}).then(res=>{
             if (res.data.flag === "readme_succeed") {
-                this.content = res.data.data.content;
+                this.content = marked(res.data.data.mdContent);
                 if (this.content === '' || this.content == null) {
                     this.content = '<h1><a id="Hi_0"></a>Hi</h1> <p>…</p>';
                 }

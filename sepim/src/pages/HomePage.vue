@@ -22,7 +22,7 @@
     };
 </script>
 
-<style>
+<style scoped>
     .main-content {
         /*margin-left: 240px;*/
         /*background: white;*/

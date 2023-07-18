@@ -233,7 +233,7 @@ export default {
     background-color: white;
     top: 0;
     height: 50px;
-    z-index: 100;
+    z-index: 2000;
     border-bottom: 1px solid #eef5fc;
 }
 

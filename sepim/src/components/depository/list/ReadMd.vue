@@ -14,7 +14,7 @@
                                 >
                                     <div class="md-pane">
                                         <div class="md-box">
-                                            <div class="sp-content-box">
+                                            <div class="sp-content-box" style="padding: 0 25px">
                                                 <div class="author-box">
                                                     <el-row>
                                                         <el-col :span="3">
@@ -46,8 +46,16 @@
                                                 
                                                 
                                                 </div>
-                                                <div ref="md_show" class="markdown-body" v-html="content"></div>
-                                                <div style="margin:0px 0 0 180px;font-size:18px;font-weight:bold;">
+
+                                                <div style="margin-top: 5px">
+                                                    <mavon-editor class="md" :value="content" :subfield = "false" :defaultOpen = "'preview'"  :toolbarsFlag = "false"
+                                                                  :editable="false"
+                                                                  :scrollStyle="true"
+                                                                  :ishljs = "true"
+                                                    ></mavon-editor>
+                                                </div>
+                                                <div style="margin:0 0 0 180px;font-size:18px;font-weight:bold;">
+                                                
                                                 </div>
                                             
                                             </div>
@@ -85,12 +93,11 @@
 
 <script>
 import {mapGetters, mapState} from "vuex";
-import 'mavon-editor/dist/markdown/github-markdown.min.css';
-import 'mavon-editor/dist/highlightjs/styles/github.min.css';
 import {Message} from 'element-ui';
 import axios from "axios";
 import PhageComment from "@/components/depository/list/comment/PhageComment";
-
+import 'mavon-editor/dist/markdown/github-markdown.min.css';
+// import 'mavon-editor/dist/highlightjs/styles/github.min.css';
 export default {
     name: "ReadMd",
     // eslint-disable-next-line vue/no-unused-components
@@ -219,6 +226,7 @@ export default {
                     this.roughly = res.data.data.roughly;
                 }
                 this.readNum = res.data.data.readNum;
+
                 this.content = res.data.data.content;
                 this.$store.commit("Comment/GET_COMMENTS", res.data.data.comments);
                 this.loading = false;
@@ -246,11 +254,9 @@ export default {
                                 document.querySelector('#' + navs[i].id).style.paddingLeft = "30px";
                                 document.querySelector('#' + navs[i].id).style.fontWeight = "400";
                             }
-                            
                         }
                     });
-                    // console.log(this.navList[0].name.substring(this.navList[0].name.lastIndexOf(">")))
-                    
+                    this.navList = this.navList.splice(0, this.navList.length / 2);
                     
                     const code = document.querySelectorAll('pre code');
                     code.forEach((item) => {
@@ -279,10 +285,22 @@ export default {
                         pre.appendChild(codeBox);
                         
                         let lang = pre.lastElementChild.firstElementChild.className;
-                        let icon = `<div class="mac-icon">` +
-                            `<button class="copy-button"><i class="el-icon-copy-document"></i></button>` +
+                        // let icon =
+                        //     `<div class="mac-icon">` +
+                        //     `<div style="color: #0d6678;width: 100px">`
+                        //     + lang.substring(lang.lastIndexOf("-") + 1) + `
+                        //         </div>` +
+                        //     `<div class="copy-box">` +
+                        //     `<button class="copy-button"><i class="el-icon-copy-document"></i></button>` +
+                        //     `</div>`+
+                        //     `</div>`;
+                        let icon =
+                            `<div class="mac-icon">` +
+                                    `<button class="copy-button"><i class="el-icon-copy-document"></i></button>` +
                             `</div>`;
                         pre.insertAdjacentHTML('afterbegin', icon);
+                        // pre.insertAdjacentHTML("afterbegin", ls);
+                        
                         
                         let copyButton = pre.firstElementChild.getElementsByClassName('copy-button')[0];
                         
@@ -314,7 +332,7 @@ export default {
 
 <style scoped>
 .tab-pane {
-    width: 150px;
+    width: 140px;
     overflow: hidden;
     text-overflow: ellipsis;
     /*background: #7e97b7;*/
@@ -457,10 +475,10 @@ export default {
     background-color: darkgray;
 }
 
->>> code::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
-    border-radius: 5px;
-    background-color: dimgrey;
-}
+/*>>> code::-webkit-scrollbar-thumb { !*滚动条里面小方块*!*/
+/*    border-radius: 5px;*/
+/*    background-color: dimgrey;*/
+/*}*/
 
 /*>>> code::-webkit-scrollbar-button{!*滚动条的轨道的两端按钮，允许通过点击微调小方块的位置*!*/
 /*    !*border-radius: 5px;*!*/
@@ -469,6 +487,8 @@ export default {
 
 >>> .mac-icon {
     text-align: right;
+    /*float: left;*/
+    /*display: flex;*/
 }
 
 /*>>> .mac-icon-lang {*/
@@ -478,6 +498,10 @@ export default {
 /*    vertical-align: top;*/
 /*}*/
 
+.copy-box{
+    flex-grow:1;
+    text-align: right;
+}
 >>> .copy-button {
     width: 40px;
     height: 30px;
@@ -486,10 +510,6 @@ export default {
     border-radius: 5px;
     outline: none;
     border: 1px solid rgba(27, 31, 36, 0.15);
-}
-
->>> .copy-button {
-    /*margin-right: 10px;*/
 }
 
 >>> .copy-button:hover {
@@ -516,7 +536,7 @@ export default {
 
 .sp-content-box {
     border-radius: 3px;
-    border: 1px solid darkgray;
+    /*border: 1px solid darkgray;*/
     background-color: white;
     padding: 10px;
 }
