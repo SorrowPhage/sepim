@@ -8,18 +8,17 @@ import com.sepim.springboot.mapper.CommentMapper;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.CommentUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
-    @Autowired
-    private ResultData resultData;
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
 
     /**
      * 获取评论列表的数据
@@ -39,11 +38,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     /**
      *保存评论
-     * @param comment
-     * @return
+     * @param comment 评论
+     * @return 返回保存结果
      */
     @Override
     public ResultData release(Comment comment) {
+        ResultData resultData = new ResultData();
         boolean save = this.save(comment);
         if (save) {
             resultData.setFlag("md_comment_release_succeed");

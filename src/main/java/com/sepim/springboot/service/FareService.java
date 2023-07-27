@@ -6,5 +6,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public interface FareService {
-    public ResultData fare(MultipartFile file);
+    ResultData fare(MultipartFile file);
 }

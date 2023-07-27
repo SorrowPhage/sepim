@@ -2,24 +2,28 @@ package com.sepim.springboot.serviceimpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sepim.springboot.entity.ResultData;
+import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.UserMapper;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
 
     private final StringRedisUtils stringRedisUtils;
+
+    private final UserMapper userMapper;
 
 
 
@@ -225,13 +229,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             resultData.setFlag("readme_defeat");
             resultData.setData(null);
         } else if (byId.getOverviewMdUrl() == null) {
-            byId.setContent(null);
             byId.setMdContent(null);
-            resultData.setFlag("readme_succeed");
+            resultData.setFlag("200");
             resultData.setData(byId);
         } else {
             byId.setMdContent(FileUploadUtil.readMdFile(byId.getOverviewMdUrl()));
-            resultData.setFlag("readme_succeed");
+            resultData.setFlag("200");
             resultData.setData(byId);
         }
         return resultData;
@@ -239,20 +242,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 搜索用户
-     * @param q 用户名
+     * @param condition 分页查询信息
      * @return 搜索结果
      */
     @Override
-    public ResultData searchUser(String q) {
+    public ResultData searchUser(SearchCondition condition) {
+        log.info(condition.toString());
         ResultData resultData = new ResultData();
+        Page<User> page = new Page<>();
+        page.setSize(condition.getPageSize());
+        page.setCurrent(condition.getPageIndex());
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.like("username", q);
-        List<User> list = this.list(wrapper);
-        if (list.size() > 0) {
-            resultData.setFlag("search_user_succeed");
-            resultData.setData(list);
+        wrapper.like("username", condition.getTitle());
+
+        Page<User> page1 = userMapper.selectPage(page, wrapper);
+        // List<User> list = this.list(wrapper);
+        if (page1 != null) {
+            resultData.setFlag("200");
+            resultData.setData(page1);
         } else {
-            resultData.setFlag("search_user_defeat");
+            resultData.setFlag("400");
             resultData.setData(null);
         }
         return resultData;
@@ -260,7 +269,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     /**
      * 上传人脸
-     // * @return
+     * @param file 人脸
+     * @param id 用户id
+     * @return 返回上传结果
      */
     @Override
     public ResultData uploadFaceImage(MultipartFile file, String id) {

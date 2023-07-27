@@ -3,13 +3,12 @@ package com.sepim.springboot.controller;
 import com.sepim.springboot.common.aop.LogAnnotation;
 import com.sepim.springboot.entity.Comment;
 import com.sepim.springboot.entity.Folder;
-import com.sepim.springboot.entity.FolderCondition;
 import com.sepim.springboot.entity.ResultData;
+import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,8 +41,8 @@ public class MarkDownController {
      * @param condition 查询规则
      * @return 返回查询结果
      */
-    @GetMapping("/md/list/page")
-    public ResultData getMdListPage(@RequestBody FolderCondition condition) {
+    @PostMapping("/md/list/page")
+    public ResultData getMdListPage(@RequestBody SearchCondition condition) {
         return folderService.queryBYCondition(condition);
     }
 
@@ -55,7 +54,7 @@ public class MarkDownController {
     /**
      * 获取文章列表
      * @param folder 这个参数应该直接使用String
-     * @return
+     * @return 返回获取数据
      */
     @PostMapping("/md/list")
     public ResultData getMdList(@RequestBody Folder folder) {
@@ -92,9 +91,9 @@ public class MarkDownController {
 
 
     /**
-     *
-     * @param comment
-     * @return
+     *发布评论
+     * @param comment 评论
+     * @return 返回发布结果
      */
     @PostMapping("/md/comment/release")
     public ResultData release(@RequestBody Comment comment) {
@@ -105,7 +104,6 @@ public class MarkDownController {
     @LogAnnotation(module = "文章",operator = "评论")
     public ResultData getComments(@RequestParam("folderId") String folderId) {
         ResultData resultData = new ResultData();
-        log.info("asdasdasd");
         List<Comment> comments = commentService.getComments(folderId);
         resultData.setFlag("md_comment_get_succeed");
         resultData.setData(comments);

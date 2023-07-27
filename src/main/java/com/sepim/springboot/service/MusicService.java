@@ -7,12 +7,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MusicService extends IService<Music> {
 
-    public ResultData saveMusic(MultipartFile file);
+    ResultData saveMusic(MultipartFile file);
 
-    public ResultData getMusicList();
+    ResultData getMusicList();
 
-    public ResultData getMusicListByMusicListId(String id);
+    ResultData getMusicListByMusicListId(String id);
 
-    public ResultData getMusicLrc(String id);
+    ResultData getMusicLrc(String id);
 
 }

@@ -18,10 +18,6 @@ public class UserController {
 
     private final UserService userService;
 
-
-    // private final ResultData resultData;
-
-
     private final FareService fareService;
 
 
@@ -70,7 +66,7 @@ public class UserController {
     }
 
     /**
-     * 用户人脸失败登录
+     * 用户人脸识别登录
      * @param file 登录时的人脸
      * @return 登录结果
      */

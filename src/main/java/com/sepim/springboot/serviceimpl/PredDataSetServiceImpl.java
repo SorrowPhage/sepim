@@ -1,13 +1,13 @@
 package com.sepim.springboot.serviceimpl;
 
 import com.sepim.springboot.entity.PredDataSet;
-import com.sepim.springboot.entity.example.PredDataSetExample;
 import com.sepim.springboot.entity.ResultData;
+import com.sepim.springboot.entity.example.PredDataSetExample;
 import com.sepim.springboot.mapper.PredDataSetMapper;
 import com.sepim.springboot.service.PredDataSetService;
 import com.sepim.springboot.utils.FileUploadUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,10 +20,10 @@ import java.util.Map;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PredDataSetServiceImpl implements PredDataSetService {
 
-    @Autowired
-    private PredDataSetMapper predDataSetMapper;
+    private final PredDataSetMapper predDataSetMapper;
 
     @Override
     public ResultData uploadPredFile(MultipartFile file, String id) {

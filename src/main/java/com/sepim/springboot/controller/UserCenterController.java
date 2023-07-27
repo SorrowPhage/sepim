@@ -1,5 +1,6 @@
 package com.sepim.springboot.controller;
 
+import com.sepim.springboot.entity.Folder;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.service.FolderService;
@@ -27,6 +28,15 @@ public class UserCenterController {
         return userService.getUser(user.getId());
     }
 
+    /**
+     * 访问其它用户时获取该用户的公告文章列表
+     * @param folder 用户
+     * @return 返回数据
+     */
+    @PostMapping("/user/center/files")
+    public ResultData getPublicFolders(@RequestBody Folder folder) {
+        return folderService.getPublicFolders(folder.getUserId());
+    }
 
 
     /**

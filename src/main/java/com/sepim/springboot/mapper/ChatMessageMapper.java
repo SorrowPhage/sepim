@@ -19,4 +19,6 @@ public interface ChatMessageMapper extends BaseMapper<ChatMessage> {
 
     int getNoReadChatMessage(String s);
 
+    int getNoReadNumLatestChatMessage(String s1, String user);
+
 }

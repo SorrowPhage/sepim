@@ -15,13 +15,11 @@ public class StringRedisUtils {
     //    Redis的默认保存时间
     // @Value(value = "${redis.keepTime}")
     // private int redisKeepTime=5;
-    private int redisKeepTime=5;
+    private int redisKeepTime = 5;
 
     /**
      * 添加数据到Redis中
      *
-     * @param key
-     * @param value
      */
     public void addRedis(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value);
@@ -31,8 +29,6 @@ public class StringRedisUtils {
     /**
      * 添加数据到Redis中(自定义保存时间)
      *
-     * @param key
-     * @param value
      */
     public void addRedisTime(String key, String value) {
         stringRedisTemplate.opsForValue().set(key, value, redisKeepTime, TimeUnit.MINUTES);
@@ -42,32 +38,24 @@ public class StringRedisUtils {
     /**
      * 根据key获取Redis中数据
      *
-     * @param key
-     * @return
      */
     public String getRedis(String key) {
-        String value = stringRedisTemplate.opsForValue().get(key);
-        return value;
+        return stringRedisTemplate.opsForValue().get(key);
     }
 
 
     /**
      * 根据key删除Redis中的数据
      *
-     * @param key
-     * @return
      */
     public boolean deleteRedis(String key) {
-        Boolean result = stringRedisTemplate.delete(key);
-        return result;
+        return stringRedisTemplate.delete(key);
     }
 
 
     /**
      * 设置Redis的保存时间
      *
-     * @param key
-     * @param time
      */
     public void setRedisTime(String key, int time) {
         stringRedisTemplate.expire(key, time, TimeUnit.MINUTES);

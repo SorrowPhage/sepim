@@ -9,6 +9,7 @@ import com.sepim.springboot.mapper.ChatMessageMapper;
 import com.sepim.springboot.service.ChatMessageService;
 import com.sepim.springboot.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
  * @author: SorrowPhage
  * @date: 2023/4/24
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMessage> implements ChatMessageService {
@@ -70,7 +72,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
 
 
     /**
-     * 找出user和交流过的其它用户的最后一条通信
+     * 找出user和交流过的其它用户的最后一条通信以及未阅读的信息的数量
      * @param user 用户的id
      * @return 返回搜素结果
      */
@@ -82,9 +84,8 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
         List<ChatMessage> list = this.list(wrapper);
         for (ChatMessage chatMessage : list) {
             String s = chatMessage.getFromId().equals(user) ? chatMessage.getToId() : chatMessage.getFromId();
-            User userServiceById = userService.getById(s);
-            chatMessage.setUser(userServiceById);
-            chatMessage.setNoReadNum(chatMessageMapper.getNoReadChatMessage(s));
+            chatMessage.setUser(userService.getById(s));
+            chatMessage.setNoReadNum(chatMessageMapper.getNoReadNumLatestChatMessage(s, user));
         }
         resultData.setFlag("200");
         resultData.setData(list);

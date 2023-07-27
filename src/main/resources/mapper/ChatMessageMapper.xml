@@ -11,6 +11,9 @@
     <select id="getNoReadChatMessage" resultType="java.lang.Integer">
         select count(`type` = 0 or null ) from chat_message  where `to_id`=#{s}
     </select>
+    <select id="getNoReadNumLatestChatMessage" resultType="java.lang.Integer">
+        select count(`type` = 0 or null ) from chat_message  where `to_id`=#{user} and `from_id`=#{s1}
+    </select>
 
     <insert id="addChatMessage" keyProperty="id" useGeneratedKeys="true" parameterType="com.sepim.springboot.entity.ChatMessage">
         insert into chat_message (from_id,to_id,content,send_time,`type`,is_latest) values(#{fromId},#{toId},#{content},now(),#{type},#{isLatest})

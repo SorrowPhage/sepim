@@ -8,24 +8,24 @@ import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.service.InterceptService;
 import com.sepim.springboot.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class InterceptServiceImpl implements InterceptService {
-    @Autowired
-    private UserService userService;
 
-    @Autowired
-    private ResultData resultData;
+    private final UserService userService;
+
 
     /**
      * 验证用户的token是否合法
      * @param token token
-     * @return
+     * @return 返回验证结果
      */
     @Override
     public ResultData verToken(String token) {
+        ResultData resultData = new ResultData();
         if (token == null) {
             resultData.setFlag("token_null");
             resultData.setData(null);
@@ -43,10 +43,10 @@ public class InterceptServiceImpl implements InterceptService {
         try {
             jwtVerifier.verify(token);
         } catch (JWTVerificationException j) {
-            resultData.setFlag("user_ver_defeat");;
+            resultData.setFlag("user_ver_defeat");
             resultData.setData(null);
             return resultData;
-        };
+        }
         resultData.setFlag("user_ver_succeed");
         user.setPassword(null);
         user.setToken(token);

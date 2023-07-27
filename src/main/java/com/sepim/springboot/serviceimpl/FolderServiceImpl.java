@@ -7,17 +7,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sepim.springboot.entity.Folder;
-import com.sepim.springboot.entity.FolderCondition;
 import com.sepim.springboot.entity.ResultData;
+import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.FolderMapper;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderService;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.FileUploadUtil;
-import com.sepim.springboot.utils.StringRedisUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,43 +25,41 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> implements FolderService {
-    @Autowired
-    private ResultData resultData;
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private FolderMapper folderMapper;
+    private final FolderMapper folderMapper;
 
-    @Autowired
-    private StringRedisUtils stringRedisUtils;
 
     private static final String MD_FILE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\md\\file\\";
 
-
-    // private static final String SERVER_MD_FILE_PATH = "http://localhost:8088/upload/sepim/md/file/";
 
 
     /**
      * 分页查询，FolderCondition中有用户的id，查询的使该用户的所有文章
      *
-     * @param condition
-     * @return
+     * @param condition 查询信息
+     * @return 返回查询结果
      */
-    public ResultData queryBYCondition(FolderCondition condition) {
+    public ResultData queryBYCondition(SearchCondition condition) {
+        ResultData resultData = new ResultData();
         Page<Folder> page = new Page<>();
         page.setCurrent(condition.getPageIndex());
         page.setSize(condition.getPageSize());
         QueryWrapper<Folder> qw = new QueryWrapper<>();
-        if (condition.getUserId() != null && !condition.getUserId().isEmpty()) {
-            qw.eq("user_id", condition.getUserId());
+        if (condition.getTitle() != null && !condition.getTitle().isEmpty()) {
+            qw.like("title", condition.getTitle()).eq("type", "公开的");
         }
         IPage<Folder> iPage = folderMapper.selectPage(page, qw);
+        List<Folder> records = iPage.getRecords();
+        for (Folder record : records) {
+            record.setUser(userService.getById(record.getUserId()));
+        }
+        iPage.setRecords(records);
         resultData.setFlag("200");
         resultData.setData(iPage);
         return resultData;
@@ -71,11 +68,12 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     /**
      * 保存MD文件
      *
-     * @param folder
-     * @return
+     * @param folder md文件
+     * @return 返回保存结果
      */
     @Override
     public ResultData saveMd(Folder folder) {
+        ResultData resultData = new ResultData();
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String mdAbsPath = MD_FILE_PATH + uuid + folder.getTitle() + ".md";
         folder.setTime(DateUtil.format(LocalDateTimeUtil.now(), "yyyy-MM-dd"));
@@ -95,18 +93,17 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     /**
      * 修改文件内容
      *
-     * @param folder
-     * @return
+     * @param folder 文件
+     * @return 返回修改结果
      */
     @Override
     public ResultData editMd(Folder folder) {
+        ResultData resultData = new ResultData();
         if (FileUploadUtil.deleteMd(this.getById(folder.getId()).getMdUrl())) {
             String uuid = UUID.randomUUID().toString().replace("-", "");
 
             String mdAbsPath = MD_FILE_PATH + uuid + folder.getTitle() + ".md";
-            if (
-                    FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
-
+            if (FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
                 folder.setMdUrl(mdAbsPath);
                 this.saveOrUpdate(folder);
                 resultData.setFlag("md_edit_succeed");
@@ -125,11 +122,12 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     /**
      * 获取文件列表
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return 返回获取结果
      */
     @Override
     public ResultData getMdList(String id) {
+        ResultData resultData = new ResultData();
         QueryWrapper<Folder> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", id);
         List<Folder> list = this.list(wrapper);
@@ -148,10 +146,11 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     /**
      * 读取文件
      *
-     * @param id
-     * @return
+     * @param id 用户id
+     * @return 返回读取结果
      */
     public ResultData readMd(String id) {
+        ResultData resultData = new ResultData();
         Folder file = this.getById(id);
         file.setUser(userService.getById(file.getUserId()));
         file.setReadNum(file.getReadNum() + 1);
@@ -166,6 +165,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     @Override
     public ResultData readMdContent(String id) {
+        ResultData resultData = new ResultData();
         Folder file = this.getById(id);
         file.setMdContent(FileUploadUtil.readMdFile(file.getMdUrl()));
         resultData.setFlag("md_read_succeed");
@@ -176,10 +176,11 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     /**
      * 上传文件中图片
      *
-     * @param file
-     * @return
+     * @param file 图片
+     * @return 返回上传结果
      */
     public ResultData uploadMdImg(MultipartFile file) {
+        ResultData resultData = new ResultData();
         String imgStr = FileUploadUtil.uploadMdImg(file);
         resultData.setFlag("md_upload_img_succeed");
         resultData.setData(imgStr);
@@ -189,10 +190,11 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     /**
      * 删除文件中的图片
      *
-     * @param url
-     * @return
+     * @param url 图片url
+     * @return 返回删除结果
      */
     public ResultData deleteImgUrl(String url) {
+        ResultData resultData = new ResultData();
         FileUploadUtil.deleteImgUrl(url);
         resultData.setFlag("md_delete_succeed");
         resultData.setData(null);
@@ -206,6 +208,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
      */
     @Override
     public ResultData deleteMd(String id) {
+        ResultData resultData = new ResultData();
         if (FileUploadUtil.deleteMd(this.getById(id).getMdUrl())) {
             commentService.deleteByFolderId(id);
             boolean b = this.removeById(id);
@@ -227,6 +230,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
 
     @Override
     public ResultData getRankList() {
+        ResultData resultData = new ResultData();
         QueryWrapper<Folder> wrapper = new QueryWrapper<>();
         wrapper.orderByDesc("read_num");
         List<Folder> list = this.list(wrapper);
@@ -247,6 +251,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
      */
     @Override
     public ResultData overview(User user) {
+        ResultData resultData = new ResultData();
         User userById = userService.getById(user.getId());
         if (userById.getOverviewMdUrl() == null) {
             String uuid = UUID.randomUUID().toString().replace("-", "");
@@ -288,12 +293,12 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
      */
     @Override
     public ResultData searchRep(String q) {
+        ResultData resultData = new ResultData();
         QueryWrapper<Folder> wrapper = new QueryWrapper<>();
         wrapper.like("title", q);
         List<Folder> list = this.list(wrapper);
 
         for (Folder folder : list) {
-            // log.info("设置用户信息，", folder.getUserId());
             folder.setUser(userService.getById(folder.getUserId()));
         }
 
@@ -316,6 +321,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
      */
     @Override
     public ResultData storeMd(MultipartFile file, Folder folder) {
+        ResultData resultData = new ResultData();
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String mdAbsPath = MD_FILE_PATH + uuid + folder.getTitle() + ".md";
         folder.setTime(DateUtil.format(LocalDateTimeUtil.now(), "yyyy-MM-dd"));
@@ -328,6 +334,17 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
             resultData.setFlag("md_save_defeat");
             resultData.setData(null);
         }
+        return resultData;
+    }
+
+    @Override
+    public ResultData getPublicFolders(String userId) {
+        ResultData resultData = new ResultData();
+        QueryWrapper<Folder> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId).eq("type", "公开的");
+        List<Folder> list = this.list(wrapper);
+        resultData.setData(list);
+        resultData.setFlag("200");
         return resultData;
     }
 }

@@ -17,6 +17,7 @@ import static com.arcsoft.face.toolkit.ImageFactory.getRGBData;
 /**
  * @author: SorrowPhage
  * @date: 2023/6/21
+ * 人脸识别工具：虹软
  */
 @Slf4j
 public class FareUtils {
@@ -63,7 +64,7 @@ public class FareUtils {
             log.info("初始化引擎失败");
         }
 
-        //人脸检测，这里我从图片的缓存库中获取文件，一般要处理的那张图片我会放在缓存库中，缓存库在			项目的face_data_cache文件夹下
+        //人脸检测，这里我从图片的缓存库中获取文件，一般要处理的那张图片我会放在缓存库中，缓存库在项目的face_data_cache文件夹下
         File fileInput  = new File("E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\face");
         File[] filesInput=fileInput.listFiles();
 

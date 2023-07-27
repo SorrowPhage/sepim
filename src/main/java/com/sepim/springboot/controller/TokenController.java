@@ -3,24 +3,25 @@ package com.sepim.springboot.controller;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.service.InterceptService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class TokenController {
 
-    @Autowired
-    private InterceptService interceptService;
+    private final InterceptService interceptService;
 
-    @Autowired
-    private ResultData resultData;
-
+    /**
+     * 验证token
+     * @param user 用户token信息
+     * @return 返回验证结果
+     */
     @PostMapping("/ver/token")
     public ResultData verToken(@RequestBody User user) {
-        resultData = interceptService.verToken(user.getToken());
-        return resultData;
+        return interceptService.verToken(user.getToken());
     }
+
 }

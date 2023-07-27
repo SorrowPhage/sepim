@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * 功能描述：上传图片的工具类
  *
- * 作者：phage
+ * @author: phage
  */
 @Slf4j
 public class FileUploadUtil {
@@ -32,7 +32,7 @@ public class FileUploadUtil {
     //歌单图片上传路径
     private static final String MUSIC_LIST_PICTURE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\music\\picture\\";
 
-    //歌单土拍你访问路径
+    //歌单图片访问路径
     private static final String SERVE_MUSIC_LIST_PICTURE_PATH = "http://localhost:8088/upload/sepim/music/picture/";
 
     private static final String LRC_BASE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\music\\lrc\\";
@@ -138,6 +138,11 @@ public class FileUploadUtil {
         }
     }
 
+    /**
+     * 上传人脸
+     * @param file 人脸
+     * @return 返回上传url
+     */
     public static String uploadFace(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
 
@@ -155,6 +160,11 @@ public class FileUploadUtil {
         return FACE_SERVER_PATH + newFile;
     }
 
+    /**
+     * 验证人脸
+     * @param file 人脸
+     * @return 返回识别url
+     */
     public static String uploadFare(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
 

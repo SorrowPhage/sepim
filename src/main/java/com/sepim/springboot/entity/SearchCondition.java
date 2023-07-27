@@ -7,8 +7,8 @@ import lombok.Data;
  * @date: 2023/6/14
  */
 @Data
-public class FolderCondition {
-    private String userId;
+public class SearchCondition {
+    private String title;
     private Integer pageIndex;
     private Integer pageSize;
 }

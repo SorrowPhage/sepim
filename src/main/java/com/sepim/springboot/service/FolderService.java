@@ -2,35 +2,38 @@ package com.sepim.springboot.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sepim.springboot.entity.Folder;
-import com.sepim.springboot.entity.FolderCondition;
 import com.sepim.springboot.entity.ResultData;
+import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FolderService extends IService<Folder> {
-    public ResultData saveMd(Folder folder);
+    ResultData saveMd(Folder folder);
 
-    public ResultData editMd(Folder folder);
+    ResultData editMd(Folder folder);
 
-    public ResultData queryBYCondition(FolderCondition condition);
+    ResultData queryBYCondition(SearchCondition condition);
 
-    public ResultData getMdList(String id);
+    ResultData getMdList(String id);
 
-    public ResultData readMd(String id);
+    ResultData readMd(String id);
 
-    public ResultData readMdContent(String id);
+    ResultData readMdContent(String id);
 
-    public ResultData uploadMdImg(MultipartFile file);
+    ResultData uploadMdImg(MultipartFile file);
 
-    public ResultData deleteImgUrl(String url);
+    ResultData deleteImgUrl(String url);
 
-    public ResultData deleteMd(String id);
+    ResultData deleteMd(String id);
 
-    public ResultData getRankList();
+    ResultData getRankList();
 
-    public ResultData overview(User user);
+    ResultData overview(User user);
 
-    public ResultData searchRep(String q);
+    ResultData searchRep(String q);
 
-    public ResultData storeMd(MultipartFile file, Folder folder);
+    ResultData storeMd(MultipartFile file, Folder folder);
+
+    ResultData getPublicFolders(String userId);
+
 }

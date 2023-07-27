@@ -17,5 +17,5 @@ public class AccountGenerateUtil {
             verCode[i] = FIELD.charAt(RANDOM.nextInt(FIELD.length()));
         }
         return SYMBOL+String.valueOf(verCode);
-    };
+    }
 }

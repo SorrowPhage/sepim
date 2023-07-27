@@ -5,5 +5,5 @@ import com.sepim.springboot.entity.ResultData;
 
 
 public interface EmailService {
-    public ResultData sendVerCode(Email email);
+    ResultData sendVerCode(Email email);
 }

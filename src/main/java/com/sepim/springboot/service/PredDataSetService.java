@@ -13,10 +13,10 @@ import java.util.Map;
 @Service
 public interface PredDataSetService {
 
-    public ResultData uploadPredFile(MultipartFile file,String id);
+    ResultData uploadPredFile(MultipartFile file, String id);
 
-    public ResultData getFileList(Map map);
+    ResultData getFileList(Map map);
 
-    public ResultData readCSV(Integer id);
+    ResultData readCSV(Integer id);
 
 }

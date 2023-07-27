@@ -8,7 +8,6 @@ import com.sepim.springboot.utils.MySessionUtil;
 import com.sepim.springboot.utils.StringRedisUtils;
 import com.sepim.springboot.utils.VerCodeGenerateUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
 
     /**
      * 发送验证码
-     * @param email 发送邮箱账号
+     * @param email 接收方验证码
      * @return 返回发送结果
      */
     @Override

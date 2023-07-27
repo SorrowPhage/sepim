@@ -2,7 +2,7 @@ package com.sepim.springboot.controller;
 
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.RedisService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,59 +11,50 @@ import org.springframework.web.bind.annotation.RestController;
  * @date: 2023/3/9
  */
 @RestController
+@RequiredArgsConstructor
 public class RedisController {
 
-    @Autowired
-    private RedisService redisService;
 
-    @Autowired
-    private ResultData resultData;
+    private final RedisService redisService;
+
 
     @PostMapping("/r/ping")
     public ResultData ping() {
-        resultData = redisService.ping();
-        return resultData;
+        return redisService.ping();
     }
 
     @PostMapping("/r/set")
     public ResultData set() {
-        resultData = redisService.set();
-        return resultData;
+        return redisService.set();
     }
 
     @PostMapping("/r/get")
     public ResultData get() {
-        resultData = redisService.get();
-        return resultData;
+        return redisService.get();
     }
     @PostMapping("/r/setHaveTime")
     public ResultData setHaveTime() {
-        resultData = redisService.setHaveTime();
-        return resultData;
+        return redisService.setHaveTime();
     }
 
     @PostMapping("/r/hasKey")
     public ResultData hasKey() {
-        resultData = redisService.hasKey();
-        return resultData;
+        return redisService.hasKey();
     }
 
     @PostMapping("/r/incr")
     public ResultData incr() {
-        resultData = redisService.incr();
-        return resultData;
+        return redisService.incr();
     }
 
     @PostMapping("/r/decr")
     public ResultData decr() {
-        resultData = redisService.decr();
-        return resultData;
+        return redisService.decr();
     }
 
     @PostMapping("/r/delete")
     public ResultData delete() {
-        resultData = redisService.delete();
-        return resultData;
+        return redisService.delete();
     }
 
 

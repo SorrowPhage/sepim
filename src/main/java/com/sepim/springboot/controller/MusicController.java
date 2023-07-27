@@ -5,7 +5,7 @@ import com.sepim.springboot.entity.MusicList;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.service.MusicListService;
 import com.sepim.springboot.service.MusicService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,20 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
  * @date: 2023/2/21
  */
 @RestController
+@RequiredArgsConstructor
 public class MusicController {
-    @Autowired
-    private MusicService musicService;
 
-    @Autowired
-    private ResultData resultData;
+    private final MusicService musicService;
 
-    @Autowired
-    private MusicListService musicListService;
+
+    private final MusicListService musicListService;
 
     @PostMapping("/music/upload")
     public ResultData uploadMusic(@RequestBody Music music) {
-        // resultData = musicService.saveMusic(file);
-        System.out.println("test");
+        ResultData resultData = new ResultData();
         resultData.setData(music);
         return resultData;
     }
@@ -38,14 +35,12 @@ public class MusicController {
 
     @PostMapping("/music/list")
     public ResultData getMusicList() {
-        resultData = musicService.getMusicList();
-        return resultData;
+        return musicService.getMusicList();
     }
 
     @PostMapping("/mlist/get")
     public ResultData getUserMusicList(@RequestBody MusicList musicList) {
-        resultData = musicListService.getUserMusicList(musicList.getOwner());
-        return resultData;
+        return musicListService.getUserMusicList(musicList.getOwner());
     }
 
     @PostMapping("/list/update")
@@ -53,26 +48,22 @@ public class MusicController {
                                                  @RequestParam(value = "id") String id,
                                                  @RequestParam(value = "name") String name,
                                                  @RequestParam(value = "describe") String describe) {
-        resultData = musicListService.updateMusicListInformation(file, id, name, describe);
-        return resultData;
+        return musicListService.updateMusicListInformation(file, id, name, describe);
     }
 
     @PostMapping("/list/only")
     public ResultData getMusicListByMusicListId(@RequestBody Music music) {
-        resultData = musicService.getMusicListByMusicListId(music.getId());
-        return resultData;
+        return musicService.getMusicListByMusicListId(music.getId());
     }
 
     @PostMapping("/music/lrc")
     public ResultData getMusicLrc(@RequestBody Music music) {
-        resultData = musicService.getMusicLrc(music.getId());
-        return resultData;
+        return musicService.getMusicLrc(music.getId());
     }
 
     @PostMapping("/list/name")
     public ResultData getMusicListName(@RequestBody Music music) {
-        resultData = musicListService.getMusicListName(music.getId());
-        return resultData;
+        return musicListService.getMusicListName(music.getId());
     }
 }
 
