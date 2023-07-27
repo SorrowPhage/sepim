@@ -168,6 +168,7 @@ export default {
     width: 100%;
     /*padding: 10px;*/
     /*background-color: dimgrey;*/
+    background: white;
 }
 .sp-comment-span{
     font-weight: bold;
@@ -211,7 +212,7 @@ export default {
     width: 100%;
     /*display: flex;*/
     /*border-bottom: 1px solid dimgrey;*/
-    padding-bottom: 10px;
+    padding: 10px;
 }
 .relpay-nav{
     /*font-size: 25px;*/

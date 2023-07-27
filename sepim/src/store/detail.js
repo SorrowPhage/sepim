@@ -12,7 +12,7 @@ export default {
                 });
             } else {
                 axios.post("http://localhost:8080/api/user/center/files", {userId: value.id}).then(res => {
-                    if (res.data.flag === "user_center_getPublicFolders_succeed") {
+                    if (res.data.flag === "200") {
                         context.commit("GET_MD_LIST", res.data.data);
                     } else {
                         const data = [];

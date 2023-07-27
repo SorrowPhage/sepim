@@ -159,7 +159,6 @@ export default {
             }
             axios.post("http://localhost:8080/api/md/overview",{id:this.$store.state.Detail.id,
                 content: this.content,mdContent:this.mdContent}).then(res=>{
-                console.log(res)
                 if (res.data.flag === "md_overview_succeed") {
                     this.$message({
                         message: '上传成功',
@@ -173,7 +172,7 @@ export default {
     },
     created() {
         axios.post("http://localhost:8080/api/md/readme", {id: this.$store.state.Detail.id}).then(res=>{
-            if (res.data.flag === "readme_succeed") {
+            if (res.data.flag === "200") {
                 this.md = res.data.data.mdContent;
                 if (this.md === '' || this.md === null) {
                     this.md = '# Hi\n' +

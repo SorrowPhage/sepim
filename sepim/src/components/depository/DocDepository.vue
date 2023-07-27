@@ -46,7 +46,7 @@
                                         </div>
                                     </div>
                                     <div v-else>
-                                        <el-empty></el-empty>
+                                        <el-empty image="http://localhost:8088/upload/sepim/state/empty.jpg"></el-empty>
                                     </div>
                                 </div>
                             </div>

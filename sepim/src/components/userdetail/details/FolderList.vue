@@ -5,17 +5,17 @@
                     <div class="sp-operation-bar">
                         <input v-model="keyword" class="sp-search-private" placeholder="Search"
                                type="text"/>
-                        <el-select v-model="value" class="sp-space" placeholder="类型"
-                                   style="width: 100px">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            >
-                            </el-option>
-                        </el-select>
-                        <el-button type="primary" @click="newdoc">新建</el-button>
+<!--                        <el-select v-model="value" class="sp-space" placeholder="类型"-->
+<!--                                   style="width: 100px">-->
+<!--                            <el-option-->
+<!--                                v-for="item in options"-->
+<!--                                :key="item.value"-->
+<!--                                :label="item.label"-->
+<!--                                :value="item.value"-->
+<!--                            >-->
+<!--                            </el-option>-->
+<!--                        </el-select>-->
+<!--                        <el-button type="primary" @click="newdoc">新建</el-button>-->
                     </div>
                     <div class="dropdown-divider"></div>
                     <div v-if="folders.length">
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div v-else>
-                        <el-empty></el-empty>
+                        <el-empty image="http://localhost:8088/upload/sepim/state/empty.jpg"></el-empty>
                     </div>
                 </div>
             </div>
@@ -83,6 +83,13 @@ export default {
             return arr;
         },
     },
+    watch:{
+        '$route.query.account':{
+            handler() {
+                this.loadData();
+            },
+        }
+    },
     methods: {
         newdoc() {
             this.$router.push({
@@ -95,9 +102,12 @@ export default {
         handleCurrentChange(val) {
             this.currentPage = val;
         },
+        loadData() {
+            this.$store.dispatch("Detail/getMdList", {id:this.$route.query.account,account:this.$store.state.User.account});
+        },
     },
-    created() {
-        this.$store.dispatch("Detail/getMdList", {id:this.$store.state.Detail.id,account:this.$store.state.User.account});
+    mounted() {
+        this.loadData()
     },
 }
 </script>
@@ -137,7 +147,7 @@ export default {
 }
 
 .sp-search-private {
-    width: 50%;
+    width: 100%;
     height: 40px;
     margin-right: 10px;
 }

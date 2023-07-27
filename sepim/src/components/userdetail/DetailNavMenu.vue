@@ -143,36 +143,38 @@ export default {
                 name: 'files',
             })
         },
+        loadData() {
+            axios.post('http://localhost:8080/api/user/center/get', {id: this.$route.query.account}).then(res => {
+                if (res.data.flag === "user_center_get_succeed") {
+                    this.$store.commit("Detail/GET_DETAIL",{
+                        account:res.data.data.id,
+                        email:res.data.data.email,
+                        username:res.data.data.username,
+                        avatarUrl:res.data.data.avatarUrl,
+                        id:this.$route.query.account,
+                        loading:false,
+                    })
+                }
+            }, Error => {
+                console.log(Error.message)
+            });
+            axios.get('http://localhost:8080/api/chat/chatlist',{params:{user: this.$route.query.account}}).then(res=>{
+                if (res.data.flag === "200") {
+                    this.chatList = res.data.data;
+                    console.log(this.chatList)
+                }
+            })
+        },
     },
     watch: {
-        $route:{
-            handler:function (val,oldVal){
-                this.reload();
+        '$route.query.account':{
+            handler() {
+                this.loadData()
             },
-            deep: true,
         }
     },
-    created() {
-        axios.post('http://localhost:8080/api/user/center/get', {id: this.$route.query.account}).then(res => {
-            if (res.data.flag === "user_center_get_succeed") {
-                this.$store.commit("Detail/GET_DETAIL",{
-                    account:res.data.data.id,
-                    email:res.data.data.email,
-                    username:res.data.data.username,
-                    avatarUrl:res.data.data.avatarUrl,
-                    id:this.$route.query.account,
-                    loading:false,
-                })
-            }
-        }, Error => {
-            console.log(Error.message)
-        });
-        axios.get('http://localhost:8080/api/chat/chatlist',{params:{user: this.$route.query.account}}).then(res=>{
-            if (res.data.flag === "200") {
-                this.chatList = res.data.data;
-                console.log(this.chatList)
-            }
-        })
+    mounted() {
+        this.loadData()
     }
 }
 </script>

@@ -1,7 +1,27 @@
 <template>
     <div>
-        <el-main>
-            <div class="main">
+        <div style="position: fixed;width: 100%">
+                <vue-particles
+                    class="login-bg"
+                    color="#39AFFD"
+                    :particleOpacity="0.7"
+                    :particlesNumber="100"
+                    shapeType="circle"
+                    :particleSize="4"
+                    linesColor="#8DD1FE"
+                    :linesWidth="1"
+                    :lineLinked="true"
+                    :lineOpacity="0.4"
+                    :linesDistance="150"
+                    :moveSpeed="3"
+                    :hoverEffect="true"
+                    hoverMode="grab"
+                    :clickEffect="true"
+                    clickMode="push"
+                >
+                </vue-particles>
+            </div>
+        <div class="main">
                 <div class="wrapper">
                     <div class="row">
                         <div class="col">
@@ -17,11 +37,11 @@
                                             <div class="sp-content-box" style="padding: 0 25px">
                                                 <div class="author-box">
                                                     <el-row>
-                                                        <el-col :span="3">
+                                                        <el-col :span="4">
                                                             <el-avatar :size="70" :src="$store.state.User.avatarUrl"
                                                                        class="avatar"></el-avatar>
                                                         </el-col>
-                                                        <el-col :span="21">
+                                                        <el-col :span="20">
                                                             <div class="sp-content-title">
                                                                 {{ title }}
                                                             </div>
@@ -71,8 +91,8 @@
                     </div>
                 </div>
             </div>
-        </el-main>
-        <div style="position: fixed;left:0;top:50%;transform:translate(0%,-50%); background: white;padding: 5px">
+        <!--v-show解决的是：当没有导航时，还是会出现一个很小的小白块-->
+        <div v-show="navList.length" style="position: fixed;left:0;top:50%;transform:translate(0%,-50%); background: white;padding: 5px;max-height: 400px;overflow: auto">
             <el-tabs v-model="activeName" :tab-position="tabPosition" style="height: auto;" @tab-click="handleClick">
                 <el-tab-pane v-for="(item, index) in navList"
                              :key="index"
@@ -287,7 +307,7 @@ export default {
                         let lang = pre.lastElementChild.firstElementChild.className;
                         // let icon =
                         //     `<div class="mac-icon">` +
-                        //     `<div style="color: #0d6678;width: 100px">`
+                        //     `<div class="mac-icon-lang" ">`
                         //     + lang.substring(lang.lastIndexOf("-") + 1) + `
                         //         </div>` +
                         //     `<div class="copy-box">` +
@@ -331,6 +351,11 @@ export default {
 </script>
 
 <style scoped>
+.login-bg{
+    width: 100%;
+    height: 100%;
+    background: #3E3E3E;
+}
 .tab-pane {
     width: 140px;
     overflow: hidden;
@@ -346,7 +371,7 @@ export default {
     margin-top: 50px;
     /*background-color: rgb(228, 228, 228);*/
     height: 100%;
-    
+    /*background: #227cf9;*/
     /*overflow: auto;*/
 }
 
@@ -371,21 +396,21 @@ export default {
 }
 
 .row {
-    margin-left: -15px;
-    margin-right: -15px;
+    /*margin-left: -15px;*/
+    /*margin-right: -15px;*/
 }
 
 .col {
     position: relative;
     min-height: 1px;
-    padding-left: 15px;
-    padding-right: 15px;
+    /*padding-left: 15px;*/
+    /*padding-right: 15px;*/
     width: 100%;
 }
 
 .panel {
     margin-bottom: 20px;
-    background-color: white;
+    /*background-color: white;*/
     border: 1px solid transparent;
     border-radius: 4px;
 }
@@ -491,12 +516,12 @@ export default {
     /*display: flex;*/
 }
 
-/*>>> .mac-icon-lang {*/
-/*    width: 50px !important;*/
-/*    padding-left: 10px;*/
-/*    font-size: 16px;*/
-/*    vertical-align: top;*/
-/*}*/
+>>> .mac-icon-lang {
+    width: 50px !important;
+    padding-left: 10px;
+    font-size: 16px;
+    vertical-align: top;
+}
 
 .copy-box{
     flex-grow:1;
@@ -537,13 +562,14 @@ export default {
 .sp-content-box {
     border-radius: 3px;
     /*border: 1px solid darkgray;*/
-    background-color: white;
+    /*background-color: white;*/
     padding: 10px;
 }
 
 .sp-comment-box {
     margin-top: 5px;
     border-radius: 3px;
+    padding: 0 25px;
     /*border: 1px solid darkgray;*/
     /*background-color: white;*/
 }

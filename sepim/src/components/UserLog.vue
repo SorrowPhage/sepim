@@ -12,7 +12,7 @@
                     <input type="password" @keydown.enter="login" placeholder="密码" v-model="user.password"/><br/>
                 </div>
                 <div class="about-password">
-                    <!--没用-->
+                    <!--没用:不打算写-->
                     <input type="checkbox" >记住密码
                     <router-link to="/retrieve">找回密码</router-link>
                     <br/>

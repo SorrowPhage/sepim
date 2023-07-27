@@ -21,7 +21,7 @@
             <ul class="notification-menu">
                 <li>
                     <label ref="showUl" class="btn btn-default dropdown-toggle" @click="isTrue=!isTrue">
-                        <img :src="avatar_url"/>
+                        <img :src="avatar_url" alt="头像"/>
                         {{ userName }}
                         <span class="caret"></span>
                     </label>
@@ -74,7 +74,7 @@
 import {mapMutations, mapState, mapGetters} from "vuex";
 import {sessionReplaceStore} from "@/utils/session_util"
 import HeFenWeather from '@/components/userinfo/HeFenWeather'
-
+let socket;
 export default {
     name: "AdminHeader",
     components: {
@@ -93,6 +93,7 @@ export default {
     },
     methods: {
         ...mapMutations("Menu", ["changeCollapse"]),
+        
         goIndex() {
             this.isTrue = false;
             this.$router.push({
@@ -191,15 +192,67 @@ export default {
             if (this.search === '') {
                 return;
             }
-            
-            //意义不明的代码
+            //作用是告诉ls跳转时携带的参数是什么
             this.$store.commit("Search/SET_SEARCH_CONTENT", this.search);
-            this.$router.push({
-                name: 'sl',
-                query: {
-                    q: this.search,
-                },
-            });
+            if (this.$route.name === 'uc') {
+                this.$router.push({
+                    name: 'uc',
+                    query: {
+                        q: this.search,
+                    },
+                });
+            }else {
+                this.$router.push({
+                    name: 'rc',
+                    query: {
+                        q: this.search,
+                    },
+                });
+            }
+        },
+        init() {
+            let username = this.account;
+            let _this = this;
+            if (typeof (WebSocket) == "undefined") {
+                console.log("您的浏览器不支持WebSocket");
+            } else {
+                console.log("您的浏览器支持WebSocket");
+                let socketUrl = "ws://localhost:8085/pushmsg/" + username;
+                console.log(socketUrl)
+                if (socket != null) {
+                    socket.close();
+                    socket = null;
+                }
+            
+                // 开启一个websocket服务
+                socket = new WebSocket(socketUrl);
+                //打开事件
+                socket.onopen = function () {
+                    console.log("websocket已打开");
+                };
+                //  浏览器端收消息，获得从服务端发送过来的文本消息
+                socket.onmessage = function (msg) {
+                    console.log("收到数据====" + msg.data)
+                    let data = JSON.parse(msg.data)  // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
+                    
+                    if (data.users) {  // 获取在线人员信息
+                        _this.users = data.users.filter(user => user.username !== username)  // 获取当前连接的所有用户信息，并且排除自身，自己不会出现在自己的聊天列表里
+                    } else {
+                        // 如果服务器端发送过来的json数据 不包含 users 这个key，那么发送过来的就是聊天文本json数据
+                        if (data.fromId === _this.toUser) {
+                            _this.messagesPush(data);
+                        }
+                    }
+                };
+                //关闭事件
+                socket.onclose = function () {
+                    console.log("websocket已关闭");
+                };
+                //发生了错误事件
+                socket.onerror = function () {
+                    console.log("websocket发生了错误");
+                }
+            }
         },
     },
     created() {
@@ -209,6 +262,7 @@ export default {
         window.addEventListener('beforeunload', () => {
             sessionStorage.setItem('store', JSON.stringify(this.$store.state))
         });
+        // this.init();
     },
     mounted() {
         document.addEventListener('click', this.showUl);
@@ -245,9 +299,9 @@ export default {
     /*background: rebeccapurple;*/
 }
 
-.message-box {
-    text-align: right;
-}
+/*.message-box {*/
+/*    text-align: right;*/
+/*}*/
 
 .sp-search-input {
     margin-top: 10px;

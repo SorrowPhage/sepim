@@ -8,7 +8,7 @@
                             <div class="sp-search-box">
                                 <div class="sp-search-opt">
                                     <el-menu
-                                        default-active="2"
+                                        default-active="/index.html/sl/rc"
                                         class="el-menu-vertical-demo"
                                         :router="true">
                                         <el-menu-item index="/index.html/sl/rc" :route="{name:'rc',query:{q:$store.state.Search.searchContent}}">

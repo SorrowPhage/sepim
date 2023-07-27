@@ -19,7 +19,6 @@ export default {
             state.sex = user.sex;
             state.birthday = user.birthday;
             state.face_url = user.faceUrl;
-            console.log(state.face_url)
         },
         changeAvatar(state,url){
             state.avatarUrl = url;

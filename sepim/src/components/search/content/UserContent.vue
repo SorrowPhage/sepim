@@ -4,16 +4,20 @@
             <div  class="d-flex flex-column flex-md-row flex-justify-between border-bottom pb-3 position-relative">
                 <h3><span class="v-align-middle">{{list.length}} users </span></h3>
             </div>
-            <UserList v-for="user in list.slice((currentPage-1)*pagesize,currentPage*pagesize)"
+<!--            <UserList v-for="user in list.slice((currentPage-1)*pagesize,currentPage*pagesize)"-->
+<!--                      :key="user.id" :account="user.id" :avatar-url="user.avatarUrl" :username="user.username"-->
+<!--            ></UserList>-->
+            <UserList v-for="user in list"
                       :key="user.id" :account="user.id" :avatar-url="user.avatarUrl" :username="user.username"
             ></UserList>
             <div class="page-box">
                 <el-pagination
-                    :page-size="pagesize"
+                    :page-size="pageSize"
                     :page-sizes="[5, 10, 15, 20]"
-                    :total="this.list.length"
+                    :total="total"
+                    :page-count="pages"
                     background
-                    layout="total, sizes, prev, pager, next, jumper"
+                    layout="total, prev, pager, next, jumper"
                     next-text="下一页"
                     prev-text="上一页"
                     @size-change="handleSizeChange"
@@ -22,7 +26,7 @@
             </div>
         </div>
         <div v-else>
-            <el-empty></el-empty>
+            <el-empty image="http://localhost:8088/upload/sepim/state/empty.jpg"></el-empty>
         </div>
     </div>
 </template>
@@ -38,8 +42,17 @@ export default {
         return {
             list: [],
             currentPage: 1,
-            pagesize: 10,
+            pageSize: 10,
+            total: 0,
+            pages: 0,
         };
+    },
+    watch: {
+        '$route.query.q': {
+            handler() {
+                this.loadData();
+            },
+        },
     },
     methods: {
         handleSizeChange(val) {
@@ -47,14 +60,22 @@ export default {
         },
         handleCurrentChange(val) {
             this.currentPage = val;
+            this.loadData();
+        },
+        loadData() {
+            axios.post("http://localhost:8080/api/search/user", {title: this.$route.query.q,
+                pageIndex: this.currentPage, pageSize: this.pageSize}).then(res => {
+                if (res.data.flag === "200") {
+                    this.list = res.data.data.records;
+                    this.pages = res.data.data.pages;
+                    this.total = res.data.data.total;
+                    this.pagesize = res.data.data.pagesize;
+                }
+            })
         },
     },
     created() {
-        axios.get("http://localhost:8080/api/search/user", {params: {q: this.$route.query.q}}).then(res => {
-            if (res.data.flag === "search_user_succeed") {
-                this.list = res.data.data;
-            }
-        })
+        this.loadData();
     }
 }
 </script>
