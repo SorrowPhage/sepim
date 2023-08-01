@@ -22,7 +22,7 @@
                 </el-row>
             </div>
             <div slot="reference">
-                <el-avatar src="http://localhost:8088/upload/sepim/avatar/963a0141622c4f999048a10d345d0b5cfile.png" :size="15"></el-avatar>
+                <el-avatar :src="url" :size="15"></el-avatar>
                 <span class="folder_name" @click="readMd(file_id)">{{name}}/{{title}}</span>
             </div>
         </el-popover>

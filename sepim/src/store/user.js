@@ -40,7 +40,7 @@ export default {
     },
     getters: {
         avatar_url(state) {
-            if (state.avatarUrl === ''||state.avatarUrl === null) return "http://localhost:8088/upload/sepim/avatar/default.png"
+            if (state.avatarUrl === ''||state.avatarUrl == null) return "http://localhost:8088/upload/sepim/avatar/default.png"
             else return state.avatarUrl
         }
     }

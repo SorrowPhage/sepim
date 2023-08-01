@@ -46,6 +46,8 @@
                                             active-text-color="#398bff">
                                             <el-menu-item index="/index.html/detail/overview" :route="{name:'overview',query:{account: this.$store.state.Detail.id}}" class="el-icon-reading">Overview</el-menu-item>
                                             <el-menu-item index="/index.html/detail/files" :route="{name:'files',query:{account: this.$store.state.Detail.id}}" class="el-icon-collection">Repositories</el-menu-item>
+                                            <el-menu-item index="/index.html/detail/insights" :route="{name:'insights',query:{account: this.$store.state.Detail.id}}" class="el-icon-view">Insights</el-menu-item>
+                                            <el-menu-item index="/index.html/detail/contribution" :route="{name:'contribution',query:{account: this.$store.state.Detail.id}}" class="el-icon-folder-add">Contribution</el-menu-item>
                                         </el-menu>
                                     </div>
                                     <div class="sp-center-content">

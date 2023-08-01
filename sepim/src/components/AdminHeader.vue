@@ -12,6 +12,21 @@
                                 <div class="sp-nav" @click="goGames">游戏</div>
                                 <div class="sp-nav" @click="goVideoPlayer">视频</div>
                 <!--                <div class="sp-nav" @click="seckill">支付模块</div>-->
+                
+<!--                                <div class="sp-nav" >-->
+<!--                                    <el-popover-->
+<!--                                        placement="top-start"-->
+<!--                                        width="400"-->
+<!--                                        trigger="hover">-->
+<!--                                        <el-badge :value="12" class="item" slot="reference" >-->
+<!--                                            <el-button size="mini">消息</el-button>-->
+<!--                                        </el-badge>-->
+<!--                                        <div>-->
+<!--                                            <span>哈哈</span>-->
+<!--                                        </div>-->
+<!--                                    </el-popover>-->
+<!--                                </div>-->
+                
             </div>
         </div>
         <div class="weather-box">

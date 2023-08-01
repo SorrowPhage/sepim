@@ -33,7 +33,6 @@ export default {
         },
         loadData() {
             axios.post("http://localhost:8080/api/md/readme", {id: this.$route.query.account}).then(res=>{
-                console.log(res.data)
                 if (res.data.flag === "200") {
                     if (res.data.data.mdContent === '' || res.data.data.mdContent == null) {
                         this.content = '<h1><a id="Hi_0"></a>Hi</h1> <p>…</p>';

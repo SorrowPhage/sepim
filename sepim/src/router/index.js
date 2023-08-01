@@ -173,6 +173,18 @@ const router = new VueRouter({
                             path: 'files',
                             component: () => import("@/components/userdetail/details/FolderList"),
                             meta: {title: "UserDetail", ver: true},
+                        },
+                        {
+                            name: 'insights',
+                            path: 'insights',
+                            component: () => import("@/components/userdetail/insights/Insights"),
+                            meta: {title: "UserDetail", ver: true}
+                        },
+                        {
+                            name: 'contribution',
+                            path: 'contribution',
+                            component: () => import("@/components/userdetail/contribution/Contribution"),
+                            meta: {title: "UserDetail", ver: true}
                         }
                     ]
                 },
