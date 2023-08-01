@@ -1,4 +1,4 @@
-package com.sepim.springboot.serviceimpl;
+package com.sepim.springboot.service.serviceimpl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
@@ -6,13 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.sepim.springboot.entity.Folder;
-import com.sepim.springboot.entity.ResultData;
-import com.sepim.springboot.entity.SearchCondition;
-import com.sepim.springboot.entity.User;
+import com.sepim.springboot.entity.*;
 import com.sepim.springboot.mapper.FolderMapper;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderService;
+import com.sepim.springboot.service.OperationService;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +31,8 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     private final UserService userService;
 
     private final FolderMapper folderMapper;
+
+    private final OperationService operationService;
 
 
     private static final String MD_FILE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\md\\file\\";
@@ -81,6 +81,10 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         if (FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
             folder.setMdUrl(mdAbsPath);
             this.save(folder);
+
+            //记录新增
+            operationService.insert(folder.getId(), folder.getUserId());
+
             resultData.setFlag("md_save_succeed");
             resultData.setData(null);
         } else {
@@ -106,6 +110,9 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
             if (FileUploadUtil.uploadMdFile(folder.getMdContent(), mdAbsPath)) {
                 folder.setMdUrl(mdAbsPath);
                 this.saveOrUpdate(folder);
+
+                operationService.update(folder.getId());
+
                 resultData.setFlag("md_edit_succeed");
                 resultData.setData(null);
             } else {
@@ -213,6 +220,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
             commentService.deleteByFolderId(id);
             boolean b = this.removeById(id);
             if (b) {
+                operationService.delete(id);
                 resultData.setFlag("md_delete_succeed");
                 resultData.setData(null);
             } else {
@@ -328,6 +336,7 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         if (FileUploadUtil.storeMd(file, mdAbsPath)) {
             folder.setMdUrl(mdAbsPath);
             this.save(folder);
+            operationService.insert(folder.getId(), folder.getUserId());
             resultData.setFlag("md_save_succeed");
             resultData.setData(null);
         } else {

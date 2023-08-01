@@ -1,4 +1,4 @@
-package com.sepim.springboot.serviceimpl;
+package com.sepim.springboot.service.serviceimpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;

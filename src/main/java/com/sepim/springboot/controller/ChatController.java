@@ -19,6 +19,7 @@ public class ChatController {
 
     /**
      * 找出两个用户之间的聊天信息
+     *
      * @param s1 用户1
      * @param s2 用户2
      * @return 搜索结果

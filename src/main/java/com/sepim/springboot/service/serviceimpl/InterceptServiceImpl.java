@@ -1,4 +1,4 @@
-package com.sepim.springboot.serviceimpl;
+package com.sepim.springboot.service.serviceimpl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
