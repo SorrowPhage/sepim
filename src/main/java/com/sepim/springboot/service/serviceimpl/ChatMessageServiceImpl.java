@@ -2,16 +2,19 @@ package com.sepim.springboot.service.serviceimpl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sepim.springboot.entity.ChatList;
 import com.sepim.springboot.entity.ChatMessage;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.ChatMessageMapper;
+import com.sepim.springboot.service.ChatListService;
 import com.sepim.springboot.service.ChatMessageService;
 import com.sepim.springboot.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +24,9 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMessage> implements ChatMessageService {
+public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatMessage> implements ChatMessageService {
+
+    private final ChatListService chatListService;
 
     private final ChatMessageMapper chatMessageMapper;
 
@@ -30,6 +35,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
 
     /**
      * 找出用户的聊天信息
+     *
      * @param s1 用户1
      * @param s2 用户2
      * @return 返回搜素结果
@@ -59,6 +65,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
 
     /**
      * 增加一条信息
+     *
      * @param chatMessage 信息
      */
     @Override
@@ -73,6 +80,7 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
 
     /**
      * 找出user和交流过的其它用户的最后一条通信以及未阅读的信息的数量
+     *
      * @param user 用户的id
      * @return 返回搜素结果
      */
@@ -89,6 +97,26 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper,ChatMe
         }
         resultData.setFlag("200");
         resultData.setData(list);
+        return resultData;
+    }
+
+    @Override
+    public ResultData getChatListByChatLIst(String user) {
+        ResultData resultData = new ResultData();
+
+        List<ChatList> otherList = chatListService.getOtherList(user);
+        List<ChatMessage> chatMessageList = new ArrayList<>(otherList.size());
+        for (ChatList chatList : otherList) {
+            QueryWrapper<ChatMessage> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("is_latest", 1).in("from_id", user, chatList.getOtherId()).in("to_id", user, chatList.getOtherId());
+            ChatMessage one = this.getOne(queryWrapper);
+            String s = one.getFromId().equals(user) ? one.getToId() : one.getFromId();
+            one.setUser(userService.getById(s));
+            one.setNoReadNum(chatMessageMapper.getNoReadNumLatestChatMessage(s, user));
+            chatMessageList.add(one);
+        }
+        resultData.setData(chatMessageList);
+        resultData.setFlag("200");
         return resultData;
     }
 }

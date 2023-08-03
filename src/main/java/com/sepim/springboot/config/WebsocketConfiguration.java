@@ -1,6 +1,9 @@
 package com.sepim.springboot.config;
 
+import com.sepim.springboot.controller.PushMSGWebSocket;
 import com.sepim.springboot.controller.WebSocket;
+import com.sepim.springboot.entity.ChatList;
+import com.sepim.springboot.service.ChatListService;
 import com.sepim.springboot.service.ChatMessageService;
 import com.sepim.springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,4 +25,15 @@ public class WebsocketConfiguration {
     public void userService(UserService userService)     {
         WebSocket.userService = userService;
     }
+
+    @Autowired
+    public void setChatMessageService(ChatMessageService chatMessageService){
+        PushMSGWebSocket.chatMessageService= chatMessageService;
+    }
+
+    @Autowired
+    public void setChatListService(ChatListService chatListService){
+        PushMSGWebSocket.chatListService= chatListService;
+    }
+
 }

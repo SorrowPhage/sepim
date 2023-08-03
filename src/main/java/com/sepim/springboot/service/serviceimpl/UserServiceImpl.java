@@ -45,8 +45,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 account = AccountGenerateUtil.generateAccount();
             }
             user.setId(AccountGenerateUtil.generateAccount());
-            MySessionUtil.removeSession("ver_code");
+            // MySessionUtil.removeSession("ver_code");
             // user.setType("user");
+
+            //直接加入默认头像
+            // user.setAvatarUrl("http://localhost:8088/upload/sepim/avatar/default.png");
             this.save(user);
             resultData.setData(user);
             resultData.setFlag("succeed");

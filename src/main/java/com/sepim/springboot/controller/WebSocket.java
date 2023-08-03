@@ -19,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @ServerEndpoint 注解的作用
  * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
  * 注解的值将被用于监听用户连接的终端访问URL地址,客户端可以通过这个URL来连接到WebSocket服务器端
+ *
+ * 这个socket是用于聊天的
  */
 @Slf4j
 @Component
@@ -80,6 +82,7 @@ public class WebSocket {
 
     /**
      * 收到客户端消息后调用的方法
+     * @return
      */
     @OnMessage
     public void OnMessage(String message_str) {
@@ -91,12 +94,19 @@ public class WebSocket {
             chatMessage.setType(0);
             chatMessage.setUser(userService.getById(chatMessage.getFromId()));
             chatMessageService.insertChatMessage(chatMessage);
+
+            PushMSGWebSocket pushMSGWebSocket = new PushMSGWebSocket();
+            pushMSGWebSocket.onMessage(message_str);
+
         } else {
             chatMessage.setType(1);
             chatMessage.setUser(userService.getById(chatMessage.getFromId()));
             chatMessageService.insertChatMessage(chatMessage);
             JSONObject o = (JSONObject) JSONObject.toJSON(chatMessage);
             AppointSending(chatMessage.getToId(), o.toJSONString());
+
+            PushMSGWebSocket pushMSGWebSocket = new PushMSGWebSocket();
+            pushMSGWebSocket.onMessage(message_str);
         }
     }
 

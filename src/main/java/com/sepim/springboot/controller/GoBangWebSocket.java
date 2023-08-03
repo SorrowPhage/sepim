@@ -2,9 +2,7 @@ package com.sepim.springboot.controller;
 
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
-import com.sepim.springboot.service.ChatMessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -18,14 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @ServerEndpoint 注解的作用
  * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
  * 注解的值将被用于监听用户连接的终端访问URL地址,客户端可以通过这个URL来连接到WebSocket服务器端
+ *
+ * 五子棋匹配与发送棋子信息的
  */
 @Slf4j
 @Component
 @ServerEndpoint("/gobang/{name}")
 public class GoBangWebSocket {
 
-    @Autowired
-    public static ChatMessageService chatMessageService;
 
     /**
      *  与某个客户端的连接对话，需要通过它来给客户端发送消息

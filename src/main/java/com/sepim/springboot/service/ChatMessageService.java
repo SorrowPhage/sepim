@@ -12,5 +12,7 @@ public interface ChatMessageService extends IService<ChatMessage> {
 
     ResultData getChatList(String user);
 
+    ResultData getChatListByChatLIst(String user);
+
 
 }
