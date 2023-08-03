@@ -55,20 +55,31 @@ export default {
             isLast: false,
         }
     },
+    watch: {
+        '$route.params.account': {
+            handler() {
+                this.initData();
+            },
+        },
+    },
     created() {
-        this.$store.dispatch("ChatMessage/getChatMessageList", {s1: this.$route.params.account, s2: this.account});
-        this.username = this.$route.params.username;
-        this.init();
-        this.$nextTick(()=>{
-            this.$refs["display-box"].scrollTop = this.$refs["display-box"].scrollHeight;
-        })
+        this.initData();
     },
     methods: {
+        initData() {
+            this.$store.dispatch("ChatMessage/getChatMessageList", {s1: this.$route.params.account, s2: this.account});
+            this.username = this.$route.params.username;
+            this.init();
+            this.$nextTick(()=>{
+                this.$refs["display-box"].scrollTop = this.$refs["display-box"].scrollHeight;
+            })
+        },
+        
         onInput(event) {
             this.contentReply = event.data;
         },
         formatDate(sendTime) {
-            let a = new Date(sendTime).getTime();
+            let a = new Date(sendTime).getTime()- 8 * 3600 * 1000;
             const date = new Date(a);
             const Y = date.getFullYear() + '/';
             const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
@@ -76,6 +87,18 @@ export default {
             const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
             const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
             return Y + M + D + h + m;
+        },
+        getLocalDate() {
+            let a = new Date().getTime() + 8 * 3600 * 1000;
+            var date = new Date(a);
+            var year = date.getFullYear()
+            var month = date.getMonth() + 1 < 10 ?
+                '0' + (date.getMonth() + 1) : date.getMonth()+ 1
+            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+            var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+            var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+            // var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+            return year + '/' + month + '/' + day + " " + hours + ":" + minutes;
         },
         send(){
             if (this.contentReply === '' || this.contentReply == null) {
@@ -92,7 +115,8 @@ export default {
                     fromId: this.account,
                     toId: this.$route.params.account,
                     content: this.contentReply,
-                    user:{avatarUrl: this.avatarUrl}
+                    user: {avatarUrl: this.avatarUrl},
+                    sendTime: this.getLocalDate()
                 });
                 this.$refs.chat_text.clear();
                 this.contentReply = '';
@@ -103,6 +127,7 @@ export default {
         },
         
         messagesPush(data) {
+            data.sendTime = this.getLocalDate();
             let oldScroll = this.$refs["display-box"].scrollTop;
             let divHeight = this.$refs["display-box"].clientHeight;
             this.messages.push(data);

@@ -1,24 +1,24 @@
 <template>
     <div class="main">
-        <vue-particles
-            :clickEffect="true"
-            :hoverEffect="true"
-            :lineLinked="true"
-            :lineOpacity="0.4"
-            :linesDistance="150"
-            :linesWidth="1"
-            :moveSpeed="3"
-            :particleOpacity="0.7"
-            :particleSize="4"
-            :particlesNumber="100"
-            class="login-bg"
-            clickMode="push"
-            color="#39AFFD"
-            hoverMode="grab"
-            linesColor="#8DD1FE"
-            shapeType="circle"
-        >
-        </vue-particles>
+<!--        <vue-particles-->
+<!--            :clickEffect="true"-->
+<!--            :hoverEffect="true"-->
+<!--            :lineLinked="true"-->
+<!--            :lineOpacity="0.4"-->
+<!--            :linesDistance="150"-->
+<!--            :linesWidth="1"-->
+<!--            :moveSpeed="3"-->
+<!--            :particleOpacity="0.7"-->
+<!--            :particleSize="4"-->
+<!--            :particlesNumber="100"-->
+<!--            class="login-bg"-->
+<!--            clickMode="push"-->
+<!--            color="#39AFFD"-->
+<!--            hoverMode="grab"-->
+<!--            linesColor="#8DD1FE"-->
+<!--            shapeType="circle"-->
+<!--        >-->
+<!--        </vue-particles>-->
         <div class="line-box">
             <el-row>
                 <el-col :span="4" style="margin-top: 40px">

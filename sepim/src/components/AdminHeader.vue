@@ -13,19 +13,24 @@
                                 <div class="sp-nav" @click="goVideoPlayer">视频</div>
                 <!--                <div class="sp-nav" @click="seckill">支付模块</div>-->
                 
-<!--                                <div class="sp-nav" >-->
-<!--                                    <el-popover-->
-<!--                                        placement="top-start"-->
-<!--                                        width="400"-->
-<!--                                        trigger="hover">-->
-<!--                                        <el-badge :value="12" class="item" slot="reference" >-->
-<!--                                            <el-button size="mini">消息</el-button>-->
-<!--                                        </el-badge>-->
-<!--                                        <div>-->
-<!--                                            <span>哈哈</span>-->
-<!--                                        </div>-->
-<!--                                    </el-popover>-->
-<!--                                </div>-->
+                                <div class="sp-nav" >
+                                    <el-popover
+                                        placement="top-start"
+                                        width="400"
+                                        trigger="hover">
+                                        <el-badge :value="noReadSum" :hidden="noReadSum === 0 " :max="99" class="item" slot="reference" >
+                                            <el-button size="mini">消息</el-button>
+                                        </el-badge>
+                                        <div class="sp-popover-box">
+                                            <div class="sp-user-line-box" v-for="chat in list" :key="chat.id">
+                                                <chat-user-line :account="chat.user.id" :username="chat.user.username" :avatar-url="chat.user.avatarUrl"
+                                                                :last-message="chat.content" :time="formatDate(chat.sendTime)" :num="chat.noReadNum"
+                                                                :clearNoReadNum="clearNoReadNum"
+                                                ></chat-user-line>
+                                            </div>
+                                        </div>
+                                    </el-popover>
+                                </div>
                 
             </div>
         </div>
@@ -89,22 +94,40 @@
 import {mapMutations, mapState, mapGetters} from "vuex";
 import {sessionReplaceStore} from "@/utils/session_util"
 import HeFenWeather from '@/components/userinfo/HeFenWeather'
+import ChatUserLine from "@/components/chat/ChatUserLine";
+import axios from "axios";
 let socket;
 export default {
     name: "AdminHeader",
     components: {
-        HeFenWeather
+        HeFenWeather,
+        ChatUserLine
     },
     data() {
         return {
             isTrue: false,
             search: '',
             isLogin: true,
+            chatList: [],
         };
     },
     computed: {
         ...mapState("User", ["userName"]),
         ...mapGetters("User", ["avatar_url"]),
+        noReadSum() {
+            let sum = 0;
+            this.chatList.forEach(partner => {
+                sum = sum + partner.noReadNum;
+            })
+            return sum;
+        },
+        list() {
+            const arr = this.chatList;
+            arr.sort((c1,c2)=>{
+                return new Date(c2.sendTime)- new Date(c1.sendTime)
+            })
+            return arr;
+        },
     },
     methods: {
         ...mapMutations("Menu", ["changeCollapse"]),
@@ -226,14 +249,13 @@ export default {
             }
         },
         init() {
-            let username = this.account;
+            let username = this.$store.state.User.account;
             let _this = this;
             if (typeof (WebSocket) == "undefined") {
                 console.log("您的浏览器不支持WebSocket");
             } else {
                 console.log("您的浏览器支持WebSocket");
                 let socketUrl = "ws://localhost:8085/pushmsg/" + username;
-                console.log(socketUrl)
                 if (socket != null) {
                     socket.close();
                     socket = null;
@@ -254,8 +276,27 @@ export default {
                         _this.users = data.users.filter(user => user.username !== username)  // 获取当前连接的所有用户信息，并且排除自身，自己不会出现在自己的聊天列表里
                     } else {
                         // 如果服务器端发送过来的json数据 不包含 users 这个key，那么发送过来的就是聊天文本json数据
-                        if (data.fromId === _this.toUser) {
-                            _this.messagesPush(data);
+                        // if (data.fromId === _this.toUser) {
+                        //     _this.messagesPush(data);
+                        // }
+    
+                        //这里需要增加一个判断，若新增的消息不再聊天列表，则访问服务端获取该对象加入列表中。
+                        const path = _this.$route.path.substring(0, 16);
+                        const date = _this.getLocalDate();
+                        let isHave = false
+                        _this.chatList.forEach(partner => {
+                            if (partner.user.id === data.fromId || partner.user.id === data.toId) {
+                                isHave = true;
+                                partner.content = data.content;
+                                partner.sendTime = date;
+                                if (path !== "/index.html/chat") {
+                                    partner.noReadNum = partner.noReadNum + 1;
+                                }
+                            }
+                        })
+                        
+                        if (!isHave) {
+                            _this.getChatList();
                         }
                     }
                 };
@@ -268,6 +309,44 @@ export default {
                     console.log("websocket发生了错误");
                 }
             }
+        },
+        getChatList() {
+            axios.get('http://localhost:8080/api/chat/chatlist',{params:{user: this.$store.state.User.account}}).then(res=>{
+                if (res.data.flag === "200") {
+                    this.chatList = res.data.data;
+                }
+            })
+        },
+        formatDate(sendTime) {
+            let a = new Date(sendTime).getTime() - 8 * 3600 * 1000;
+            const date = new Date(a) ;
+            const Y = date.getFullYear() + '/';
+            const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/';
+            const D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + '  ';
+            const h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+            const m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+            // const s = date.getSeconds(); // 秒
+            // console.log('dateString', dateString); // > dateString 2021-07-06 14:23
+            return Y + M + D + h + m;
+        },
+        getLocalDate() {
+            let a = new Date().getTime() + 8 * 3600 * 1000;
+            var date = new Date(a);
+            var year = date.getFullYear()
+            var month = date.getMonth() + 1 < 10 ?
+                '0' + (date.getMonth() + 1) : date.getMonth()+ 1
+            var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+            var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+            var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+            // var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+            return year + '/' + month + '/' + day + " " + hours + ":" + minutes;
+        },
+        clearNoReadNum(id) {
+            this.chatList.forEach(partner=>{
+                if (partner.fromId === id) {
+                    partner.noReadNum = 0;
+                }
+            })
         },
     },
     created() {
@@ -285,7 +364,8 @@ export default {
         if (token === null || token === '') {
             this.isLogin = false;
         }
-        
+        this.init();
+        this.getChatList();
     },
     destroyed() {
         document.removeEventListener('click', this.showUl);
@@ -536,4 +616,17 @@ li {
     position: absolute;
     right: 250px;
 }
+.sp-user-line-box{
+    /*border-top: 1px solid dimgrey;*/
+    width: 100%;
+    /*height: 40%;*/
+    margin-top: 5px;
+    overflow: auto;
+}
+.sp-popover-box {
+    height: 300px;
+    white-space: pre-wrap;
+    overflow: auto;
+}
+
 </style>

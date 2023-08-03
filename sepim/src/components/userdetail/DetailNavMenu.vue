@@ -30,9 +30,9 @@
                                             <el-input v-model="searchUser"></el-input>
                                         </div>
                                     </div>
-                                    <div class="sp-user-line-box" v-show="$store.state.Detail.id===$store.state.User.account" v-for="chat in chatList" :key="chat.id">
-                                        <chat-user-line :account="chat.user.id" :username="chat.user.username" :avatar-url="chat.user.avatarUrl" :last-message="chat.content" :time="formatDate(chat.sendTime)" :num="chat.noReadNum"></chat-user-line>
-                                    </div>
+<!--                                    <div class="sp-user-line-box" v-show="$store.state.Detail.id===$store.state.User.account" v-for="chat in chatList" :key="chat.id">-->
+<!--                                        <chat-user-line :account="chat.user.id" :username="chat.user.username" :avatar-url="chat.user.avatarUrl" :last-message="chat.content" :time="formatDate(chat.sendTime)" :num="chat.noReadNum"></chat-user-line>-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="sp-repository-box">
                                     <div>
@@ -66,14 +66,14 @@
 <script>
 
 import axios from "axios";
-import ChatUserLine from "@/components/chat/ChatUserLine";
+// import ChatUserLine from "@/components/chat/ChatUserLine";
 
 export default {
     name: "DetailNavMenu",
     inject: ["reload"],
-    components:{
-        ChatUserLine
-    },
+    // components:{
+    //     ChatUserLine
+    // },
     data() {
         return {
             x: 'http://localhost:8088/upload/sepim/avatar/ba0640727d374101b6c041ece7a40b4afile.png',
@@ -160,12 +160,12 @@ export default {
             }, Error => {
                 console.log(Error.message)
             });
-            axios.get('http://localhost:8080/api/chat/chatlist',{params:{user: this.$route.query.account}}).then(res=>{
-                if (res.data.flag === "200") {
-                    this.chatList = res.data.data;
-                    console.log(this.chatList)
-                }
-            })
+            // axios.get('http://localhost:8080/api/chat/chatlist',{params:{user: this.$route.query.account}}).then(res=>{
+            //     if (res.data.flag === "200") {
+            //         this.chatList = res.data.data;
+            //         console.log(this.chatList)
+            //     }
+            // })
         },
     },
     watch: {

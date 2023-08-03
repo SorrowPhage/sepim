@@ -13,12 +13,11 @@
                 <div v-show="num" class="badge-box">
                     {{num}}
                 </div>
-<!--                <el-badge :value="num" class="item">-->
-<!--                -->
-<!--                </el-badge>-->
             </div>
-
         </div>
+<!--        <div v-show="showDelete">-->
+<!--            删除-->
+<!--        </div>-->
         
     </div>
 </template>
@@ -26,17 +25,18 @@
 <script>
 export default {
     name: "ChatUserLine",
-    props: ['lastMessage', 'avatarUrl','username','time','account','num'],
+    props: ['lastMessage', 'avatarUrl','username','time','account','num','clearNoReadNum'],
     data() {
         return{
-        
+            showDelete: false,
         }
     },
     methods:{
         goChat() {
+            this.clearNoReadNum(this.account);
             this.$router.push({
                 name: 'chat',
-                params:{
+                params: {
                     account: this.account,
                     username: this.username,
                     url: this.avatarUrl,
