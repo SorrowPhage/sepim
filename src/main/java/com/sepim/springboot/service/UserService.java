@@ -6,11 +6,13 @@ import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface UserService extends IService<User> {
 
     ResultData register(User user);
 
-    ResultData login(User user);
+    ResultData login(User user, HttpServletRequest request);
 
     ResultData retrieve(User user);
 

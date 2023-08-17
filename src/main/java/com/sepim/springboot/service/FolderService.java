@@ -7,6 +7,8 @@ import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 public interface FolderService extends IService<Folder> {
     ResultData saveMd(Folder folder);
 
@@ -35,5 +37,7 @@ public interface FolderService extends IService<Folder> {
     ResultData storeMd(MultipartFile file, Folder folder);
 
     ResultData getPublicFolders(String userId);
+
+    ResultData getEchartsData(Map<String, String> param);
 
 }

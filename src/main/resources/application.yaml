@@ -7,7 +7,8 @@ server:
 spring:
   datasource:
 
-    url: jdbc:mysql://localhost:3306/sepim?serverTimezone=UTC
+#    url: jdbc:mysql://localhost:3306/sepim?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/sepim?serverTimezone=CTT
     username: "root"
     password: "123456"
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -89,4 +90,8 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+
+python:
+  script: D:\A-SpringBoot\algorithm\recommendation\recommendation.py
+  path: E:\ProgrammingSoftware\Anaconda\python.exe
 

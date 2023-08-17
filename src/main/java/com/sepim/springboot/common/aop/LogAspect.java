@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 @Slf4j
 public class LogAspect {
 
-    @Pointcut("@annotation(com.sepim.springboot.common.aop.LogAnnotation)")
+    @Pointcut("@annotation(com.sepim.springboot.common.aop.LogExecuteMethod)")
     public void pt(){}
 
     //环绕通知
@@ -41,8 +41,8 @@ public class LogAspect {
     private void recordLog(ProceedingJoinPoint joinPoint,long time) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        LogAnnotation logAnnotation = method.getAnnotation(LogAnnotation.class);
-        log.info("=========================start===========================");
+        LogExecuteMethod logAnnotation = method.getAnnotation(LogExecuteMethod.class);
+        log.info("=========================start=========================");
         log.info("module:{}", logAnnotation.module());
         log.info("operator:{}", logAnnotation.operator());
 

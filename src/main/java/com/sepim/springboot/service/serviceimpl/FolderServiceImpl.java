@@ -8,17 +8,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sepim.springboot.entity.*;
 import com.sepim.springboot.mapper.FolderMapper;
-import com.sepim.springboot.service.CommentService;
-import com.sepim.springboot.service.FolderService;
-import com.sepim.springboot.service.OperationService;
-import com.sepim.springboot.service.UserService;
+import com.sepim.springboot.mapper.LoginLogMapper;
+import com.sepim.springboot.service.*;
 import com.sepim.springboot.utils.FileUploadUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -33,6 +33,10 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
     private final FolderMapper folderMapper;
 
     private final OperationService operationService;
+
+    private final FolderLikeRedisService folderLikeRedisService;
+
+    private final LoginLogMapper loginLogMapper;
 
 
     private static final String MD_FILE_PATH = "E:\\ProgrammingSoftware\\apache-tomcat-10.0.12\\webapps\\upload\\sepim\\md\\file\\";
@@ -166,6 +170,11 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         file.setContent(FileUploadUtil.readMdFile(file.getMdUrl()));
         file.setComments(commentService.getComments(id));
         resultData.setFlag("md_read_succeed");
+
+        Integer likedCountFromRedis = folderLikeRedisService.getLikedCountFromRedis(id);
+        if (likedCountFromRedis != null) {
+            file.setLikeCount(file.getLikeCount() + likedCountFromRedis);
+        }
         resultData.setData(file);
         return resultData;
     }
@@ -354,6 +363,21 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         List<Folder> list = this.list(wrapper);
         resultData.setData(list);
         resultData.setFlag("200");
+        return resultData;
+    }
+
+    @Override
+    public ResultData getEchartsData(Map<String, String> param) {
+        ResultData resultData = new ResultData();
+        List<LoginLog> loginLogList = loginLogMapper.getRecent14Data(param);
+        List<Folder> folderList = folderMapper.getRecent14Data(param);
+
+        Map<String, List> dataList = new HashMap<>();
+        dataList.put("folderList", folderList);
+        dataList.put("loginList", loginLogList);
+
+        resultData.setFlag("200");
+        resultData.setData(dataList);
         return resultData;
     }
 }

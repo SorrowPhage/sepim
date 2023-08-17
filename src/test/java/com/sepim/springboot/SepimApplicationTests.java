@@ -3,6 +3,7 @@ package com.sepim.springboot;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.sepim.springboot.controller.WebSocket;
 import com.sepim.springboot.entity.*;
 import com.sepim.springboot.entity.example.TestGeneratorExample;
 import com.sepim.springboot.mapper.ChatMessageMapper;
@@ -12,13 +13,19 @@ import com.sepim.springboot.mapper.TestGeneratorMapper;
 import com.sepim.springboot.service.*;
 import com.sepim.springboot.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
 import org.junit.jupiter.api.Test;
+import org.omg.CORBA.UNKNOWN;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
+
 @Slf4j
-@SpringBootTest( webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT )
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SepimApplicationTests {
 
     @Autowired
@@ -42,6 +49,9 @@ class SepimApplicationTests {
     @Autowired
     private ChatMessageService chatMessageService;
 
+    @Autowired
+    private  TransferPythonService transferPythonService;
+
     @Test
     void setChatMessageMapperTest() {
         // List<ChatMessage> chatMessages = chatMessageMapper.getChatMessage("user", "sp2645354");
@@ -61,7 +71,7 @@ class SepimApplicationTests {
 
         // int i = chatMessageMapper.updateIsLatest("user", "sp2645354");
         int s = chatMessageMapper.getNoReadChatMessage("sp2645354");
-        System.out.println("xxx"+s);
+        System.out.println("xxx" + s);
     }
 
     @Test
@@ -90,7 +100,7 @@ class SepimApplicationTests {
 
     @Test
     void testJson() {
-        String a= " {\"fromId\":\"user\",\"toId\":\"sp2645354\",\"content\":\"bb\"} ";
+        String a = " {\"fromId\":\"user\",\"toId\":\"sp2645354\",\"content\":\"bb\"} ";
         // ChatMessage chatMessage = JSON.parseObject(a, ChatMessage.class);
         // System.out.println(chatMessage);
         JSONObject jsonObject = JSONObject.parseObject(a);
@@ -196,7 +206,7 @@ class SepimApplicationTests {
     private RedisUtil redisUtil;
 
     @Test
-    void test(){
+    void test() {
         // redisUtil.set("user","myValue");
         // System.out.println(redisUtil.get("user"));  //myValue
         System.out.println(redisUtil.ping());
@@ -255,5 +265,32 @@ class SepimApplicationTests {
         System.out.println(DateUtil.format(LocalDateTimeUtil.now(), "yyyy-MM-dd"));
     }
 
+
+
+    @Test
+    void pythonTest() {
+        // System.out.println("==================");
+        // transferPythonService.recommendationFolders("1");
+        WebSocket webSocket = new WebSocket();
+        webSocket.OnMessage("haha");
+    }
+
+    @Autowired
+    private Ip2regionSearcher ip2regionSearcher;
+
+    @Test
+    void getLocation() {
+
+        String ip = null;
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        log.info(ip);
+        log.info("========================");
+        String address = ip2regionSearcher.getAddress(ip);
+        log.info(address);
+    }
 
 }

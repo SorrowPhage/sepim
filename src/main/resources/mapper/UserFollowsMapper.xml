@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sepim.springboot.mapper.UserFollowsMapper">
+
+
+    <select id="getFansCount" resultType="java.lang.Integer">
+        select count(*) from user_follows where followed_id=#{userId}
+    </select>
+    <select id="getFollowCount" resultType="java.lang.Integer">
+        select count(*) from user_follows where user_id=#{userId}
+    </select>
+</mapper>

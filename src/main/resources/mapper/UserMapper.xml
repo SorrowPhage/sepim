@@ -5,4 +5,8 @@
 <!--namespace=绑定一个指定的Mapper接口-->
 <mapper namespace="com.sepim.springboot.mapper.UserMapper">
 
+    <select id="followUser" resultType="com.sepim.springboot.entity.User">
+        select u.id,u.username,u.avatar_url from user u where id=#{userId}
+    </select>
+
 </mapper>

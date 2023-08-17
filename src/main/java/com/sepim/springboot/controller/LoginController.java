@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
@@ -46,8 +48,8 @@ public class LoginController {
      * @return 返回用户登录结果
      */
     @PostMapping("/login")
-    public ResultData login(@RequestBody User user) {
-        return userService.login(user);
+    public ResultData login(@RequestBody User user, HttpServletRequest request) {
+        return userService.login(user,request);
     }
 
     /**

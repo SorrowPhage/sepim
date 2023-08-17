@@ -1,11 +1,14 @@
 package com.sepim.springboot.controller;
 
-import com.sepim.springboot.common.aop.LogAnnotation;
+import com.sepim.springboot.common.aop.Idempotent;
+import com.sepim.springboot.common.aop.LogExecuteMethod;
 import com.sepim.springboot.entity.Comment;
 import com.sepim.springboot.entity.Folder;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.service.CommentService;
+import com.sepim.springboot.service.FolderLikeRedisService;
+import com.sepim.springboot.service.FolderLikeService;
 import com.sepim.springboot.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -25,9 +29,14 @@ public class MarkDownController {
 
     private final CommentService commentService;
 
+    private final FolderLikeService folderLikeService;
+
+
+
 
     /**
      * 文章上传
+     *
      * @param folder 文章数据
      * @return 返回上传结果
      */
@@ -38,6 +47,7 @@ public class MarkDownController {
 
     /**
      * 分页查询
+     *
      * @param condition 查询规则
      * @return 返回查询结果
      */
@@ -53,6 +63,7 @@ public class MarkDownController {
 
     /**
      * 获取文章列表
+     *
      * @param folder 这个参数应该直接使用String
      * @return 返回获取数据
      */
@@ -62,13 +73,13 @@ public class MarkDownController {
     }
 
     @GetMapping("/md/read")
-    @LogAnnotation(module = "文章",operator = "获取文章")
+    @LogExecuteMethod(module = "文章", operator = "获取文章")
     public ResultData readMd(@RequestParam("id") String id) {
         return folderService.readMd(id);
     }
 
     @GetMapping("/md/readMd")
-    @LogAnnotation(module = "文章",operator = "获取文章")
+    @LogExecuteMethod(module = "文章", operator = "获取文章")
     public ResultData readMdContent(@RequestParam("id") String id) {
         return folderService.readMdContent(id);
     }
@@ -89,9 +100,9 @@ public class MarkDownController {
     }
 
 
-
     /**
-     *发布评论
+     * 发布评论
+     *
      * @param comment 评论
      * @return 返回发布结果
      */
@@ -101,7 +112,7 @@ public class MarkDownController {
     }
 
     @GetMapping("/md/comment/get")
-    @LogAnnotation(module = "文章",operator = "评论")
+    @LogExecuteMethod(module = "文章", operator = "评论")
     public ResultData getComments(@RequestParam("folderId") String folderId) {
         ResultData resultData = new ResultData();
         List<Comment> comments = commentService.getComments(folderId);
@@ -117,21 +128,59 @@ public class MarkDownController {
 
     /**
      * 用户上传本地文章
-     * @param file 文件
-     * @param userId 用户id
+     *
+     * @param file    文件
+     * @param userId  用户id
      * @param roughly 文章描述
-     * @param title 文章标题
-     * @param type 文章类型
+     * @param title   文章标题
+     * @param type    文章类型
      * @return 上传结果返回
      */
     @PostMapping("/md/store")
-    public ResultData storeMd(@RequestParam(value = "file") MultipartFile file,@RequestParam("userId") String userId,
-                             @RequestParam("roughly") String roughly,@RequestParam("title")String title,@RequestParam("type") String type) {
+    public ResultData storeMd(@RequestParam(value = "file") MultipartFile file, @RequestParam("userId") String userId,
+                              @RequestParam("roughly") String roughly, @RequestParam("title") String title, @RequestParam("type") String type) {
         Folder folder = new Folder();
         folder.setUserId(userId);
         folder.setRoughly(roughly);
         folder.setTitle(title);
         folder.setType(type);
         return folderService.storeMd(file, folder);
+    }
+
+    @PostMapping("/md/like")
+    @LogExecuteMethod(module = "文章", operator = "点赞")
+    public ResultData likeMd(@RequestBody Map<String, String> param) {
+        return folderLikeService.like(param);
+    }
+
+
+    @PostMapping("/md/unlike")
+    @LogExecuteMethod(module = "文章", operator = "取消点赞")
+    public ResultData unlikeMd(@RequestBody Map<String, String> param) {
+        return folderLikeService.unlike(param);
+    }
+
+    @PostMapping("/md/like/status")
+    public ResultData getLikeStatus(@RequestBody Map<String, String> param) {
+        return folderLikeService.getLikeStatus(param);
+    }
+
+
+    @PostMapping("/md/likes")
+    @Idempotent
+    public void likeMdRedisLock(@RequestBody Map<String, String> param) {
+
+        log.info("测试接口{}", param.get("userId"));
+    }
+
+
+    /**
+     * 获取echarts的数据
+     * @param param 用户id
+     * @return
+     */
+    @PostMapping("md/echarts-data")
+    public ResultData getEchartsData(@RequestBody Map<String,String> param) {
+        return folderService.getEchartsData(param);
     }
 }

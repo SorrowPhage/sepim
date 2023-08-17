@@ -1,19 +1,25 @@
 package com.sepim.springboot.service.serviceimpl;
 
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sepim.springboot.entity.LoginLog;
 import com.sepim.springboot.entity.ResultData;
 import com.sepim.springboot.entity.SearchCondition;
 import com.sepim.springboot.entity.User;
 import com.sepim.springboot.mapper.UserMapper;
+import com.sepim.springboot.service.LoginLogService;
 import com.sepim.springboot.service.UserService;
 import com.sepim.springboot.utils.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 @Slf4j
@@ -25,7 +31,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final UserMapper userMapper;
 
+    private final LoginLogService loginLogService;
 
+    private final Ip2regionSearcher ip2regionSearcher;
 
     /**
      * 用户注册
@@ -62,7 +70,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param user 用户登录上传的信息
      * @return 用户登录结果
      */
-    public ResultData login(User user) {
+    public ResultData login(User user, HttpServletRequest request) {
         ResultData resultData = new ResultData();
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("id", user.getId()).eq("password", user.getPassword());
@@ -73,6 +81,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             resultData.setFlag("login_succeed");
             admin.setPassword(null);
             resultData.setData(admin);
+
+            LoginLog loginLog = new LoginLog();
+            String address = IPUtils.getIpAddr(request);
+            log.info(IPUtils.getGatWayIpAddr(request));
+            loginLog.setUserId(user.getId());
+            loginLog.setTime(LocalDateTimeUtil.now());
+            loginLog.setLocation(address);
+            loginLogService.save(loginLog);
+
         } else {
             resultData.setFlag("login_defeat");
             resultData.setData(null);

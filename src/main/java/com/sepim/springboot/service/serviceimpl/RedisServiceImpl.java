@@ -29,8 +29,12 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public ResultData ping() {
-        resultData.setData(redisUtil.ping());
+        String ping = redisUtil.ping();
+        resultData.setData(ping);
         resultData.setFlag("200");
+        if (ping.contains("connect timed out")) {
+            resultData.setFlag("400");
+        }
         return resultData;
     }
 
