@@ -30,7 +30,7 @@
                                     @imgDel="renderImgDel"
                                     @change="change"
                                     @save="save"
-                                    :toolbarsBackground="'#afb8c1'"
+                                    :toolbarsBackground="'#ffffff'"
                                     :externalLink="externalLink"
                                     style="height: calc(100vh - 50px)"
                                     :toolbars="toolbars"

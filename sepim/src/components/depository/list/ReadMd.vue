@@ -59,6 +59,21 @@
                                             &nbsp;&nbsp;&nbsp;浏览量:
                                             {{ readNum }}&nbsp;&nbsp;&nbsp;
                                               </span>
+                                                            <span>
+                                            &nbsp;&nbsp;&nbsp;点赞:
+                                            {{ likeCount }}&nbsp;&nbsp;&nbsp;
+                                                                <el-tooltip v-if="!likeStatus" class="item" effect="dark" content="赞" placement="top">
+                                                                    <i  class="el-icon-thumb" style="cursor: pointer;" @click="like()"></i>
+                                                                </el-tooltip>
+                                                                <el-tooltip v-else class="item" effect="dark" content="取消点赞" placement="top">
+                                                                    <i  class="el-icon-thumb" style="cursor: pointer;color: #227cf9" @click="unlike()"></i>
+                                                                </el-tooltip>
+                                                                &nbsp;
+<!--                                                                <el-tooltip class="item" effect="dark" content="踩" placement="top">-->
+<!--                                                                    <i class="el-icon-thumb" style="transform: rotate(3.142rad);cursor: pointer"></i>-->
+<!--                                                                </el-tooltip>-->
+                                              
+                                              </span>
 <!--                                                            <span class="text-author route-style" @click="downFile">下载-->
 <!--                                             </span>-->
                                                         </el-col>
@@ -137,6 +152,8 @@ export default {
             substance: '',
             isShow: false,
             loading: true,
+            likeCount: 0,
+            likeStatus: 0,
         };
     },
     computed: {
@@ -227,7 +244,30 @@ export default {
                 type: 'success',
                 center: true,
             });
-        }
+        },
+        
+        getLinkedData() {
+            axios.post("http://localhost:8080/api/md/like/status",{folderId:this.$route.query.id,
+                userId: this.$store.state.User.account}).then(res=>{
+                if (res.data.flag === "200") {
+                    this.likeStatus = res.data.data;
+                }
+            })
+        },
+        like() {
+            axios.post("http://localhost:8080/api/md/like",{folderId:this.$route.query.id,
+                userId: this.$store.state.User.account}).then(res=>{
+                this.getLinkedData();
+                this.likeCount += 1;
+            })
+        },
+        unlike() {
+            axios.post("http://localhost:8080/api/md/unlike",{folderId:this.$route.query.id,
+                userId: this.$store.state.User.account}).then(res=>{
+                this.getLinkedData();
+                this.likeCount -= 1
+            })
+        },
     },
     watch: {
         scroll: function () {
@@ -240,6 +280,7 @@ export default {
                 this.author = res.data.data.user.username;
                 this.account = res.data.data.userId;
                 this.title = res.data.data.title;
+                this.likeCount = res.data.data.likeCount;
                 if (res.data.data.roughly === "" || res.data.data.roughly === null) {
                     this.roughly = "没有描述";
                 } else {
@@ -346,6 +387,7 @@ export default {
                 });
             }
         })
+        this.getLinkedData();
     }
 }
 </script>
@@ -432,7 +474,8 @@ export default {
 .author-box {
     width: 100%;
     padding: 15px;
-    background-color: rgba(175, 184, 193, 0.1);
+    /*background-color: rgba(175, 184, 193, 0.1);*/
+    background: white;
     margin-bottom: 5px;
     /*border-bottom: 1px solid #9f0936;*/
 }

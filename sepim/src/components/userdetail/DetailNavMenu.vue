@@ -21,14 +21,27 @@
                                                 <div class="sp-info-username">{{$store.state.Detail.username}}</div>
                                             </div>
                                         </div>
+                                        <div class="sp-userinfo-username-box">
+<!--                                            <div style="width: 40%;padding: 5px">Phage:{{fans}}</div>-->
+<!--                                            <div style="width: 60%;padding: 5px">Escherichia coli:{{follow}}</div>-->
+                                            <div class="follow-box" @click="goFollow">
+                                                <div class="filed-box">{{follow}}</div>
+                                                <div class="filed-box">ERC</div>
+                                            </div>
+                                            <div class="follow-box" @click="goPhage">
+                                                <div class="filed-box">{{fans}}</div>
+                                                <div class="filed-box">PHAGE</div>
+                                            </div>
+                                        </div>
                                         <div v-show="$store.state.Detail.id!==$store.state.User.account"
                                              class="sp-userinfo-info-box">
                                             <el-button type="danger" @click="goChat()">私信</el-button>
-<!--                                            <el-button type="danger" @click="goWUzQi">五子棋</el-button>-->
+                                            <el-button v-if="!status" type="danger" @click="followUser">关注</el-button>
+                                            <el-button v-else type="danger" @click="unfollowUser">取消关注</el-button>
                                         </div>
-                                        <div v-show="$store.state.Detail.id===$store.state.User.account">
-                                            <el-input v-model="searchUser"></el-input>
-                                        </div>
+<!--                                        <div v-show="$store.state.Detail.id===$store.state.User.account">-->
+<!--                                            <el-input v-model="searchUser"></el-input>-->
+<!--                                        </div>-->
                                     </div>
 <!--                                    <div class="sp-user-line-box" v-show="$store.state.Detail.id===$store.state.User.account" v-for="chat in chatList" :key="chat.id">-->
 <!--                                        <chat-user-line :account="chat.user.id" :username="chat.user.username" :avatar-url="chat.user.avatarUrl" :last-message="chat.content" :time="formatDate(chat.sendTime)" :num="chat.noReadNum"></chat-user-line>-->
@@ -47,7 +60,8 @@
                                             <el-menu-item index="/index.html/detail/overview" :route="{name:'overview',query:{account: this.$store.state.Detail.id}}" class="el-icon-reading">Overview</el-menu-item>
                                             <el-menu-item index="/index.html/detail/files" :route="{name:'files',query:{account: this.$store.state.Detail.id}}" class="el-icon-collection">Repositories</el-menu-item>
                                             <el-menu-item index="/index.html/detail/insights" :route="{name:'insights',query:{account: this.$store.state.Detail.id}}" class="el-icon-view">Insights</el-menu-item>
-                                            <el-menu-item index="/index.html/detail/contribution" :route="{name:'contribution',query:{account: this.$store.state.Detail.id}}" class="el-icon-folder-add">Contribution</el-menu-item>
+<!--                                            <el-menu-item index="/index.html/detail/follow" :route="{name:'follow',query:{account: this.$store.state.Detail.id}}" class="el-icon-view">Follows</el-menu-item>-->
+<!--                                            <el-menu-item index="/index.html/detail/contribution" :route="{name:'contribution',query:{account: this.$store.state.Detail.id}}" class="el-icon-folder-add">Contribution</el-menu-item>-->
                                         </el-menu>
                                     </div>
                                     <div class="sp-center-content">
@@ -88,6 +102,9 @@ export default {
             loading: true,
             chatList: [],
             searchUser: '',
+            fans: null,
+            follow: null,
+            status: 0,
         };
     },
     // computed: {
@@ -166,6 +183,58 @@ export default {
             //         console.log(this.chatList)
             //     }
             // })
+            axios.post("http://localhost:8080/api/uf/num-fans", {userId: this.$route.query.account}).then(res => {
+                if (res.data.flag === "200") {
+                    this.fans = res.data.data;
+                }
+            });
+            axios.post("http://localhost:8080/api/uf/num-follow", {userId: this.$route.query.account}).then(res => {
+                if (res.data.flag === "200") {
+                    this.follow = res.data.data
+                }
+            });
+            if (this.$store.state.Detail.id !== this.$store.state.User.account) {
+                axios.post("http://localhost:8080/api/uf/status",{userId:this.$store.state.User.account,
+                    followedId: this.$route.query.account}).then(res=>{
+                    if (res.data.flag === "200") {
+                        this.status = res.data.data;
+                    }
+                })
+            }
+        },
+        goPhage() {
+            this.$router.push({
+                name:'phages',
+                query:{
+                    userId: this.$route.query.account,
+                }
+            })
+        },
+        goFollow() {
+            this.$router.push({
+                name:'erc',
+                query:{
+                    userId: this.$route.query.account,
+                }
+            })
+        },
+        followUser() {
+            axios.post("http://localhost:8080/api/uf/follow",{userId:this.$store.state.User.account,
+                followedId: this.$route.query.account}).then(res=>{
+                if (res.data.flag === "200") {
+                    this.status = 1;
+                    this.fans +=1;
+                }
+            })
+        },
+        unfollowUser() {
+            axios.post("http://localhost:8080/api/uf/unfollow",{userId:this.$store.state.User.account,
+                followedId: this.$route.query.account}).then(res=>{
+                if (res.data.flag === "200") {
+                    this.status = 0;
+                    this.fans -= 1;
+                }
+            })
         },
     },
     watch: {
@@ -297,6 +366,13 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.sp-userinfo-xxxx::before{
+    content:'';
+    display: inline-block;
+    height:100%;
+    vertical-align: middle;
+}
+
 .sp-repository-box{
     width: 75%;
     font-size: 10px;
@@ -313,7 +389,8 @@ export default {
     font-weight: bold;
     color: white;
     font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace !important;
-    
+    vertical-align: middle;
+    display: inline-block;
 }
 .sp-user-line-box{
     border-top: 1px solid dimgrey;
@@ -329,6 +406,15 @@ export default {
     border-radius: 0;
     color: white;
 }
+.follow-box {
+    width: 50%;
+    height: 50px;
+    margin: 5px;
+    cursor: pointer;
+}
 
-
+.filed-box {
+    width: 100%;
+    text-align: center;
+}
 </style>

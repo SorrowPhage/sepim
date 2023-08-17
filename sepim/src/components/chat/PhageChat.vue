@@ -22,7 +22,7 @@
                     </div>
                     <div class="btn-box">
                         <div class="btn-content-box">
-                            <el-button size="mini" type="primary" @click="send" >发送</el-button>
+                            <el-button size="mini" type="primary" @click="send" >发送(S)</el-button>
                         </div>
                     </div>
                 </div>

@@ -77,7 +77,8 @@ import {
   Main,
   Upload,
   Drawer,
-  Divider
+  Divider,
+  Tooltip
 } from 'element-ui';
 
 import { Loading } from 'element-ui';
@@ -143,6 +144,8 @@ Vue.component(Main.name, Main)
 Vue.component(Upload.name, Upload)
 Vue.component(Drawer.name, Drawer)
 Vue.component(Divider.name, Divider)
+Vue.component(Tooltip.name, Tooltip)
+
 
 
 

@@ -10,7 +10,7 @@
                 <!--                <div class="sp-nav" @click="goBirthday">投诉</div>-->
                                 <div class="sp-nav" @click="goMusicPlayer">音乐</div>
                                 <div class="sp-nav" @click="goGames">游戏</div>
-                                <div class="sp-nav" @click="goVideoPlayer">视频</div>
+<!--                                <div class="sp-nav" @click="goVideoPlayer">视频</div>-->
                 <!--                <div class="sp-nav" @click="seckill">支付模块</div>-->
                 
                                 <div class="sp-nav" >
@@ -341,6 +341,7 @@ export default {
             // var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
             return year + '/' + month + '/' + day + " " + hours + ":" + minutes;
         },
+        //这个原来是想写成清空未读消息的，后来使用监听完成了，就没有这个了
         clearNoReadNum(id) {
             this.chatList.forEach(partner=>{
                 if (partner.fromId === id) {

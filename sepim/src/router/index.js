@@ -185,8 +185,41 @@ const router = new VueRouter({
                             path: 'contribution',
                             component: () => import("@/components/userdetail/contribution/Contribution"),
                             meta: {title: "UserDetail", ver: true}
-                        }
+                        },
+                        // {
+                        //     name: 'follow',
+                        //     path: 'follow',
+                        //     component: () => import("@/components/userdetail/follow/UserFollow"),
+                        //     meta: {title: "UserDetail", ver: true},
+                        //     redirect: '/index.html/detail/follow/phages',
+                        //     children:[
+                        //         {
+                        //             name: 'phages',
+                        //             path: 'phages',
+                        //             component: () => import("@/components/userdetail/follow/PhageFollow"),
+                        //             meta: {title: "UserDetail", ver: true}
+                        //         },
+                        //         {
+                        //             name: 'erc',
+                        //             path: 'erc',
+                        //             component: () => import("@/components/userdetail/follow/ERCFollow"),
+                        //             meta: {title: "UserDetail", ver: true}
+                        //         },
+                        //     ]
+                        // },
                     ]
+                },
+                {
+                    name: 'phages',
+                    path: 'phages',
+                    component: () => import("@/components/userdetail/follow/PhageFollow"),
+                    meta: {title: "UserDetail", ver: true}
+                },
+                {
+                    name: 'erc',
+                    path: 'erc',
+                    component: () => import("@/components/userdetail/follow/ERCFollow"),
+                    meta: {title: "UserDetail", ver: true}
                 },
                 {
                     name: 'chat',
