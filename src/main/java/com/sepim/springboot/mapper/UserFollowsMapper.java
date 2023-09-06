@@ -1,12 +1,9 @@
 package com.sepim.springboot.mapper;
 
-import com.sepim.springboot.entity.UserFollows;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import io.swagger.models.auth.In;
+import com.sepim.springboot.entity.UserFollows;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
 import java.util.Map;
 
 /**

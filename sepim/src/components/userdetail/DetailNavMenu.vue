@@ -21,18 +21,18 @@
                                                 <div class="sp-info-username">{{$store.state.Detail.username}}</div>
                                             </div>
                                         </div>
-                                        <div class="sp-userinfo-username-box">
-<!--                                            <div style="width: 40%;padding: 5px">Phage:{{fans}}</div>-->
-<!--                                            <div style="width: 60%;padding: 5px">Escherichia coli:{{follow}}</div>-->
-                                            <div class="follow-box" @click="goFollow">
-                                                <div class="filed-box">{{follow}}</div>
-                                                <div class="filed-box">ERC</div>
-                                            </div>
-                                            <div class="follow-box" @click="goPhage">
-                                                <div class="filed-box">{{fans}}</div>
-                                                <div class="filed-box">PHAGE</div>
-                                            </div>
-                                        </div>
+<!--                                        <div class="sp-userinfo-username-box">-->
+<!--&lt;!&ndash;                                            <div style="width: 40%;padding: 5px">Phage:{{fans}}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <div style="width: 60%;padding: 5px">Escherichia coli:{{follow}}</div>&ndash;&gt;-->
+<!--                                            <div class="follow-box" @click="goFollow">-->
+<!--                                                <div class="filed-box">{{follow}}</div>-->
+<!--                                                <div class="filed-box">ERC</div>-->
+<!--                                            </div>-->
+<!--                                            <div class="follow-box" @click="goPhage">-->
+<!--                                                <div class="filed-box">{{fans}}</div>-->
+<!--                                                <div class="filed-box">PHAGE</div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
                                         <div v-show="$store.state.Detail.id!==$store.state.User.account"
                                              class="sp-userinfo-info-box">
                                             <el-button type="danger" @click="goChat()">私信</el-button>
