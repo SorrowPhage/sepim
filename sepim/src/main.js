@@ -147,6 +147,15 @@ Vue.component(Divider.name, Divider)
 Vue.component(Tooltip.name, Tooltip)
 
 
+//树型组件
+import Vue2OrgTree from 'vue2-org-tree'
+
+Vue.use(Vue2OrgTree)
+
+//拖拽·缩放·画布插件
+import VueDraggableResizable from 'vue-draggable-resizable'
+import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
+Vue.component('vue-draggable-resizable', VueDraggableResizable)
 
 
 

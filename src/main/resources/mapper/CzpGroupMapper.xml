@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sepim.springboot.mapper.CzpGroupMapper">
+
+    <select id="getIdList" resultType="java.lang.String">
+        select id as creater_id from czp_group where parent_id=#{smallGroup} or id=#{smallGroup}
+    </select>
+    <select id="getCreater" resultType="java.lang.String">
+        select creater_id from czp_group where id=#{smallGroup}
+    </select>
+</mapper>

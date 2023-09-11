@@ -27,9 +27,12 @@
     "vue": "^2.6.14",
     "vue-amap": "^0.5.10",
     "vue-cropper": "^0.5.8",
+    "vue-draggable-resizable": "^2.3.0",
     "vue-highlightjs": "^1.3.3",
     "vue-json-excel": "^0.3.0",
     "vue-router": "^3.5.3",
+    "vue-tree-chart": "^1.2.9",
+    "vue2-org-tree": "^1.3.6",
     "vuejs-emoji": "^0.1.8",
     "vuex": "^3.6.2",
     "xlsx": "^0.18.5"
@@ -45,8 +48,8 @@
     "core-js": "^3.22.3",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "less": "^4.1.3",
-    "less-loader": "^11.1.2",
+    "less": "^4.2.0",
+    "less-loader": "^11.1.3",
     "vue-particles": "^1.0.9",
     "vue-template-compiler": "^2.6.14"
   },

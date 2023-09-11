@@ -109,10 +109,10 @@ const router = new VueRouter({
                     // meta: {title: "Aurora",ver:false},
                 },
                 {
-                    name:'aurora',
-                    path:'aurora',
+                    name: 'aurora',
+                    path: 'aurora',
                     component: () => import("@/components/video/player/PhageAurora"),
-                    meta:{title: 'Aurora', ver: true}
+                    meta: {title: 'Aurora', ver: true}
                 },
                 {
                     name: 'music',
@@ -230,14 +230,14 @@ const router = new VueRouter({
                 {
                     name: 'games',
                     path: 'games:/account',
-                    component:() => import("@/components/games/PhageGames"),
-                    meta:{title: "游戏", ver: true},
+                    component: () => import("@/components/games/PhageGames"),
+                    meta: {title: "游戏", ver: true},
                 },
                 {
                     name: 'wuziqi',
                     path: "wuqizi/:account",
-                    component:() => import("@/components/games/FiveInRow"),
-                    meta:{title: "五子棋", ver: true},
+                    component: () => import("@/components/games/FiveInRow"),
+                    meta: {title: "五子棋", ver: true},
                 },
                 {
                     name: 'overvieweditor',
@@ -331,6 +331,24 @@ const router = new VueRouter({
                             meta: {title: "Analysis", ver: true},
                         }
                     ]
+                },
+                {
+                    name: 'czph',
+                    path: 'czph',
+                    component: () => import("@/components/czp/CzpHome"),
+                    meta: {title: "cHome", ver: true},
+                },
+                {
+                    name: 'czpt',
+                    path: 'czpt',
+                    component: () => import("@/components/czp/CzpTree"),
+                    meta: {title: "cTree", ver: true},
+                },
+                {
+                    name: 'add_czp',
+                    path: 'add_czp',
+                    component: () => import("@/components/czp/AddCzp"),
+                    meta: {title: "add_czp", ver: true},
                 }
             ]
         },

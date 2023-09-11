@@ -22,7 +22,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -51,6 +53,16 @@ class SepimApplicationTests {
 
     @Autowired
     private  TransferPythonService transferPythonService;
+
+    @Autowired
+    private CzpUserService czpUserService;
+
+    @Test
+    void testCzp() {
+        Map<String, String> param = new HashMap<>();
+        param.put("smallGroup", "5");
+        czpUserService.getRelationChat2All(param);
+    }
 
     @Test
     void setChatMessageMapperTest() {

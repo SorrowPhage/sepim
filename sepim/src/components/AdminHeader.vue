@@ -72,6 +72,9 @@
                         <li class="sp-li-space" @click="anslysis">
                             <i class="el-icon-setting"></i> Analysis
                         </li>
+                        <li class="sp-li-space" @click="czp">
+                            <i class="el-icon-setting"></i> czp
+                        </li>
                         <div class="dropdown-divider"></div>
                         <li class="sp-li-space" @click="logOut">
                             <i class="el-icon-right"></i> 退出
@@ -208,6 +211,12 @@ export default {
             this.isTrue = false;
             this.$router.push({
                 name: 'analysis'
+            })
+        },
+        czp() {
+            this.isTrue = false;
+            this.$router.push({
+                name: 'czph',
             })
         },
         logOut() {

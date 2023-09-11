@@ -17,7 +17,7 @@ public class MybatisPlusGenerator {
 
     public static void main(String[] args) {
         List<String> tables = new ArrayList<>();
-        tables.add("user_follows");
+        tables.add("czp_tribe");
         FastAutoGenerator.create("jdbc:mysql://127.0.0.1:3306/sepim?serverTimezone=UTC","root","123456")
                 .globalConfig(builder -> {
                     builder.author("SorrowPhage")              //作者

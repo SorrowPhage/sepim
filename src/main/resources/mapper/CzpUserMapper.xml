@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sepim.springboot.mapper.CzpUserMapper">
+
+    <select id="relationChat2Area" resultType="com.sepim.springboot.entity.vo.CzpUserVO">
+        select u.id,u.name,u.sex,u.parent_id,u.root_id,u.mate_id,u.birthday,u.avatar,u.root_id,a.area_name,a.des
+        from czp_user u
+        left join czp_area a on a.area_id=u.area_id
+        <where>
+            <if test="smallGroup !=null and smallGroup != '' ">
+                and u.small_group = #{smallGroup}
+            </if>
+        </where>
+<!--        <where>-->
+<!--            <if test="areaName != null and areaName!= '' ">-->
+<!--                and a.area_name like concat('%',#{areaName},'%');-->
+<!--            </if>-->
+<!--        </where>-->
+
+    </select>
+    <select id="relationChat2All" resultType="com.sepim.springboot.entity.vo.CzpUserVO">
+        select u.id,u.name,u.sex,u.parent_id,u.root_id,u.mate_id,u.birthday,u.avatar,u.root_id,a.area_name,a.des
+        from czp_user u
+        left join czp_area a on a.area_id=u.area_id
+        <where>
+            <if test="list !=null and list.size() >0 ">
+                and u.small_group in 
+                <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <select id="relationChat2Tribe" resultType="com.sepim.springboot.entity.vo.CzpUserVO">
+        select u.id,u.name,u.sex,u.parent_id,u.root_id,u.mate_id,u.birthday,u.avatar,t.tribe_name,t.tribe_area
+            from czp_user_tribe ut
+            left join czp_user u on u.id=ut.user_id
+            left join czp_tribe t on t.id=ut.tribe_id
+        <where>
+            <if test="tribeId !=null and tribeId != '' ">
+                and tribe_id=#{tribeId}
+            </if>
+        </where>
+    </select>
+</mapper>
