@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CommentUtil {
 
@@ -42,5 +43,20 @@ public class CommentUtil {
             }
         }
         return list;
+    }
+
+
+    /**
+     * 有bug
+     * @param comments
+     * @return
+     */
+    public static List<Comment> processComments4Lambda(List<Comment> comments) {
+        Map<String, List<Comment>> map = comments.stream().filter(comment -> !"".equals(comment.getRootId()))
+                .collect(Collectors.groupingBy(Comment::getRootId));
+
+        comments.forEach(comment -> comment.setChild(map.get(comment.getId())));
+
+        return comments.stream().filter(comment -> "".equals(comment.getRootId())).collect(Collectors.toList());
     }
 }

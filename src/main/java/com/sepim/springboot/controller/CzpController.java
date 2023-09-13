@@ -1,7 +1,6 @@
 package com.sepim.springboot.controller;
 
 import com.sepim.springboot.entity.ResultMessage;
-import com.sepim.springboot.service.CzpAreaService;
 import com.sepim.springboot.service.CzpIntoTribeTempService;
 import com.sepim.springboot.service.CzpUserService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +21,6 @@ public class CzpController {
 
     private final CzpUserService czpUserService;
 
-    private final CzpAreaService czpAreaService;
-
     private final CzpIntoTribeTempService czpIntoTribeTempService;
 
     /**
@@ -43,13 +40,20 @@ public class CzpController {
      */
     @PostMapping("/all_rc")
     public ResultMessage getRelationChat2All(@RequestBody Map<String, String> param) {
-        return czpUserService.getRelationChat2All(param);
+        // return czpUserService.getRelationChat2All(param);
+        return czpUserService.relationChatAll(param);
     }
 
     @PostMapping("/upload")
     public ResultMessage uploadCzpData(@RequestParam("file")MultipartFile file,@RequestParam("userId")String userId) {
-        return czpIntoTribeTempService.uploadCzpData(file,userId);
+        return czpUserService.uploadCzpData(file,userId);
     }
+
+    @GetMapping("/batchnos")
+    public ResultMessage batchNoList(@RequestParam("userId") String userId) {
+        return czpIntoTribeTempService.batchNoList(userId);
+    }
+
 
 
 

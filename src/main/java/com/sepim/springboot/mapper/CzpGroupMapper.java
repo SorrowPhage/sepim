@@ -22,4 +22,6 @@ public interface CzpGroupMapper extends BaseMapper<CzpGroup> {
 
     List<String> getCreater(Map<String, String> param);
 
+    List<String> getSubgroup(String smallGroup);
+
 }

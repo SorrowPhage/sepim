@@ -34,6 +34,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             comment.setUser(userService.getById(comment.getAccount()));
         }
         return CommentUtil.processComments(list);
+        // return CommentUtil.processComments4Lambda(list);
     }
 
     /**

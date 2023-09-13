@@ -16,4 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface CzpIntoTribeTempService extends IService<CzpIntoTribeTemp> {
 
     ResultMessage uploadCzpData(MultipartFile file, String userId);
+
+    ResultMessage batchNoList(String userId);
 }

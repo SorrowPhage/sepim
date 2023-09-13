@@ -21,6 +21,8 @@ public interface CzpUserMapper extends BaseMapper<CzpUser> {
 
     List<CzpUserVO> relationChat2Area(Map<String, String> param);
 
+    List<CzpUserVO> relationChat2Area(String smallGroup);
+
     List<CzpUserVO> relationChat2All(List<String> list);
 
     List<CzpUserVO> relationChat2Tribe(Map<String, String> param);
