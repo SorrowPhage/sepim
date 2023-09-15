@@ -2,4 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sepim.springboot.mapper.CzpIntoTribeTempMapper">
 
+    <select id="batchNoList" resultType="java.lang.String">
+        select batch_no from czp_into_tribe_temp
+        <where>
+            <if test="userId != null and userId != '' ">
+                and operater_id=#{userId}
+            </if>
+        </where>
+    </select>
+    <select id="getTempData" resultType="com.sepim.springboot.entity.vo.CzpIntoTribeTempVO">
+        SELECT DISTINCT u.`name`,u.`sex`,pu.`name` as parent_name,po.`name` as operater_name,t.user_id,t.parent_id,t.operater_id,t.operater_time,g.group_name
+        FROM `czp_into_tribe_temp` t
+        LEFT JOIN czp_user u on u.id = t.user_id
+        LEFT JOIN czp_user pu on pu.id = t.parent_id
+        LEFT JOIN czp_user po on po.id = t.operater_id
+        LEFT JOIN czp_group g on pu.small_group=g.id
+        <where>
+            <if test="userId != null and userId !='' ">
+                and t.operater_id=#{userId}
+            </if>
+            <if test="batchNo != null and batchNo != '' ">
+                and t.batch_no=#{batchNo}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -100,6 +100,11 @@ public class ChatMessageServiceImpl extends ServiceImpl<ChatMessageMapper, ChatM
         return resultData;
     }
 
+    /**
+    * ES 有bug，总是会报空指针
+    * 空指针原因：两个人之间的最后一条信息的状态在某个地方被修改为0，导致无法查出两个有消息的用户之间的最后一条信息
+    * @Date 2023/9/15 16:32
+    **/
     @Override
     public ResultData getChatListByChatLIst(String user) {
         ResultData resultData = new ResultData();

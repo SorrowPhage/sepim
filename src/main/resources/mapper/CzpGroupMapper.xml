@@ -3,9 +3,17 @@
 <mapper namespace="com.sepim.springboot.mapper.CzpGroupMapper">
 
     <select id="getIdList" resultType="java.lang.String">
-        select id as creater_id from czp_group where parent_id=#{smallGroup} or id=#{smallGroup}
+        select distinct id as creater_id from czp_group where parent_id=#{smallGroup} or id=#{smallGroup}
     </select>
     <select id="getCreater" resultType="java.lang.String">
-        select creater_id from czp_group where id=#{smallGroup}
+        select distinct creater_id from czp_group where id=#{smallGroup}
+    </select>
+    <select id="getSubgroup" resultType="java.lang.String">
+        select distinct id as creater_id from czp_group
+        <where>
+            <if test="smallGroup != null and smallGroup !='' ">
+                and parent_id=#{smallGroup}
+            </if>
+        </where>
     </select>
 </mapper>
