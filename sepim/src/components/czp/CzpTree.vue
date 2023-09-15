@@ -10,15 +10,24 @@
             </el-col>
         </el-row>
         
-<!--        <el-row>-->
-<!--            <el-col :span="24">-->
-<!--                <vue2-org-tree :data="data"  :render-content="renderContent" />-->
-<!--            </el-col>-->
-<!--        </el-row>-->
         
         <el-row>
-            <el-col :span="24">
-                <div style="border:1px solid red;width: 1200px;height: 500px;margin: auto;position:relative;overflow: hidden">
+            <el-col :span="12" >
+                <div style="border:1px solid #48A3F0;width: 100%;height: 500px;margin: auto;position:relative;overflow: hidden">
+                    <vue-draggable-resizable
+                        w="auto"
+                        h="auto"
+                        :x="0"
+                        :y="0"
+                        :resizable="false"
+                        @resizing="onResize">
+                        <vue2-org-tree :data="data"  :render-content="renderContent" />
+                        
+                    </vue-draggable-resizable>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div style="border:1px solid #48A3F0;width: 100%;height: 500px;margin: auto;position:relative;overflow: hidden">
 <!--                    <div class="treeDiv"  ref="czpTree" v-drag>-->
 <!--                        <TreeChat :json="data"></TreeChat>-->
 <!--                    </div>-->
@@ -38,16 +47,14 @@
                 
             </el-col>
         </el-row>
-        
-        
+
     </div>
 </template>
 
 <script>
-// import 'vue2-org-tree/dist/style.css';
-import {getRelationChat,getRelation2All} from "@/components/api/czp";
-import VueDraggableResizable from "vue-draggable-resizable";
+import 'vue2-org-tree/dist/style.css';
 import TreeChat from "@/components/czp/TreeChat";
+import axios from "axios";
 export default {
     name: "CzpTree",
     components: {TreeChat},
@@ -91,15 +98,13 @@ export default {
     },
     methods:{
         loadData() {
-            getRelationChat(this.user).then(res=>{
-                console.log(res.data)
-                this.data = res.data;
+            axios.post("http://localhost:8080/api/czp/rc",this.user).then(res=>{
+                this.data = res.data.data;
             })
         },
         loadData2All() {
-            getRelation2All(this.user).then(res=>{
-                console.log(res.data)
-                this.data = res.data;
+            axios.post("http://localhost:8080/api/czp/all_rc",this.user).then(res=>{
+                this.data = res.data.data;
             })
         },
         renderContent(h, data) {
@@ -143,12 +148,7 @@ export default {
             this.width = width
             this.height = height
         },
-        exportData() {
-        
-        },
-        downloadData() {
-        
-        },
+
     }
 }
 </script>

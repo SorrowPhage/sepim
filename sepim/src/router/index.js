@@ -363,26 +363,26 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (!to.meta.ver){
-        let token = localStorage.getItem("token");
-        if (token === null) {
-            next();
-        } else {
-            axios.post("http://localhost:8080/api/ver/token", {token: token}).then(res => {
-                //验证成功
-                if (res.data.flag === "user_ver_succeed") {
-                    store.commit("User/getUserInfo", res.data.data);
-                    next();
-                } else {
-                    //验证失败
-                    console.log("未登录");
-                    localStorage.removeItem("token")
-                    next();
-                }
-            });
-        }
-
-    }
+    // if (!to.meta.ver){
+    //     let token = localStorage.getItem("token");
+    //     if (token === null) {
+    //         next();
+    //     } else {
+    //         axios.post("http://localhost:8080/api/ver/token", {token: token}).then(res => {
+    //             //验证成功
+    //             if (res.data.flag === "user_ver_succeed") {
+    //                 store.commit("User/getUserInfo", res.data.data);
+    //                 next();
+    //             } else {
+    //                 //验证失败
+    //                 console.log("未登录");
+    //                 localStorage.removeItem("token")
+    //                 next();
+    //             }
+    //         });
+    //     }
+    //
+    // }
     if (to.meta.ver) {
         let token = localStorage.getItem("token");
         if (token === null) {

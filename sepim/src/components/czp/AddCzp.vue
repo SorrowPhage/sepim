@@ -1,7 +1,8 @@
 <template>
     <div style="margin-top: 50px;">
         <el-upload style="display: inline-block"  name="file" ref="fileUploader" accept=".xls,.xlsx"
-                   :action="fileUpload.action+getUploadParam()"
+                   :action="fileUpload.action"
+                   :data="uploadParam"
                    :file-list="fileUpload.fileList"
                    :on-success="fileUploadSuccess"
                    :on-error="fileUploadError"
@@ -18,16 +19,16 @@
                 :value="item">
             </el-option>
         </el-select>
-        <el-button @click="addCzpTree()">确认</el-button>
+        <el-button @click="addCzpTree()">查询</el-button>
         <el-row>
             <el-col :span="24" class="el-main-content">
                 <el-table :data="tableData" style="width: 100%;" :height="tableHeight">
                     <el-table-column prop="userId" label="用户编码"></el-table-column>
-                    <el-table-column prop="userName" label="用户姓名"></el-table-column>
-                    <el-table-column prop="parentId" label="父级"></el-table-column>
+                    <el-table-column prop="name" label="用户姓名"></el-table-column>
+                    <el-table-column prop="parentName" label="父级"></el-table-column>
+                    <el-table-column prop="operaterName" label="操作人"></el-table-column>
                     <el-table-column prop="groupName" label="族群"></el-table-column>
-                    <el-table-column prop="userSex" label="性别"></el-table-column>
-                    <el-table-column prop="areaName" label="地区"></el-table-column>
+                    <el-table-column prop="sex" label="性别"></el-table-column>
                 </el-table>
             </el-col>
         </el-row>
@@ -48,6 +49,7 @@
 
 <script>
 import {windowHeight,uploadCzpTree} from "@/components/api/api";
+import axios from "axios";
 export default {
     name: "AddCzp",
     data() {
@@ -62,24 +64,40 @@ export default {
                 pageNum: 1,
                 pageSize: 12
             },
+            uploadParam: {
+                userId: '1',
+            },
             fileUpload: {
-                action: uploadCzpTree ,
+                action: uploadCzpTree() ,
                 fileList: []
             },
             pagination: {pages: 0, total: 0, pageSize: 12},
-            batchNos:["1","2","3"],
+            batchNos:[],
             batchNo: '',
         }
     },
+    mounted() {
+        this.loadData();
+    },
     methods:{
         addCzpTree() {
-        
+            axios.get("http://localhost:8080/api/czp/get",{params:{userId:1, batchNo: '20230915151825'}}).then(res=>{
+                this.tableData = res.data.data
+            })
         },
         getDataList() {
         
         },
+        loadData() {
+            axios.get("http://localhost:8080/api/czp/batchnos",{params:{userId:1}}).then(res=>{
+                console.log(res);
+                this.batchNos = res.data.data;
+                this.batchNo = this.batchNos[0];
+            })
+        },
         fileUploadSuccess(result) {
             if (result != null) {
+                console.log(result)
                 console.log("上传成功")
             }
             this.fileUpload.fileList = []
@@ -92,9 +110,6 @@ export default {
                 position: 'bottom-right'
             })
             this.fileUpload.fileList = []
-        },
-        getUploadParam() {
-            return "userId=1";
         },
     }
 }

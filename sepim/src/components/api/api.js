@@ -7,5 +7,5 @@ export function windowHeight() {
 }
 
 export function uploadCzpTree() {
-    return "http://localhost:8085/";
+    return "http://localhost:8085/czp/upload";
 }

@@ -22,3 +22,11 @@ export function getRelation2All(data){
     })
 }
 
+export function batchNoList(query) {
+    return request({
+        url: "/czp/batchnos",
+        method: 'get',
+        params: query
+    })
+}
+
