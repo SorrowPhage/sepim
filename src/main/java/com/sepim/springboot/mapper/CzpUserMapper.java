@@ -27,4 +27,13 @@ public interface CzpUserMapper extends BaseMapper<CzpUser> {
 
     List<CzpUserVO> relationChat2Tribe(Map<String, String> param);
 
+    /**
+     * 根据用户id获取用户信息
+     * @param id
+     * @return
+     */
+    CzpUserVO getUser(String id);
+
+    List<CzpUserVO> offstringList(String id);
+
 }

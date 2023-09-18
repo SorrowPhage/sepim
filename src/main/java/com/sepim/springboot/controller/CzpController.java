@@ -43,8 +43,14 @@ public class CzpController {
      */
     @PostMapping("/all_rc")
     public ResultMessage getRelationChat2All(@RequestBody Map<String, String> param) {
-        // return czpUserService.getRelationChat2All(param);
-        return czpUserService.relationChatAll(param);
+        // return czpUserService.getRelationChat2All(param);  //假的全部，只能带第一级子节点
+        return czpUserService.relationChatAll(param); //真全部，所有子节点
+    }
+
+
+    @GetMapping("/rc_userid")
+    public ResultMessage relationChatByUserId(@RequestParam("userId")String userId) {
+        return czpUserService.relationChatByUserId(userId);
     }
 
     /**
@@ -55,6 +61,7 @@ public class CzpController {
      */
     @PostMapping("/upload")
     public ResultMessage uploadCzpData(@RequestParam("file") MultipartFile file, @RequestParam("userId") String userId) {
+
         return czpUserService.uploadCzpData(file, userId);
     }
 

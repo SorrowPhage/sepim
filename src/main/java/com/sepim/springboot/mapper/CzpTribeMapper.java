@@ -4,6 +4,8 @@ import com.sepim.springboot.entity.CzpTribe;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -14,5 +16,9 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CzpTribeMapper extends BaseMapper<CzpTribe> {
+
+    void deleteBatch(CzpTribe czpTribe);
+
+    void dleteByBatch(List<CzpTribe> list);
 
 }

@@ -118,7 +118,13 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
         List<String> createrList = czpGroupMapper.getCreater(param);
         //全部列表
         List<CzpUserVO> dataList = czpUserMapper.relationChat2Area(param);
-        //寻找配偶
+
+        //找出所有的子节点数据加到dataList里面
+        List<String> subgroup = czpGroupMapper.getSubgroup(smallGroup);
+        List<CzpUserVO> list = subgroupList(subgroup);
+        dataList.addAll(list);
+
+        //寻找配偶,放在这里所有人都能找出数据
         for (CzpUserVO czpUserVO : dataList) {
             if (czpUserVO.getMateId()!=null) {
                 QueryWrapper<CzpUser> wrapper = new QueryWrapper<>();
@@ -126,11 +132,6 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
                 czpUserVO.setMate(this.getOne(wrapper));
             }
         }
-
-        //找出所有的子节点数据加到dataList里面
-        List<String> subgroup = czpGroupMapper.getSubgroup(smallGroup);
-        List<CzpUserVO> list = subgroupList(subgroup);
-        dataList.addAll(list);
 
         List<CzpUserVO> czpTree = this.createCzpTree(dataList, createrList);
         //源头不止一个需要封装一个根源
@@ -181,6 +182,33 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
         return ResultMessage.success(batchNo);
     }
 
+    /**
+     * 查询用户所属
+     * @param userId 用户id
+     * @return 树型结构
+     */
+    @Override
+    public ResultMessage relationChatByUserId(String userId) {
+        //查询用户
+        CzpUserVO user = czpUserMapper.getUser(userId);
+        if (user != null) {
+            //查询用户所属
+            List<CzpUserVO> offspring = offspring(userId);
+            //配偶
+            for (CzpUserVO czpUserVO : offspring) {
+                if (czpUserVO.getMateId() != null) {
+                    QueryWrapper<CzpUser> wrapper = new QueryWrapper<>();
+                    wrapper.eq("id", czpUserVO.getMateId());
+                    czpUserVO.setMate(this.getOne(wrapper));
+                }
+            }
+            //树型结构
+            return ResultMessage.success(convert(user, offspring));
+        } else {
+            return ResultMessage.failure("该用户不存在");
+        }
+    }
+
 
     /**
      * 转换成树型结构
@@ -198,6 +226,24 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
         return czpUserVOList.stream().filter(node -> creaters.contains(node.getId())).collect(Collectors.toList());
     }
 
+
+    /**
+     * 转换为树型结构
+     * @param createrUser 创始人
+     * @param offstringList 所属列表
+     * @return 树型结构数据
+     */
+    public CzpUserVO convert(CzpUserVO createrUser, List<CzpUserVO> offstringList) {
+        Map<String, List<CzpUserVO>> czpMap = offstringList.stream().filter(czpUserVO -> !createrUser.getId().equals(czpUserVO.getParentId()))
+                .collect(Collectors.groupingBy(CzpUserVO::getParentId));
+
+        offstringList.forEach(czpUserVO -> czpUserVO.setChildren(czpMap.get(czpUserVO.getId())));
+
+        createrUser.setChildren(offstringList.stream().filter(czpUserVO ->
+                createrUser.getId().equals(czpUserVO.getParentId())).collect(Collectors.toList()));
+
+        return createrUser;
+    }
 
 
     /**
@@ -218,12 +264,27 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
                 }
                 //到这里时，没有子节点，递归结束
                 List<CzpUserVO> list = czpUserMapper.relationChat2Area(s);
+
                 resultList.addAll(list);
             }
         } else {
             return null;
         }
         return resultList;
+    }
+
+    public List<CzpUserVO> offspring(String userId) {
+        List<CzpUserVO> list = new ArrayList<>();
+        if (userId != null && !"".equals(userId)) {
+            List<CzpUserVO> offstringList = czpUserMapper.offstringList(userId);
+            if (offstringList != null && offstringList.size() > 0) {
+                for (CzpUserVO czpUserVO : offstringList) {
+                    list.addAll(offspring(czpUserVO.getId()));
+                }
+                list.addAll(offstringList);
+            }
+        }
+        return list;
     }
 
 }

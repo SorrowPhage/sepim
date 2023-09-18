@@ -38,5 +38,19 @@ public interface CzpUserService extends IService<CzpUser> {
      */
     ResultMessage relationChatAll(Map<String, String> param);
 
+    /**
+     * 上传excel
+     * @param file
+     * @param userId
+     * @return
+     */
     ResultMessage uploadCzpData(MultipartFile file, String userId);
+
+    /**
+     * 查询某个用户下面所属
+     * @param userId
+     * @return
+     */
+    ResultMessage relationChatByUserId(String userId);
+
 }
