@@ -5,28 +5,31 @@
 <!--                <el-button @click="exportData()" type="success" size="mini" style="float: right; margin: 0 10px 0 10px;">addczptree</el-button>-->
                 <el-button type="primary" size="mini" @click="loadData" style="float: right; margin: 0 10px 0 10px;">查询（不包括分支）</el-button>
                 <el-button type="primary" size="mini" @click="loadData2All" style="float: right; margin: 0 10px 0 10px;">查询全部</el-button>
-<!--                <el-input v-model="user.areaName" placeholder="地区" size="mini"  style="float: right; margin: 0 10px 0 10px;" ></el-input>-->
                 <el-input v-model="user.smallGroup" placeholder="zuqun" size="mini"  style="float: right; margin: 0 10px 0 10px;" ></el-input>
+                <el-button type="primary" size="mini" @click="getDataByUserId" style="float: right; margin: 0 10px 0 10px;">查询全部(用户)</el-button>
+                <el-input v-model="user.userId" placeholder="userId" size="mini"  style="float: right; margin: 0 10px 0 10px;" ></el-input>
+<!--                <el-input v-model="user.areaName" placeholder="地区" size="mini"  style="float: right; margin: 0 10px 0 10px;" ></el-input>-->
+            
             </el-col>
         </el-row>
         
         
         <el-row>
-            <el-col :span="12" >
-                <div style="border:1px solid #48A3F0;width: 100%;height: 500px;margin: auto;position:relative;overflow: hidden">
-                    <vue-draggable-resizable
-                        w="auto"
-                        h="auto"
-                        :x="0"
-                        :y="0"
-                        :resizable="false"
-                        @resizing="onResize">
-                        <vue2-org-tree :data="data"  :render-content="renderContent" />
-                        
-                    </vue-draggable-resizable>
-                </div>
-            </el-col>
-            <el-col :span="12">
+<!--            <el-col :span="12" >-->
+<!--                <div style="border:1px solid #48A3F0;width: 100%;height: 500px;margin: auto;position:relative;overflow: hidden">-->
+<!--                    <vue-draggable-resizable-->
+<!--                        w="auto"-->
+<!--                        h="auto"-->
+<!--                        :x="0"-->
+<!--                        :y="0"-->
+<!--                        :resizable="false"-->
+<!--                        @resizing="onResize">-->
+<!--                        <vue2-org-tree :data="data"  :render-content="renderContent" />-->
+<!--                        -->
+<!--                    </vue-draggable-resizable>-->
+<!--                </div>-->
+<!--            </el-col>-->
+            <el-col :span="24">
                 <div style="border:1px solid #48A3F0;width: 100%;height: 500px;margin: auto;position:relative;overflow: hidden">
 <!--                    <div class="treeDiv"  ref="czpTree" v-drag>-->
 <!--                        <TreeChat :json="data"></TreeChat>-->
@@ -63,6 +66,7 @@ export default {
             user: {
                 areaName: '',
                 smallGroup: '',
+                userId: '',
             },
             data: {},
         };
@@ -104,6 +108,11 @@ export default {
         },
         loadData2All() {
             axios.post("http://localhost:8080/api/czp/all_rc",this.user).then(res=>{
+                this.data = res.data.data;
+            })
+        },
+        getDataByUserId() {
+            axios.get("http://localhost:8080/api/czp/rc_userid",{params: this.user}).then(res=>{
                 this.data = res.data.data;
             })
         },
