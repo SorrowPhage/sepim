@@ -2,4 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sepim.springboot.mapper.CzpTribeMapper">
 
+    <delete id="deleteBatch" parameterType="com.sepim.springboot.entity.CzpTribe">
+        delete from czp_tribe
+        <where>
+            <if test="tribeName != null and tribeName != '' ">
+                and tribe_name =#{tribeName,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null and createTime != '' ">
+                and create_time = #{createTime,jdbcType=VARCHAR}
+            </if>
+            <if test="tribeArea != null and tribeArea != '' ">
+                and tribe_area =#{tribeArea,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </delete>
+    <delete id="dleteByBatch" parameterType="java.util.List">
+        delete from czp_tribe
+        where
+        <foreach collection="list" item="item" open="(" close=")" separator="or">
+            <trim prefixOverrides="and">
+                <if test="item.tribeName != null and item.tribeName != '' ">
+                    and tribe_name =#{item.tribeName,jdbcType=VARCHAR}
+                </if>
+                <if test="item.createTime != null and item.createTime != '' ">
+                    and create_time = #{item.createTime,jdbcType=VARCHAR}
+                </if>
+                <if test="item.tribeArea != null and item.tribeArea != '' ">
+                    and tribe_area =#{item.tribeArea,jdbcType=VARCHAR}
+                </if>
+            </trim>
+        </foreach>
+    </delete>
+
+
 </mapper>
