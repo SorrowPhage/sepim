@@ -2,10 +2,7 @@ package com.sepim.springboot.controller;
 
 import com.sepim.springboot.common.aop.Idempotent;
 import com.sepim.springboot.common.aop.LogExecuteMethod;
-import com.sepim.springboot.entity.Comment;
-import com.sepim.springboot.entity.Folder;
-import com.sepim.springboot.entity.ResultData;
-import com.sepim.springboot.entity.SearchCondition;
+import com.sepim.springboot.entity.*;
 import com.sepim.springboot.service.CommentService;
 import com.sepim.springboot.service.FolderLikeRedisService;
 import com.sepim.springboot.service.FolderLikeService;
@@ -149,20 +146,25 @@ public class MarkDownController {
 
     @PostMapping("/md/like")
     @LogExecuteMethod(module = "文章", operator = "点赞")
-    public ResultData likeMd(@RequestBody Map<String, String> param) {
-        return folderLikeService.like(param);
+    public ResultMessage likeMd(@RequestBody Map<String, String> param) {
+        // return folderLikeService.like(param);// redis
+        return folderLikeService.liek2DB(param);// 存入DB中
     }
 
 
     @PostMapping("/md/unlike")
     @LogExecuteMethod(module = "文章", operator = "取消点赞")
-    public ResultData unlikeMd(@RequestBody Map<String, String> param) {
-        return folderLikeService.unlike(param);
+    public ResultMessage unlikeMd(@RequestBody Map<String, String> param) {
+        // return folderLikeService.unlike(param);// redis
+        return folderLikeService.unlike2DB(param);//DB
     }
+
+
 
     @PostMapping("/md/like/status")
     public ResultData getLikeStatus(@RequestBody Map<String, String> param) {
-        return folderLikeService.getLikeStatus(param);
+        // return folderLikeService.getLikeStatus(param);//redis
+        return folderLikeService.getLikeStatus2DB(param);
     }
 
 

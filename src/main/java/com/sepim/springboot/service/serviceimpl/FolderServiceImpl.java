@@ -171,10 +171,10 @@ public class FolderServiceImpl extends ServiceImpl<FolderMapper, Folder> impleme
         file.setComments(commentService.getComments(id));
         resultData.setFlag("md_read_succeed");
 
-        Integer likedCountFromRedis = folderLikeRedisService.getLikedCountFromRedis(id);
-        if (likedCountFromRedis != null) {
-            file.setLikeCount(file.getLikeCount() + likedCountFromRedis);
-        }
+        // Integer likedCountFromRedis = folderLikeRedisService.getLikedCountFromRedis(id);
+        // if (likedCountFromRedis != null) {
+        //     file.setLikeCount(file.getLikeCount() + likedCountFromRedis);
+        // }
         resultData.setData(file);
         return resultData;
     }

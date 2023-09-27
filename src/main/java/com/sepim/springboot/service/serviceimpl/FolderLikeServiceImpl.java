@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sepim.springboot.entity.Folder;
 import com.sepim.springboot.entity.FolderLike;
 import com.sepim.springboot.entity.ResultData;
+import com.sepim.springboot.entity.ResultMessage;
 import com.sepim.springboot.mapper.FolderLikeMapper;
 import com.sepim.springboot.service.FolderLikeRedisService;
 import com.sepim.springboot.service.FolderLikeService;
 import com.sepim.springboot.service.FolderService;
+import com.sepim.springboot.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -41,7 +43,6 @@ public class FolderLikeServiceImpl extends ServiceImpl<FolderLikeMapper, FolderL
         if (likeStatus1 == null) {
             redisService.saveLiked2Redis(folderId, userId);
             redisService.incrementLikedCount(folderId);
-            return resultData;
         } else {
             Integer likeStatus = (Integer) this.getLikeStatus(param).getData();
 
@@ -54,7 +55,47 @@ public class FolderLikeServiceImpl extends ServiceImpl<FolderLikeMapper, FolderL
                 redisService.incrementLikedCount(folderId);
             }
 
-            return resultData;
+        }
+        return resultData;
+    }
+
+
+    /**
+     * 点赞  直接保存至数据库
+     * @param param folderId：文章，userId:用户id
+     * @return 点赞状态
+     */
+    @Override
+    public ResultMessage liek2DB(Map<String, String> param) {
+        String folderId = param.get("folderId");
+        String userId = param.get("userId");
+
+        //查询文章
+        QueryWrapper<Folder> folderQueryWrapper = new QueryWrapper<>();
+        folderQueryWrapper.eq("id", folderId);
+        Folder folder = folderService.getOne(folderQueryWrapper);
+
+        if (folder != null) {
+            folderService.remove(folderQueryWrapper);
+            folder.setLikeCount(folder.getLikeCount() + 1);
+            folderService.save(folder);
+            //查询文章与用户点赞状态
+            QueryWrapper<FolderLike> wrapper = new QueryWrapper<>();
+            wrapper.eq("folder_id", folderId).eq("user_id", userId);
+            FolderLike folderLike = this.getOne(wrapper);
+            if (folderLike == null) {
+                FolderLike folderLike1 = new FolderLike(folderId, userId, 1,
+                        DateUtil.getSystemDateTimeString(), DateUtil.getSystemDateTimeString());
+                this.save(folderLike1);
+            } else  {
+                folderLike.setStatus(1);
+                folderLike.setUpdateTime(DateUtil.getSystemDateTimeString());
+                this.remove(wrapper);
+                this.save(folderLike);
+            }
+            return ResultMessage.success("点赞成功");
+        } else {
+            return ResultMessage.success("该文章不存在");
         }
     }
 
@@ -69,8 +110,6 @@ public class FolderLikeServiceImpl extends ServiceImpl<FolderLikeMapper, FolderL
         //为空表示没有相关数据，直接返回
         if (likeStatus1 == null) {
             resultData.setFlag("400");
-            resultData.setData(null);
-            return resultData;
         } else {
             Integer likeStatus = (Integer) this.getLikeStatus(param).getData();
 
@@ -85,10 +124,24 @@ public class FolderLikeServiceImpl extends ServiceImpl<FolderLikeMapper, FolderL
             }
 
             resultData.setFlag("200");
-            resultData.setData(null);
-            return resultData;
         }
+        resultData.setData(null);
+        return resultData;
     }
+
+    @Override
+    public ResultMessage unlike2DB(Map<String, String> param) {
+        String folderId = param.get("folderId");
+        String userId = param.get("userId");
+        QueryWrapper<FolderLike> wrapper = new QueryWrapper<>();
+        wrapper.eq("folder_id", folderId).eq("user_id", userId);
+        FolderLike folderLike = this.getOne(wrapper);
+        folderLike.setStatus(0);
+        this.remove(wrapper);
+        this.save(folderLike);
+        return ResultMessage.success("取消点赞成功");
+    }
+
 
     @Override
     public ResultData getLikeStatus(Map<String, String> param) {
@@ -114,6 +167,23 @@ public class FolderLikeServiceImpl extends ServiceImpl<FolderLikeMapper, FolderL
             resultData.setData(1);
         } else {
             resultData.setData(0);
+        }
+        resultData.setFlag("200");
+        return resultData;
+    }
+
+    @Override
+    public ResultData getLikeStatus2DB(Map<String, String> param) {
+        ResultData resultData = new ResultData();
+        String folderId = param.get("folderId");
+        String userId = param.get("userId");
+        QueryWrapper<FolderLike> wrapper = new QueryWrapper<>();
+        wrapper.eq("folder_id", folderId).eq("user_id", userId);
+        FolderLike folderLike = this.getOne(wrapper);
+        if (folderLike == null || folderLike.getStatus() == 0) {
+            resultData.setData(0);
+        } else if (folderLike.getStatus() == 1) {
+            resultData.setData(1);
         }
         resultData.setFlag("200");
         return resultData;

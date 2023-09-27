@@ -33,4 +33,9 @@ public class CzpTribeServiceImpl extends ServiceImpl<CzpTribeMapper, CzpTribe> i
         czpTribeMapper.dleteByBatch(list);
         System.out.println("==================");
     }
+
+    @Override
+    public void deleteDataSimple(List<CzpTribe> list) {
+        czpTribeMapper.dleteByBatchSpimle(list);
+    }
 }

@@ -21,4 +21,6 @@ public interface CzpTribeMapper extends BaseMapper<CzpTribe> {
 
     void dleteByBatch(List<CzpTribe> list);
 
+    void dleteByBatchSpimle(List<CzpTribe> list);
+
 }

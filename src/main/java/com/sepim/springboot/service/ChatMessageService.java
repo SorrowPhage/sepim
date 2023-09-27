@@ -3,6 +3,7 @@ package com.sepim.springboot.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sepim.springboot.entity.ChatMessage;
 import com.sepim.springboot.entity.ResultData;
+import org.springframework.stereotype.Service;
 
 public interface ChatMessageService extends IService<ChatMessage> {
 

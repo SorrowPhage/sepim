@@ -3,6 +3,7 @@ package com.sepim.springboot.service.serviceimpl;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sepim.springboot.db.DS;
 import com.sepim.springboot.entity.CzpIntoTribeTemp;
 import com.sepim.springboot.entity.CzpUser;
 import com.sepim.springboot.entity.ResultMessage;
@@ -51,6 +52,7 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
      * @param param smallGroup
      * @return 树型结构
      */
+    @DS("czpDB")
     @Override
     public ResultMessage getRelationChat(Map<String, String> param) {
         //找出所有的创始人
@@ -81,6 +83,7 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
      * @param param 始源族群编码
      * @return 树型结构
      */
+    @DS("czpDB")
     @Override
     public ResultMessage getRelationChat2All(Map<String, String> param) {
         //找出所有族群
@@ -107,10 +110,12 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
 
 
     /**
-     * 获取zp树型结构数据，这个还包括下一级的子节点的数据，包括子节点的子节点(while)，真正的获取所以数据
-     * @param param 始源族群编码
-     * @return 树型结构数据
+     * 获取zp树型结构数据，需要使用递归查出所有的子节点数据
+     *
+     * @param param
+     * @return
      */
+    @DS("czpDB")
     @Override
     public ResultMessage relationChatAll(Map<String, String> param) {
         String smallGroup = param.get("smallGroup");
@@ -126,7 +131,7 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
 
         //寻找配偶,放在这里所有人都能找出数据
         for (CzpUserVO czpUserVO : dataList) {
-            if (czpUserVO.getMateId()!=null) {
+            if (czpUserVO.getMateId() != null) {
                 QueryWrapper<CzpUser> wrapper = new QueryWrapper<>();
                 wrapper.eq("id", czpUserVO.getMateId());
                 czpUserVO.setMate(this.getOne(wrapper));
@@ -147,6 +152,7 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
      * @param userId 操作者id
      * @return 批次号
      */
+    @DS("czpDB")
     @Override
     public ResultMessage uploadCzpData(MultipartFile file, String userId) {
         try {
@@ -187,6 +193,7 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
      * @param userId 用户id
      * @return 树型结构
      */
+    @DS("czpDB")
     @Override
     public ResultMessage relationChatByUserId(String userId) {
         //查询用户
@@ -259,7 +266,7 @@ public class CzpUserServiceImpl extends ServiceImpl<CzpUserMapper, CzpUser> impl
                 //查询子节点
                 List<String> subgroup1 = czpGroupMapper.getSubgroup(s);
                 if (subgroup1 != null && subgroup1.size() > 0) {
-                    //还有子节点，先查子节点，并递归
+                    //还有子节点，先查子节点，并递归cd
                     resultList.addAll(subgroupList(subgroup1));
                 }
                 //到这里时，没有子节点，递归结束

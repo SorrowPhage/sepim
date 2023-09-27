@@ -1,5 +1,7 @@
 package com.sepim.springboot.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -11,7 +13,8 @@ import java.sql.Timestamp;
 @Data
 public class FolderLike {
 
-    private Integer id;
+    @TableId(type = IdType.ASSIGN_ID)
+    private String id;
 
     private String folderId;
 
@@ -19,7 +22,9 @@ public class FolderLike {
 
     private Integer status;
 
-    private Timestamp time;
+    private String time;
+
+    private String updateTime;
 
     public FolderLike() {
     }
@@ -28,5 +33,20 @@ public class FolderLike {
         this.folderId = folderId;
         this.userId = userId;
         this.status = status;
+    }
+
+    public FolderLike(String folderId, String userId, Integer status, String updateTime) {
+        this.folderId = folderId;
+        this.userId = userId;
+        this.status = status;
+        this.updateTime = updateTime;
+    }
+
+    public FolderLike(String folderId, String userId, Integer status, String time, String updateTime) {
+        this.folderId = folderId;
+        this.userId = userId;
+        this.status = status;
+        this.time = time;
+        this.updateTime = updateTime;
     }
 }

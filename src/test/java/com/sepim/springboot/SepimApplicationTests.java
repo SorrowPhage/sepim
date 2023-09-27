@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,12 +58,36 @@ class SepimApplicationTests {
     @Autowired
     private CzpUserService czpUserService;
 
+    @Autowired
+    private CzpTribeService czpTribeService;
+
     @Test
     void testCzp() {
-        Map<String, String> param = new HashMap<>();
-        param.put("smallGroup", "5");
-        czpUserService.getRelationChat2All(param);
+        // Map<String, String> param = new HashMap<>();
+        // param.put("smallGroup", "5");
+        // System.out.println(czpUserService.relationChatAll(param));
+
+        List<CzpTribe> list = new ArrayList<>();
+        CzpTribe czpTribe = new CzpTribe();
+        czpTribe.setTribeArea("luba");
+        czpTribe.setTribeName("");
+        czpTribe.setCreateTime("");
+        list.add(czpTribe);
+
+        CzpTribe czpTribe1 = new CzpTribe();
+        czpTribe1.setTribeArea("erli");
+        czpTribe1.setTribeName("erli");
+        czpTribe1.setCreateTime("1930");
+        list.add(czpTribe1);
+
+        czpTribeService.deleteData(list); //能全部删除
+        // czpTribeService.deleteDataSimple(list); //有空值的无法删除
+
+
+
     }
+
+
 
     @Test
     void setChatMessageMapperTest() {

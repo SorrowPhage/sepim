@@ -1,6 +1,7 @@
 package com.sepim.springboot.service.serviceimpl;
 
 import com.alibaba.excel.EasyExcel;
+import com.sepim.springboot.db.DS;
 import com.sepim.springboot.entity.CzpIntoTribeTemp;
 import com.sepim.springboot.entity.ResultMessage;
 import com.sepim.springboot.entity.excelmodel.CzpUpload;
@@ -34,7 +35,7 @@ public class CzpIntoTribeTempServiceImpl extends ServiceImpl<CzpIntoTribeTempMap
     private final CzpIntoTribeTempMapper czpIntoTribeTempMapper;
 
 
-
+    @DS("czpDB")
     @Override
     public ResultMessage uploadCzpData(MultipartFile file, String userId) {
         try {
@@ -54,6 +55,7 @@ public class CzpIntoTribeTempServiceImpl extends ServiceImpl<CzpIntoTribeTempMap
      * @param userId 用户id
      * @return 列表数据
      */
+    @DS("czpDB")
     @Override
     public ResultMessage batchNoList(String userId) {
         List<String> list = czpIntoTribeTempMapper.batchNoList(userId);
@@ -66,6 +68,7 @@ public class CzpIntoTribeTempServiceImpl extends ServiceImpl<CzpIntoTribeTempMap
      * @param batchNo 批次号
      * @return 临时表数据
      */
+    @DS("czpDB")
     @Override
     public ResultMessage getTempData(String userId, String batchNo) {
         List<CzpIntoTribeTempVO> tempData = czpIntoTribeTempMapper.getTempData(userId, batchNo);
@@ -78,6 +81,7 @@ public class CzpIntoTribeTempServiceImpl extends ServiceImpl<CzpIntoTribeTempMap
      * @param czpIntoTribeTempVO 删除条件
      * @return 删除状态
      */
+    @DS("czpDB")
     @Override
     public ResultMessage delete(CzpIntoTribeTempVO czpIntoTribeTempVO) {
 
@@ -90,6 +94,7 @@ public class CzpIntoTribeTempServiceImpl extends ServiceImpl<CzpIntoTribeTempMap
      * @param param 带批次，用户id，父id，操作人id
      * @return 确认状态
      */
+    @DS("czpDB")
     @Override
     public ResultMessage confirm(Map<String, String> param) {
         return null;

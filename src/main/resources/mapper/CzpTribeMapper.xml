@@ -33,6 +33,13 @@
             </trim>
         </foreach>
     </delete>
+    <select id="dleteByBatchSpimle">
+        delete from czp_tribe
+        where (tribe_name,create_time,tribe_area) in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            (#{item.tribeName,jdbcType=VARCHAR},#{item.createTime,jdbcType=VARCHAR},#{item.tribeArea,jdbcType=VARCHAR})
+        </foreach>
+    </select>
 
 
 </mapper>

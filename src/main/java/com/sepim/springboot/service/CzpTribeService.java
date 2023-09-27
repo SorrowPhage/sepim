@@ -17,4 +17,6 @@ public interface CzpTribeService extends IService<CzpTribe> {
 
     void deleteData(List<CzpTribe> list);
 
+    void deleteDataSimple(List<CzpTribe> list);
+
 }

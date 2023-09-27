@@ -6,27 +6,31 @@ server:
 
 spring:
   datasource:
+    sepim:
+      jdbc-url: jdbc:mysql://localhost:3306/sepim?serverTimezone=UTC
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: "root"
+      password: "123456"
 
-    url: jdbc:mysql://localhost:3306/sepim?serverTimezone=UTC
-#    url: jdbc:mysql://localhost:3306/sepim?serverTimezone=CTT
-    username: "root"
-    password: "123456"
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    czp:
+      jdbc-url: jdbc:mysql://localhost:3306/czp?serverTimezone=UTC
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: "root"
+      password: "123456"
+
+
+
     druid:
       aop-patterns: com.phage.boot
-
       filters: stat,wall
-
       stat-view-servlet: #监控页的功能
         enabled: true
         login-username: admin
         login-password: 123456
         reset-enable: false\
-
       web-stat-filter:
         enabled: true
         url-pattern: /*
-
       filter:
         stat:
           slow-sql-millis: 1000

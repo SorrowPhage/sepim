@@ -3,6 +3,7 @@ package com.sepim.springboot.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.sepim.springboot.entity.FolderLike;
 import com.sepim.springboot.entity.ResultData;
+import com.sepim.springboot.entity.ResultMessage;
 
 import java.util.Map;
 
@@ -20,6 +21,8 @@ public interface FolderLikeService  extends IService<FolderLike> {
      */
     ResultData like(Map<String, String> param);
 
+    ResultMessage liek2DB(Map<String, String> param);
+
     /**
      * 取消点赞
      * @param param 点赞参数
@@ -27,12 +30,16 @@ public interface FolderLikeService  extends IService<FolderLike> {
      */
     ResultData unlike(Map<String, String> param);
 
+    ResultMessage unlike2DB(Map<String, String> param);
+
     /**
      * 获取用户对某篇文章的点赞状态
      * @param param 文章id，用户id
      * @return 1表示已点赞，0表示为点赞,null表示在redis中和数据库中都没有数据，即该用户没有对该文章有过点赞操作
      */
     ResultData getLikeStatus(Map<String, String> param);
+
+    ResultData getLikeStatus2DB(Map<String, String> param);
 
     /**
      * 获取文章点赞数量

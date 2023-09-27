@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -21,6 +20,9 @@ import lombok.Setter;
 @Setter
 @TableName("czp_tribe")
 @ApiModel(value = "CzpTribe对象", description = "")
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CzpTribe implements Serializable {
 
     private static final long serialVersionUID = 1L;

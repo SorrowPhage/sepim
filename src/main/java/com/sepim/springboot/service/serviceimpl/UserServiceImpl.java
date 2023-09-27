@@ -33,8 +33,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     private final LoginLogService loginLogService;
 
-    private final Ip2regionSearcher ip2regionSearcher;
-
     /**
      * 用户注册
      * @param user 用户上传的注册信息
