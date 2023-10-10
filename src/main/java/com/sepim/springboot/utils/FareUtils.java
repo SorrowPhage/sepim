@@ -23,8 +23,8 @@ import static com.arcsoft.face.toolkit.ImageFactory.getRGBData;
 public class FareUtils {
     public static String checkFace(String faceUrl){
         // 输入id和key
-        String appId = "xixi";
-        String sdkKey = "xixi";
+        String appId = "9irKT9Ks7iVsUVEw2LY7UuRxGBgZM3S63oZacFFTMMHK";
+        String sdkKey = "9uqG5395qu3qsX1jKGJ4Rik9sFEhnCAsAFPu5MdZoDgT";
 
         // 引擎sdk存放位置
         FaceEngine faceEngine = new FaceEngine("D:\\A-SpringBoot\\sepim\\lib\\face\\WIN64");

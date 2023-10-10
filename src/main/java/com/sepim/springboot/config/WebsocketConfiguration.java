@@ -2,7 +2,6 @@ package com.sepim.springboot.config;
 
 import com.sepim.springboot.controller.PushMSGWebSocket;
 import com.sepim.springboot.controller.WebSocket;
-import com.sepim.springboot.entity.ChatList;
 import com.sepim.springboot.service.ChatListService;
 import com.sepim.springboot.service.ChatMessageService;
 import com.sepim.springboot.service.UserService;

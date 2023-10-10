@@ -1,17 +1,22 @@
 package com.sepim.springboot.controller;
 
+import com.google.zxing.WriterException;
 import com.sepim.springboot.common.aop.Idempotent;
 import com.sepim.springboot.common.aop.LogExecuteMethod;
 import com.sepim.springboot.entity.*;
 import com.sepim.springboot.service.CommentService;
-import com.sepim.springboot.service.FolderLikeRedisService;
 import com.sepim.springboot.service.FolderLikeService;
 import com.sepim.springboot.service.FolderService;
+import com.sepim.springboot.utils.QrCodeUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +33,8 @@ public class MarkDownController {
 
     private final FolderLikeService folderLikeService;
 
-
+    @Value("${sepim.folder.src}")
+    private String FOLDER_SRC_PREFIX;
 
 
     /**
@@ -159,30 +165,25 @@ public class MarkDownController {
         return folderLikeService.unlike2DB(param);//DB
     }
 
-
-
     @PostMapping("/md/like/status")
     public ResultData getLikeStatus(@RequestBody Map<String, String> param) {
         // return folderLikeService.getLikeStatus(param);//redis
         return folderLikeService.getLikeStatus2DB(param);
     }
 
-
-    @PostMapping("/md/likes")
-    @Idempotent
-    public void likeMdRedisLock(@RequestBody Map<String, String> param) {
-
-        log.info("测试接口{}", param.get("userId"));
-    }
-
-
     /**
      * 获取echarts的数据
+     *
      * @param param 用户id
      * @return
      */
     @PostMapping("md/echarts-data")
-    public ResultData getEchartsData(@RequestBody Map<String,String> param) {
+    public ResultData getEchartsData(@RequestBody Map<String, String> param) {
         return folderService.getEchartsData(param);
+    }
+
+    @GetMapping("/md/qr")
+    public void createQrCode(@RequestParam("id") String id, HttpServletResponse response) throws IOException, WriterException {
+        QrCodeUtils.encode(FOLDER_SRC_PREFIX + id, null, response.getOutputStream(), false);
     }
 }

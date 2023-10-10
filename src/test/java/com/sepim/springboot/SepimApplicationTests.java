@@ -3,6 +3,8 @@ package com.sepim.springboot;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.alibaba.fastjson.JSONObject;
+import com.google.zxing.NotFoundException;
+import com.google.zxing.WriterException;
 import com.sepim.springboot.controller.WebSocket;
 import com.sepim.springboot.entity.*;
 import com.sepim.springboot.entity.example.TestGeneratorExample;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -87,6 +90,13 @@ class SepimApplicationTests {
 
     }
 
+    @Test
+    void testQrCode() throws IOException, WriterException, NotFoundException {
+        String content = "this first QrCode";
+        QrCodeUtils.encode(content, null, "D:\\A-SpringBoot\\sepim\\qrcode\\test.jpg", false);
+        String decode = QrCodeUtils.decode("D:\\A-SpringBoot\\sepim\\qrcode\\test.jpg");
+        System.out.println(decode);
+    }
 
 
     @Test

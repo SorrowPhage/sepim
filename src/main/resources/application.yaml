@@ -104,3 +104,6 @@ python:
   script: D:\A-SpringBoot\algorithm\recommendation\recommendation.py
   path: E:\ProgrammingSoftware\Anaconda\python.exe
 
+sepim:
+  folder:
+    src: http://localhost:8080/#/index.html/read?id=
