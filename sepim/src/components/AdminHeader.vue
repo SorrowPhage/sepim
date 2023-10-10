@@ -1,6 +1,7 @@
 <template>
     <div class="header">
         <div class="search-box">
+            <div class="sp-nav" style="margin-right: 5px" @click="drawer = true"><i class="el-icon-menu"></i></div>
             <input v-model="search" class="sp-search-input" placeholder="Search" type="text" @keydown.enter="goSearch"/>
             <i class="el-icon-search sp-search-icon" @click="goSearch"></i>
             <div style="display: inline">
@@ -19,7 +20,8 @@
                                         width="400"
                                         trigger="hover">
                                         <el-badge :value="noReadSum" :hidden="noReadSum === 0 " :max="99" class="item" slot="reference" >
-                                            <el-button size="mini">消息</el-button>
+<!--                                            <el-button size="mini">消息</el-button>-->
+                                            <i class="el-icon-chat-dot-square"></i>
                                         </el-badge>
                                         <div class="sp-popover-box">
                                             <div class="sp-user-line-box" v-for="chat in list" :key="chat.id">
@@ -90,6 +92,16 @@
                 </div>
             </div>
         </div>
+    
+        <el-drawer
+            title="我是标题"
+            append-to-body
+            :visible.sync="drawer"
+            :direction="direction"
+            :with-header="false"
+            :before-close="handleClose">
+            
+        </el-drawer>
     </div>
 </template>
 
@@ -108,6 +120,8 @@ export default {
     },
     data() {
         return {
+            drawer: false,
+            direction: 'ltr',
             isTrue: false,
             search: '',
             isLogin: true,
@@ -357,6 +371,9 @@ export default {
                     partner.noReadNum = 0;
                 }
             })
+        },
+        handleClose(done) {
+            done();
         },
     },
     created() {

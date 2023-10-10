@@ -257,6 +257,7 @@ export default {
         like() {
             axios.post("http://localhost:8080/api/md/like",{folderId:this.$route.query.id,
                 userId: this.$store.state.User.account}).then(res=>{
+                console.log(res)
                 this.getLinkedData();
                 this.likeCount += 1;
             })
@@ -264,6 +265,7 @@ export default {
         unlike() {
             axios.post("http://localhost:8080/api/md/unlike",{folderId:this.$route.query.id,
                 userId: this.$store.state.User.account}).then(res=>{
+                console.log(res)
                 this.getLinkedData();
                 this.likeCount -= 1
             })
